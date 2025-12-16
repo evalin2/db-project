@@ -21,10 +21,10 @@ CREATE TABLE wartungsarbeiter (
 
 CREATE TABLE tennisplatz (
     tid INT AUTO_INCREMENT PRIMARY KEY,
-    belag VARCHAR(100),
+    standort VARCHAR(250),
     tennisanlage VARCHAR(250),
     platznummer VARCHAR(10),
-    standort VARCHAR(250),
+    belag VARCHAR(100),
     wid INT NOT NULL,
     datum_der_wartung DATE,
     FOREIGN KEY (wid) REFERENCES wartungsarbeiter(wid)
@@ -35,7 +35,28 @@ CREATE TABLE buchung (
     nid INT NOT NULL,
     tid INT NOT NULL,
     spieldatum DATE,
-    spiellaenge CHAR(2),
+    spielbeginn TIME,
+    spielende TIME,
     FOREIGN KEY (nid) REFERENCES nutzer(nid),
     FOREIGN KEY (tid) REFERENCES tennisplatz(tid)
 );
+
+INSERT INTO nutzer (vorname, nachname, geburtsdatum, email) VALUES
+('Max', 'Müller', 01.01.2000, 'max.müller@email.ch'),
+('Anna', 'Schwarz', 12.12.1999, 'anna.schwarz@email.ch');
+
+INSERT INTO wartungsarbeiter (vorname, nachname, geburtsdatum) VALUES
+('Sonja', 'Sonne', 28.02.1985),
+('Anton', 'Alt', 07.05.1965),
+('Martin', 'Meier', 01.10.1992);
+
+INSERT INTO tennisplatz (standort, tennisanlage, platznummer, belag, wid, datum_der_wartung) VALUES
+('Klauberg', 'Tennis Club Klauberg', 1, 'hart', 1, '10.11.2025').
+('Klauberg', 'Tennis Club Klauberg', 2, 'hart', 1, '10.11.2025'),
+('Klauberg', 'Tennis Club Klauberg', 3, 'hart', 1, '10.11.2025'),
+('Klauberg', 'Tennis Club Klauberg', 4, 'hart', 1, '10.11.2025'),
+('Tann', 'Tanner Tennisclub', 2, 'Sand', 2, '10.11.2025');
+
+INSERT INTO buchung (nid, tid, spieldatum, spielbeginn, spielende);
+(1, 1, 16.12.2025, 14:00, 15:00),
+(2, 5, 18., 12:00, 13:00);
