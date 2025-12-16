@@ -14,7 +14,7 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
 )
 
-# Load .env variables
+# Load .env variablescf
 load_dotenv()
 W_SECRET = os.getenv("W_SECRET")
 
