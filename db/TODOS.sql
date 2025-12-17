@@ -1,7 +1,7 @@
 DROP TABLE nutzer;
 DROP TABLE tennisplatz;
 DROP TABLE wartunsarbeiter;
-DROP TABLE buchung;
+DROP TABLE buchung; 
 
 
 CREATE TABLE nutzer (
