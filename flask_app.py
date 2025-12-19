@@ -132,3 +132,8 @@ def complete():
 
 if __name__ == "__main__":
     app.run()
+
+@app.route("/", methods=["GET", "POST"])
+@login_required
+def index():
+    pass
