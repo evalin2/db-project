@@ -111,11 +111,6 @@ def logout():
 def index():
     return render_template("index.html")
 
-@app.route("/", methods=["GET", "POST"])
-@login_required
-def index():
-    return render_template("buchen.html")
-
 @app.route("/users", methods=["GET"])
 @login_required
 def users():
