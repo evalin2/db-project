@@ -109,4 +109,10 @@ def logout():
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
-    pass
+    return render_template("index.html")
+
+@app.route("/users", methods=["GET"])
+@login_required
+def users():
+    users = db_read("SELECT username FROM users ORDER BY username", ())
+    return render_template("users.html", users=users)
