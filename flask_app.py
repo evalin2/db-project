@@ -117,3 +117,19 @@ def users():
     users = db_read("SELECT username FROM users ORDER BY username", ())
     return render_template("users.html", users=users)
 
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("index"))
+
+@app.route("/", methods=["GET", "POST"])
+@login_required
+def index():
+    return render_template("buchen.html")
+
+@app.route("/users", methods=["GET"])
+@login_required
+def users():
+    users = db_read("SELECT username FROM users ORDER BY username", ())
+    return render_template("users.html", users=users)
