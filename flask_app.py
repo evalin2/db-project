@@ -106,10 +106,9 @@ def logout():
     logout_user()
     return redirect(url_for("index"))
 
-@app.route("/", methods=["GET", "POST"])
-@login_required
+@app.route("/")
 def index():
-    return render_template("index.html")
+    return "TEST"
 
 @app.route("/users", methods=["GET"])
 @login_required
