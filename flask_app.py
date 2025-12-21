@@ -100,19 +100,7 @@ def register():
         footer_link_label="Einloggen"
     )
 
-@app.route("/logout")
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for("index"))
-
-@app.route("/", methods=["GET", "POST"])
+@app.route("/index")
 @login_required
 def index():
-    return render_template("index.html")
-
-@app.route("/users", methods=["GET"])
-@login_required
-def users():
-    users = db_read("SELECT username FROM users ORDER BY username", ())
-    return render_template("users.html", users=users)
+    return render_template("index.html")    
