@@ -100,28 +100,30 @@ def register():
         footer_link_label="Einloggen"
     )
 
-# Startseite nach Login
-@app.route("/", methods=["GET", "POST"])
-@login_required
-def index():
-    return render_template("index.html")  # "Indexseite"
-
-# Buchen-Seite
-@app.route("/buchen", methods=["GET", "POST"])
-@login_required
-def buchen():
-    return render_template("buchen.html")  # "Buchen"-Seite
-
-# Users-Seite
-@app.route("/users", methods=["GET"])
-@login_required
-def users_list():
-    users = db_read("SELECT username FROM users ORDER BY username", ())
-    return render_template("users.html", users=users)
-
-# Logout
 @app.route("/logout")
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("login"))  # oder auf Login-Seite weiterleiten
+    return redirect(url_for("index"))
+
+@app.route("/", methods=["GET", "POST"])
+@login_required
+def index():
+    return render_template("index.html")
+    
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("buchen"))
+
+@app.route("/", methods=["GET", "POST"])
+@login_required
+def buchen():
+    return render_template("buchen.html")
+
+@app.route("/users", methods=["GET"])
+@login_required
+def users():
+    users = db_read("SELECT username FROM users ORDER BY username", ())
+    return render_template("users.html", users=users)
