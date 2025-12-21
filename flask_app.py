@@ -104,8 +104,3 @@ def register():
 @login_required
 def index():
     return render_template("index.html")
-
-@app.route("/buchen")
-@login_required
-def buchen():
-    return render_template("buchen.html")
