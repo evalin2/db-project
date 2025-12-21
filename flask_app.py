@@ -116,4 +116,3 @@ def index():
 def users():
     users = db_read("SELECT username FROM users ORDER BY username", ())
     return render_template("users.html", users=users)
-)
