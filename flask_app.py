@@ -117,11 +117,6 @@ def logout():
     logout_user()
     return redirect(url_for("buchen"))
 
-@app.route("/", methods=["GET", "POST"])
-@login_required
-def buchen():
-    return render_template("buchen.html")
-
 @app.route("/users", methods=["GET"])
 @login_required
 def users():
