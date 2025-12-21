@@ -110,12 +110,6 @@ def logout():
 @login_required
 def index():
     return render_template("index.html")
-    
-@app.route("/logout")
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for("buchen"))
 
 @app.route("/users", methods=["GET"])
 @login_required
