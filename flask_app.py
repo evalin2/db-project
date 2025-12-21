@@ -102,7 +102,7 @@ def register():
 
 @app.route("/logout")
 @login_required
-def logout():
+def logout_view():
     logout_user()
     return redirect(url_for("index"))
 
