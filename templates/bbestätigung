@@ -8,7 +8,54 @@
     <!-- jsPDF Bibliothek -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
+<body>
 
+<header>
+    <a href="index.html" class="header-link">
+        <img src="logo.png" alt="Logo">
+        <h1>Tennisplatz-Buchungssystem</h1>
+    </a>
+</header>
+
+<main class="form-container" style="text-align:center;">
+
+    <h2>Buchung erfasst</h2>
+
+    <div class="buchungs-info" style="margin:20px 0;">
+        <p><strong>Nutzer-ID:</strong> <span id="nid-display">NID-123456</span></p>
+        <p><strong>Buchungsnummer:</strong> <span id="buchungsnr">B-987654</span></p>
+    </div>
+
+    <button class="confirm-button" id="download-pdf">Buchungsbestätigung herunterladen</button>
+
+</main>
+
+<footer>
+    <p>
+        Impressum<br>
+        Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt
+    </p>
+</footer>
+
+<script>
+    document.getElementById("download-pdf").addEventListener("click", function () {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        const nid = document.getElementById("nid-display").textContent;
+        const buchungsnr = document.getElementById("buchungsnr").textContent;
+
+        doc.setFontSize(18);
+        doc.text("Buchungsbestätigung", 20, 20);
+
+        doc.setFontSize(14);
+        doc.text(`Nutzer-ID: ${nid}`, 20, 40);
+        doc.text(`Buchungsnummer: ${buchungsnr}`, 20, 50);
+        doc.text("Vielen Dank für Ihre Buchung!", 20, 70);
+
+        doc.save(`Buchung_${buchungsnr}.pdf`);
+    });
+</script>
 
 </body>
 </html>
