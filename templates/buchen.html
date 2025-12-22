@@ -16,10 +16,12 @@
 </head>
 <body>
 
-<!-- Header ohne Link -->
+<!-- Header -->
 <header>
-    <img src="logo.png" alt="Logo">
-    <h1>Tennisplatz-Buchungssystem</h1>
+    <a href="index.html" class="header-link">
+        <img src="logo.png" alt="Logo">
+        <h1>Tennisplatz-Buchungssystem</h1>
+    </a>
 </header>
 
 <main class="form-container">
@@ -47,6 +49,7 @@
     <div class="form-group">
         <label>Nutzer-ID</label>
         <input type="text" id="nid" name="nid" readonly>
+        <small>Wird automatisch vergeben. Entweder Personalien oder nur NID ausfüllen.</small>
     </div>
 
     <!-- Buchungsdetails -->
@@ -81,9 +84,10 @@
     </div>
 
     <!-- Button weiter zur Bestätigungsseite -->
-    <button class="confirm-button" onclick="window.location.href='bbestaetigt.html'">
-        Buchung bestätigen
-    </button>
+    <a href="{{ url_for('buchen') }}">
+        <button class="confirm-button">Tennisplatz buchen</button>
+    </a>
+
 
 </main>
 
