@@ -2,101 +2,31 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Tennisplatz buchen</title>
+    <title>Tennisplatz-Buchungssystem</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-
-    <!-- Kleine Logik für automatische ID -->
-    <script>
-        window.onload = function () {
-            const idFeld = document.getElementById("nid");
-            idFeld.value = "NID-" + Math.floor(100000 + Math.random() * 900000);
-        };
-    </script>
 </head>
 <body>
 
-<!-- Header wie Startseite -->
 <header>
-    <img src="logo.png" alt="Logo">
-    <h1>Tennisplatz-Buchungssystem</h1>
+    <a href="index.html" class="header-link">
+        <img src="logo.png" alt="Logo">
+        <h1>Tennisplatz-Buchungssystem</h1>
+    </a>
 </header>
 
-<main class="form-container">
+<div class="container">
+    <nav>
+        <a href="buchen.html" class="nav-button">Tennisplatz buchen</a>
+        <a href="stornieren.html" class="nav-button">Tennisplatz stornieren</a>
+        <a href="verwaltung.html" class="nav-button">Verwaltung</a>
+    </nav>
 
-    <h2>Tennisplatz buchen</h2>
+    <main>
+        <img src="tennisplatz.jpg" alt="Tennisplatz">
+    </main>
+</div>
 
-    <!-- Personalien -->
-    <h3>Personalien</h3>
-    <div class="form-group">
-        <label>Vorname</label>
-        <input type="text" name="vorname">
-    </div>
-
-    <div class="form-group">
-        <label>Nachname</label>
-        <input type="text" name="nachname">
-    </div>
-
-    <div class="form-group">
-        <label>Geburtsdatum</label>
-        <input type="date" name="geburtsdatum">
-    </div>
-
-    <div class="form-group">
-        <label>E-Mail</label>
-        <input type="email" name="email">
-    </div>
-
-    <div class="form-group">
-        <label>NID (alternativ)</label>
-        <input type="text" id="nid" name="nid">
-        <small>Entweder Personalien ODER nur die NID ausfüllen.</small>
-    </div>
-
-    <!-- Buchungsdetails -->
-    <h3>Buchungsdetails</h3>
-
-    <div class="form-group">
-        <label>Spieldatum</label>
-        <input type="date" name="spieldatum" required>
-    </div>
-
-    <div class="form-group">
-        <label>Spielbeginn</label>
-        <input type="time" name="beginn" required>
-    </div>
-
-    <div class="form-group">
-        <label>Spielende</label>
-        <input type="time" name="ende" required>
-    </div>
-
-    <div class="form-group">
-        <label>Standort</label>
-        <select name="standort">
-            <option>-- bitte wählen --</option>
-            <option>Standort A</option>
-            <option>Standort B</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label>Platznummer</label>
-        <select name="platznummer">
-            <option>-- bitte wählen --</option>
-            <option>Platz 1</option>
-            <option>Platz 2</option>
-        </select>
-    </div>
-
-    <button class="confirm-button">Buchung bestätigen</button>
-        <nav>
-            <a href="{{ url_for('bbestätigt') }}">Tennisplatz buchen</a>
-        </nav> 
-</main>
-
-<!-- Impressum -->
 <footer>
     <p>
         Impressum<br>
