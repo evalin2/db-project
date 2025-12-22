@@ -99,8 +99,3 @@ def register():
         footer_link_url=url_for("login"),
         footer_link_label="Einloggen"
     )
-
-@app.route("/", methods=["GET", "POST"])
-@login_required
-def index():
-    return render_template("index.html")
