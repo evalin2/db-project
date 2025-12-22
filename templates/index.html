@@ -2,18 +2,35 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Tennisplatz Buchungssystem</title>
+    <title>Tennisplatz-Buchungssystem</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="container">
-        <h1>Tennisplatz Buchungssystem</h1>
+<header>
+    <img src="logo.png" alt="Logo">
+    <h1>Tennisplatz-Buchungssystem</h1>
+</header>
 
-        <div class="button-container">
-            <a href="{{ url_for('buchen') }}">Tennisplatz buchen</a>
-            <a href="stornieren.html" class="btn">Tennisplatz stornieren</a>
-            <a href="verwaltung.html" class="btn admin">Verwaltung</a>
-        </div>
-    </div>
+<div class="container">
+    <nav>
+        <a href="{{ url_for('buchen') }}">Tennisplatz buchen</a>
+        <a href="stornieren.html" class="nav-button">Tennisplatz stornieren</a>
+        <a href="verwaltung.html" class="nav-button">Verwaltung</a>
+    </nav>
+
+    <main>
+        <img src="tennisplatz.jpg" alt="Tennisplatz">
+    </main>
+</div>
+
+<footer>
+    <p>
+        Impressum<br>
+        Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt
+    </p>
+</footer>
 
 </body>
+</html>
