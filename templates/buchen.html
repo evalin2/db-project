@@ -3,62 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <title>Tennisplatz buchen</title>
-    <link rel="stylesheet" href="buchen.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Kleine Logik für automatische ID -->
+    <script>
+        window.onload = function () {
+            const idFeld = document.getElementById("nid");
+            idFeld.value = "NID-" + Math.floor(100000 + Math.random() * 900000);
+        };
+    </script>
 </head>
 <body>
 
-<div class="container">
-    <h1>Tennisplatz buchen</h1>
+<!-- Header wie Startseite -->
+<header>
+    <img src="logo.png" alt="Logo">
+    <h1>Tennisplatz-Buchungssystem</h1>
+</header>
 
-    <form action="buchen.php" method="post">
+<main class="form-container">
 
-        <h2>Persönliche Daten</h2>
+    <h2>Tennisplatz buchen</h2>
 
-        <label for="vorname">Vorname</label>
-        <input type="text" id="vorname" name="vorname" required>
+    <!-- Personalien -->
+    <h3>Personalien</h3>
+    <div class="form-group">
+        <label>Vorname</label>
+        <input type="text" name="vorname">
+    </div>
 
-        <label for="nachname">Nachname</label>
-        <input type="text" id="nachname" name="nachname" required>
+    <div class="form-group">
+        <label>Nachname</label>
+        <input type="text" name="nachname">
+    </div>
 
-        <label for="geburtsdatum">Geburtsdatum</label>
-        <input type="date" id="geburtsdatum" name="geburtsdatum" required>
+    <div class="form-group">
+        <label>Geburtsdatum</label>
+        <input type="date" name="geburtsdatum">
+    </div>
 
-        <label for="email">E-Mail</label>
-        <input type="email" id="email" name="email" required>
+    <div class="form-group">
+        <label>E-Mail</label>
+        <input type="email" name="email">
+    </div>
 
-        <h2>Buchungsdetails</h2>
+    <div class="form-group">
+        <label>NID (alternativ)</label>
+        <input type="text" id="nid" name="nid">
+        <small>Entweder Personalien ODER nur die NID ausfüllen.</small>
+    </div>
 
-        <label for="spieldatum">Spieldatum</label>
-        <input type="date" id="spieldatum" name="spieldatum" required>
+    <!-- Buchungsdetails -->
+    <h3>Buchungsdetails</h3>
 
-        <label for="spielbeginn">Spielbeginn</label>
-        <input type="time" id="spielbeginn" name="spielbeginn" required>
+    <div class="form-group">
+        <label>Spieldatum</label>
+        <input type="date" name="spieldatum" required>
+    </div>
 
-        <label for="spielende">Spielende</label>
-        <input type="time" id="spielende" name="spielende" required>
+    <div class="form-group">
+        <label>Spielbeginn</label>
+        <input type="time" name="beginn" required>
+    </div>
 
-        <label for="standort">Standort</label>
-        <select id="standort" name="standort" required>
-            <option value="">Bitte auswählen</option>
-            <option value="Nord">Nord</option>
-            <option value="Süd">Süd</option>
-            <option value="Ost">Ost</option>
-            <option value="West">West</option>
+    <div class="form-group">
+        <label>Spielende</label>
+        <input type="time" name="ende" required>
+    </div>
+
+    <div class="form-group">
+        <label>Standort</label>
+        <select name="standort">
+            <option>-- bitte wählen --</option>
+            <option>Standort A</option>
+            <option>Standort B</option>
         </select>
+    </div>
 
-        <label for="platznummer">Platznummer</label>
-        <select id="platznummer" name="platznummer" required>
-            <option value="">Bitte auswählen</option>
-            <option value="1">Platz 1</option>
-            <option value="2">Platz 2</option>
-            <option value="3">Platz 3</option>
-            <option value="4">Platz 4</option>
+    <div class="form-group">
+        <label>Platznummer</label>
+        <select name="platznummer">
+            <option>-- bitte wählen --</option>
+            <option>Platz 1</option>
+            <option>Platz 2</option>
         </select>
+    </div>
 
-        <button type="submit">Buchung abschicken</button>
+    <button class="confirm-button">Buchung bestätigen</button>
 
-    </form>
-</div>
+</main>
+
+<!-- Impressum -->
+<footer>
+    <p>
+        Impressum<br>
+        Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt
+    </p>
+</footer>
 
 </body>
 </html>
