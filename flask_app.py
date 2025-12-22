@@ -109,8 +109,3 @@ def index():
 @login_required
 def buchen():
     return render_template("buchen.html")
-
-@app.route("/bbestätigt")
-@login_required
-def bbestätigt():
-    return render_template("bbestätigt.html")
