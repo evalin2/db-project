@@ -102,5 +102,5 @@ def register():
 
 @app.route("/")
 @login_required
-def auth():
-    return render_template("auth.html")
+def index():
+    return render_template("index.html")
