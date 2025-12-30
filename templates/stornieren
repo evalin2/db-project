@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Buchung stornieren</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        fieldset {
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select, button {
+            margin-top: 5px;
+            padding: 5px;
+            width: 250px;
+        }
+        button {
+            width: auto;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Buchung stornieren</h1>
+
+<form action="https://www.neue-website.de/storno-bestaetigung" method="get">
+
+    <!-- Personalien -->
+    <fieldset>
+        <legend>Personalien</legend>
+
+        <label for="vorname">Vorname</label>
+        <input type="text" id="vorname" name="vorname" required>
+
+        <label for="nachname">Nachname</label>
+        <input type="text" id="nachname" name="nachname" required>
+
+        <label for="geburtsdatum">Geburtsdatum</label>
+        <input type="date" id="geburtsdatum" name="geburtsdatum" required>
+
+        <label for="email">E-Mail oder Nutzer-ID</label>
+        <input type="text" id="email" name="email" required>
+    </fieldset>
+
+    <!-- Buchungsdetails -->
+    <fieldset>
+        <legend>Buchungsdetails</legend>
+
+        <label for="spieldatum">Spieldatum</label>
+        <input type="date" id="spieldatum" name="spieldatum">
+
+        <label for="spielbeginn">Spielbeginn</label>
+        <input type="time" id="spielbeginn" name="spielbeginn">
+
+        <label for="spielende">Spielende</label>
+        <input type="time" id="spielende" name="spielende">
+
+        <label for="standort">Standort</label>
+        <select id="standort" name="standort">
+            <option value="">Bitte wählen</option>
+            <option value="halle1">Halle 1</option>
+            <option value="halle2">Halle 2</option>
+        </select>
+
+        <label for="platznummer">Platznummer</label>
+        <select id="platznummer" name="platznummer">
+            <option value="">Bitte wählen</option>
+            <option value="1">Platz 1</option>
+            <option value="2">Platz 2
