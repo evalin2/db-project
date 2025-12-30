@@ -114,3 +114,8 @@ def buchen():
 @login_required
 def bbestätigt():
     return render_template("bbestätigt.html")
+
+@app.route("/stornieren")
+@login_required
+def stornieren():
+    return render_template("stornieren.html")
