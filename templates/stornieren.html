@@ -3,6 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Buchung stornieren</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        fieldset {
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select, button {
+            margin-top: 5px;
+            padding: 5px;
+            width: 250px;
+        }
+        button {
+            width: auto;
+            margin-top: 15px;
+        }
+    </style>
 </head>
 <body>
 
@@ -11,6 +34,7 @@
 <form action="https://www.neue-website.de/storno-bestaetigung" method="get">
 
     <!-- Personalien -->
+    <fieldset>
         <legend>Personalien</legend>
 
         <label for="vorname">Vorname</label>
@@ -24,8 +48,10 @@
 
         <label for="email">E-Mail oder Nutzer-ID</label>
         <input type="text" id="email" name="email" required>
+    </fieldset>
 
     <!-- Buchungsdetails -->
+    <fieldset>
         <legend>Buchungsdetails</legend>
 
         <label for="spieldatum">Spieldatum</label>
@@ -48,13 +74,18 @@
         <select id="platznummer" name="platznummer">
             <option value="">Bitte wählen</option>
             <option value="1">Platz 1</option>
-            <option value="2">Platz 2
+            <option value="2">Platz 2</option>
+            <option value="3">Platz 3</option>
+        </select>
+    </fieldset>
 
     <!-- Alternative: Buchungsnummer -->
+    <fieldset>
         <legend>Alternative: Buchungsnummer</legend>
 
         <label for="buchungsnummer">Buchungsnummer</label>
         <input type="text" id="buchungsnummer" name="buchungsnummer">
+    </fieldset>
 
     <!-- Absenden -->
     <button type="submit">Stornierung bestätigen</button>
