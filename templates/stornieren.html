@@ -40,3 +40,74 @@
 
         <div class="form-group">
             <label>E-Mail</label>
+            <input type="email" name="email">
+        </div>
+
+        <div class="form-group">
+            <label>Nutzer-ID</label>
+            <input type="text" name="nid">
+        </div>
+
+        <!-- Buchungsdetails -->
+        <h3>Buchungsdetails</h3>
+
+        <div class="form-group">
+            <label>Spieldatum</label>
+            <input type="date" name="spieldatum">
+        </div>
+
+        <div class="form-group">
+            <label>Spielbeginn</label>
+            <input type="time" name="spielbeginn">
+        </div>
+
+        <div class="form-group">
+            <label>Spielende</label>
+            <input type="time" name="spielende">
+        </div>
+
+        <div class="form-group">
+            <label>Standort</label>
+            <select name="standort">
+                <option>-- bitte wählen --</option>
+                <option>Standort A</option>
+                <option>Standort B</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Platznummer</label>
+            <select name="platznummer">
+                <option>-- bitte wählen --</option>
+                <option>Platz 1</option>
+                <option>Platz 2</option>
+            </select>
+        </div>
+
+        <!-- Alternative: Buchungsnummer -->
+        <h3>Alternative</h3>
+
+        <div class="form-group">
+            <label>Buchungsnummer</label>
+            <input type="text" name="buchungsnummer">
+        </div>
+
+        <!-- Absenden -->
+        <button class="confirm-button" type="submit">
+            Stornierung bestätigen
+        </button>
+
+    </form>
+
+</main>
+
+<!-- Footer -->
+<footer>
+    <p>
+        Impressum<br>
+        Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt
+    </p>
+</footer>
+
+</body>
+</html>
