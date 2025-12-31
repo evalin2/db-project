@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Buchung stornieren</title>
+    <title>Tennisplatz buchen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -16,92 +16,76 @@
 
 <main class="form-container">
 
-    <h2>Buchung stornieren</h2>
+    <h2>Tennisplatz buchen</h2>
 
-    <form action="https://www.neue-website.de/storno-bestaetigung" method="get">
+    <!-- Personalien -->
+    <h3>Personalien</h3>
 
-        <!-- Personalien -->
-        <h3>Personalien</h3>
+    <div class="form-group">
+        <label>Vorname</label>
+        <input type="text" name="vorname">
+    </div>
 
-        <div class="form-group">
-            <label>Vorname</label>
-            <input type="text" name="vorname">
-        </div>
+    <div class="form-group">
+        <label>Nachname</label>
+        <input type="text" name="nachname">
+    </div>
 
-        <div class="form-group">
-            <label>Nachname</label>
-            <input type="text" name="nachname">
-        </div>
+    <div class="form-group">
+        <label>Geburtsdatum</label>
+        <input type="date" name="geburtsdatum">
+    </div>
 
-        <div class="form-group">
-            <label>Geburtsdatum</label>
-            <input type="date" name="geburtsdatum">
-        </div>
+    <div class="form-group">
+        <label>E-Mail</label>
+        <input type="email" name="email">
+    </div>
 
-        <div class="form-group">
-            <label>E-Mail</label>
-            <input type="email" name="email">
-        </div>
+    <div class="form-group">
+        <label>Nutzer-ID</label>
+        <input type="text" id="nid" name="nid">
+    </div>
 
-        <div class="form-group">
-            <label>Nutzer-ID</label>
-            <input type="text" name="nid">
-        </div>
+    <!-- Buchungsdetails -->
+    <h3>Buchungsdetails</h3>
 
-        <!-- Buchungsdetails -->
-        <h3>Buchungsdetails</h3>
+    <div class="form-group">
+        <label>Spieldatum</label>
+        <input type="date" name="spieldatum" required>
+    </div>
 
-        <div class="form-group">
-            <label>Spieldatum</label>
-            <input type="date" name="spieldatum">
-        </div>
+    <div class="form-group">
+        <label>Spielbeginn</label>
+        <input type="time" name="beginn" required>
+    </div>
 
-        <div class="form-group">
-            <label>Spielbeginn</label>
-            <input type="time" name="spielbeginn">
-        </div>
+    <div class="form-group">
+        <label>Spielende</label>
+        <input type="time" name="ende" required>
+    </div>
 
-        <div class="form-group">
-            <label>Spielende</label>
-            <input type="time" name="spielende">
-        </div>
+    <div class="form-group">
+        <label>Standort</label>
+        <select name="standort">
+            <option>-- bitte wählen --</option>
+            <option>Standort A</option>
+            <option>Standort B</option>
+        </select>
+    </div>
 
-        <div class="form-group">
-            <label>Standort</label>
-            <select name="standort">
-                <option>-- bitte wählen --</option>
-                <option>Standort A</option>
-                <option>Standort B</option>
-            </select>
-        </div>
+    <div class="form-group">
+        <label>Platznummer</label>
+        <select name="platznummer">
+            <option>-- bitte wählen --</option>
+            <option>Platz 1</option>
+            <option>Platz 2</option>
+        </select>
+    </div>
 
-        <div class="form-group">
-            <label>Platznummer</label>
-            <select name="platznummer">
-                <option>-- bitte wählen --</option>
-                <option>Platz 1</option>
-                <option>Platz 2</option>
-            </select>
-        </div>
-
-        <!-- Alternative: Buchungsnummer -->
-
-        <div class="form-group">
-            <label>Buchungsnummer</label>
-            <input type="text" name="buchungsnummer">
-        </div>
-
-        <!-- Absenden -->
-        <button class="confirm-button" type="submit">
-            Stornierung bestätigen
-        </button>
-
-         <!-- Button weiter zur Bestätigungsseite -->
+    <!-- Button weiter zur Bestätigungsseite -->
     <a href="{{ url_for('sbestätigt') }}">
         <button class="confirm-button">Stornierung bestätigen</button>
-    </a> 
-
-    </form>
+    </a>
 
 </main>
 
