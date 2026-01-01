@@ -120,7 +120,7 @@ def bbestätigt():
 def stornieren():
     return render_template("stornieren.html")
 
-@app.route("/bestätigt")
+@app.route("/sbestätigt")
 @login_required
-def bestätigt():
-    return render_template("bestätigt.html")
+def sbestätigt():
+    return render_template("sbestätigt.html")
