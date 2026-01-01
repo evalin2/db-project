@@ -119,8 +119,3 @@ def bbestätigt():
 @login_required
 def stornieren():
     return render_template("stornieren.html")
-
-@app.route("/sbestätigt")
-@login_required
-def sbestätigt():
-    return render_template("sbestätigt.html")
