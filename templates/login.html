@@ -60,3 +60,55 @@
         .login-box label {
             display: block;
             text-align: left;
+            margin: 10px 0 5px;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #0077cc;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .login-box button:hover {
+            background-color: #005fa3;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hintergrund -->
+    <div class="background">
+        <img src="tennisplatz.jpg" alt="Tennisplatz">
+    </div>
+
+    <!-- Login-Container -->
+    <div class="login-container">
+        <img src="logo.png" alt="Logo" class="logo">
+        <h1>Verwaltung</h1>
+
+        <div class="login-box">
+            <h2>Login</h2>
+            <form action="/verwaltung" method="POST"> <!-- Flask kann hier /verwaltung verarbeiten -->
+                <label for="username">Benutzername</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="password">Passwort</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="submit">Bestätigen</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
