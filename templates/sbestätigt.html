@@ -2,8 +2,9 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Stornierung erfasst</title>
+    <title>Buchung erfasst</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <!-- jsPDF Bibliothek -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
@@ -17,16 +18,14 @@
 
 <main class="form-container" style="text-align:center;">
 
-    <h2>Stornierung erfasst</h2>
+    <h2>Buchung erfasst</h2>
 
     <div class="buchungs-info" style="margin:20px 0;">
         <p><strong>Nutzer-ID:</strong> <span id="nid-display">NID-123456</span></p>
-        <p><strong>Stornierungsnummer:</strong> <span id="storno-nr">S-987654</span></p>
+        <p><strong>Buchungsnummer:</strong> <span id="buchungsnr">B-987654</span></p>
     </div>
 
-    <button class="confirm-button" id="download-pdf">
-        Stornierungsbestätigung herunterladen
-    </button>
+    <button class="confirm-button" id="download-pdf">Buchungsbestätigung herunterladen</button>
 
 </main>
 
@@ -43,17 +42,17 @@
         const doc = new jsPDF();
 
         const nid = document.getElementById("nid-display").textContent;
-        const stornoNr = document.getElementById("storno-nr").textContent;
+        const buchungsnr = document.getElementById("buchungsnr").textContent;
 
         doc.setFontSize(18);
-        doc.text("Stornierungsbestätigung", 20, 20);
+        doc.text("Buchungsbestätigung", 20, 20);
 
         doc.setFontSize(14);
         doc.text(`Nutzer-ID: ${nid}`, 20, 40);
-        doc.text(`Stornierungsnummer: ${stornoNr}`, 20, 50);
-        doc.text("Ihre Buchung wurde erfolgreich storniert.", 20, 70);
+        doc.text(`Buchungsnummer: ${buchungsnr}`, 20, 50);
+        doc.text("Vielen Dank für Ihre Buchung!", 20, 70);
 
-        doc.save(`Stornierung_${stornoNr}.pdf`);
+        doc.save(`Buchung_${buchungsnr}.pdf`);
     });
 </script>
 
