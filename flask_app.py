@@ -125,7 +125,7 @@ def stornieren():
 def sbestätigt():
     return render_template("sbestätigt.html")
 
-@app.route("/verwaltung/login")
+@app.route("/vlogin")
 @login_required
 def vlogin():
     return render_template("vlogin.html")
