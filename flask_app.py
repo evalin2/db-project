@@ -100,6 +100,10 @@ def register():
         footer_link_label="Einloggen"
     )
 
+@app.route("/logout")
+def logout():
+    return redirect(url_for("login"))
+
 @app.route("/")
 @login_required
 def index():
