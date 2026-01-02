@@ -165,8 +165,8 @@ def log():
 
 @app.route("/verwaltung")
 @login_required
-def welcome():
-    return "<h2>Willkommen auf der Zielseite!</h2>"
+def verwaltung():
+    return render_template("verwaltung.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
