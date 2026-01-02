@@ -1,44 +1,92 @@
-<form action="/buchung" method="POST">
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Tennisplatz buchen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <img src="logo.png" alt="Logo">
+    <h1>Tennisplatz-Buchungssystem</h1>
+</header>
+
+<main class="form-container">
+
+    <h2>Tennisplatz buchen</h2>
 
     <!-- Personalien -->
-    <label>Vorname</label>
-    <input type="text" name="vorname" required>
-
-    <label>Nachname</label>
-    <input type="text" name="nachname" required>
-
-    <label>Geburtsdatum</label>
-    <input type="date" name="geburtsdatum" required>
-
-    <label>E-Mail</label>
-    <input type="email" name="email" required>
+    <h3>Personalien</h3>
+    <div class="form-group">
+        <label>Vorname</label>
+        <input type="text" name="vorname">
+    </div>
+    <div class="form-group">
+        <label>Nachname</label>
+        <input type="text" name="nachname">
+    </div>
+    <div class="form-group">
+        <label>Geburtsdatum</label>
+        <input type="date" name="geburtsdatum">
+    </div>
+    <div class="form-group">
+        <label>E-Mail</label>
+        <input type="email" name="email">
+    </div>
+    <div class="form-group">
+        <label>Nutzer-ID</label>
+        <input type="text" id="nid" name="nid">
+    </div>
 
     <!-- Buchungsdetails -->
-    <label>Spieldatum</label>
-    <input type="date" name="spieldatum" required>
+    <h3>Buchungsdetails</h3>
+    <div class="form-group">
+        <label>Spieldatum</label>
+        <input type="date" name="spieldatum" required>
+    </div>
+    <div class="form-group">
+        <label>Spielbeginn</label>
+        <input type="time" name="beginn" required>
+    </div>
+    <div class="form-group">
+        <label>Spielende</label>
+        <input type="time" name="ende" required>
+    </div>
+    <div class="form-group">
+        <label>Tennisanlage</label>
+        <select name="tennisanlage">
+            <option>-- bitte wählen --</option>
+            <option>Standort A</option>
+            <option>Standort B</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Platznummer</label>
+        <select name="platznummer">
+            <option>-- bitte wählen --</option>
+            <option>Platz 1</option>
+            <option>Platz 2</option>
+        </select>
+    </div>
 
-    <label>Spielbeginn</label>
-    <input type="time" name="spielbeginn" required>
+    <!-- Button weiter zur Bestätigungsseite -->
+    <a href="{{ url_for('bbestätigt') }}">
+        <button class="confirm-button">Buchung bestätigen</button>
+    </a>
 
-    <label>Spielende</label>
-    <input type="time" name="spielende" required>
 
-    <label>Tennisanlage</label>
-    <select name="tennisanlage" required>
-        <option value="">-- bitte wählen --</option>
-        <option value="Tennis Club Klauberg">Tennis Club Klauberg</option>
-        <option value="Tanner Tennisclub">Tanner Tennisclub</option>
-    </select>
+</main>
 
-    <label>Platznummer</label>
-    <select name="platznummer" required>
-        <option value="">-- bitte wählen --</option>
-        <option value="1">Platz 1</option>
-        <option value="2">Platz 2</option>
-        <option value="3">Platz 3</option>
-        <option value="4">Platz 4</option>
-        <option value="5">Platz 5</option>
-    </select>
+<!-- Footer -->
+<footer>
+    <p>
+        Impressum<br>
+        Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt
+    </p>
+</footer>
 
-    <button type="submit">Buchung bestätigen</button>
-</form>
+</body>
+</html>
