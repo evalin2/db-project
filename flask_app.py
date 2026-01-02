@@ -144,3 +144,23 @@ def tennisplätze():
 @login_required
 def wartungsarbeiter():
     return render_template("wartungsarbeiter.html")
+
+
+app = Flask(__name__)
+
+@app.route("/buchung", methods=["GET", "POST"])
+def buchung():
+    if request.method == "POST":
+        # Daten aus dem Formular holen
+        nutzer_id = request.form.get("nutzer_id")
+        buchungsnr = request.form.get("buchungsnr")
+        # Optional: speichern in der DB
+        # db.save_buchung(nutzer_id, buchungsnr, ...)
+        
+        # Weiterleiten zur Bestätigungsseite und Daten übergeben
+        return render_template(
+            "buchung_bestaetigt.html",
+            nutzer_id=nutzer_id,
+            buchungsnr=buchungsnr
+        )
+    return render_template("buchung_formular.html")
