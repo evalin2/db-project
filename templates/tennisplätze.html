@@ -29,6 +29,7 @@
 
             <label for="belag_add">Belag</label>
             <select id="belag_add" name="belag">
+                <option value="" selected></option> <!-- leere Option -->
                 <option value="hart">Hart</option>
                 <option value="sand">Sand</option>
                 <option value="rasen">Rasen</option>
@@ -46,7 +47,7 @@
     <section>
         <h3>Tennisplatz-Daten ändern</h3>
         <form>
-            <label for="platz_id_edit">Tennisplatz-ID</label>
+            <label for="platz_id_edit">Tennisplatz-ID *</label>
             <input type="text" id="platz_id_edit" name="platz_id" required>
 
             <label for="anlage_edit">Tennisanlage</label>
@@ -57,6 +58,7 @@
 
             <label for="belag_edit">Belag</label>
             <select id="belag_edit" name="belag">
+                <option value="" selected></option> <!-- leere Option -->
                 <option value="hart">Hart</option>
                 <option value="sand">Sand</option>
                 <option value="rasen">Rasen</option>
