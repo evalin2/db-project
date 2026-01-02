@@ -134,3 +134,18 @@ def log():
 @login_required
 def verwaltung():
     return render_template("verwaltung.html")
+
+@app.route("/tennisplätze")
+@login_required
+def tennisplätze():
+    return render_template("tennisplätze.html")
+
+@app.route("/nutzer")
+@login_required
+def nutzer():
+    return render_template("nutzer.html")
+
+@app.route("/wartungsarbeiter")
+@login_required
+def wartungsarbeiter():
+    return render_template("wartungsarbeiter.html")
