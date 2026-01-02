@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Tennisplatz-Buchungssystem</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <img src="logo.png" alt="Logo">
+    <h1>Tennisplatz-Buchungssystem</h1>
+</header>
+
+<h2 class="subheading">Tennisplätze</h2>
+
+<main class="container">
+
+    <!-- Tennisplatz hinzufügen -->
+    <section>
+        <h3>Tennisplatz hinzufügen</h3>
+        <form>
+            <label for="anlage_add">Tennisanlage</label>
+            <input type="text" id="anlage_add" name="anlage">
+
+            <label for="platznummer_add">Platznummer</label>
+            <input type="text" id="platznummer_add" name="platznummer">
+
+            <label for="belag_add">Belag</label>
+            <select id="belag_add" name="belag">
+                <option value="hart">Hart</option>
+                <option value="sand">Sand</option>
+                <option value="rasen">Rasen</option>
+                <option value="teppich">Teppich (Halle)</option>
+            </select>
+
+            <label for="wartung">Datum der Wartung</label>
+            <input type="date" id="wartung" name="wartung">
+
+            <button type="submit">Hinzufügen</button>
+        </form>
+    </section>
+
+    <!-- Tennisplatz-Daten ändern -->
+    <section>
+        <h3>Tennisplatz-Daten ändern</h3>
+        <form>
+            <label for="platz_id_edit">Tennisplatz-ID *</label>
+            <input type="text" id="platz_id_edit" name="platz_id" required>
+
+            <label for="anlage_edit">Tennisanlage</label>
+            <input type="text" id="anlage_edit" name="anlage">
+
+            <label for="platznummer_edit">Platznummer</label>
+            <input type="text" id="platznummer_edit" name="platznummer">
+
+            <label for="belag_edit">Belag</label>
+            <select id="belag_edit" name="belag">
+                <option value="hart">Hart</option>
+                <option value="sand">Sand</option>
+                <option value="rasen">Rasen</option>
+                <option value="teppich">Teppich (Halle)</option>
+            </select>
+
+            <button type="submit">Ändern</button>
+        </form>
+    </section>
+
+    <!-- Tennisplatz löschen -->
+    <section>
+        <h3>Tennisplatz löschen</h3>
+        <form>
+            <label for="platz_id_delete">Tennisplatz-ID</label>
+            <input type="text" id="platz_id_delete" name="platz_id">
+
+            <button type="submit">Löschen</button>
+        </form>
+    </section>
+
+</main>
+
+<footer>
+    <p>
+        Impressum<br>
+        Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt
+    </p>
+</footer>
+
+</body>
+</html>
