@@ -140,11 +140,6 @@ def verwaltung():
 def tennisplätze():
     return render_template("tennisplätze.html")
 
-@app.route("/nutzer")
-@login_required
-def nutzer():
-    return render_template("nutzer.html")
-
 @app.route("/wartungsarbeiter")
 @login_required
 def wartungsarbeiter():
