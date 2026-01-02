@@ -130,30 +130,7 @@ def sbestätigt():
 def log():
     return render_template("log.html")
 
-# Log routes
-@app.route("/log", methods=["GET", "POST"])
-def log():
-    error = None
-
-    if request.method == "POST":
-        user = authenticate(
-            request.form["username"],
-            request.form["password"]
-        )
-
-        if user:
-            login_user(user)
-            return redirect(url_for("index"))
-
-        error = "Benutzername oder Passwort ist falsch."
-
-    return render_template(
-        "auth.html",
-        title="In dein Konto einloggen",
-        action=url_for("login"),
-        button_label="Einloggen",
-        error=error,
-        footer_text="Noch kein Konto?",
-        footer_link_url=url_for("register"),
-        footer_link_label="Registrieren"
-    )
+@app.route("/verwaltung")
+@login_required
+def verwaltung():
+    return render_template("verwaltung.html")
