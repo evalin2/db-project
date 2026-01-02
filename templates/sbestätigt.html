@@ -20,11 +20,12 @@
 
     <h2>Stornierung erfasst</h2>
 
-    <div class="stornier-info" style="margin:20px 0;">
+    <div class="buchungs-info" style="margin:20px 0;">
         <p><strong>Nutzer-ID:</strong> <span id="nid-display">NID-123456</span></p>
+        <p><strong>Stornierte Buchungsnummer:</strong> <span id="buchungsnr">B-987654</span></p>
     </div>
 
-    <button class="confirm-button" id="download-pdf">Buchungsbestätigung herunterladen</button>
+    <button class="confirm-button" id="download-pdf">Stornierungsbestätigung herunterladen</button>
 
 </main>
 
@@ -44,14 +45,13 @@
         const buchungsnr = document.getElementById("buchungsnr").textContent;
 
         doc.setFontSize(18);
-        doc.text("Buchungsbestätigung", 20, 20);
+        doc.text("Stornierungsbestätigung", 20, 20);
 
         doc.setFontSize(14);
         doc.text(`Nutzer-ID: ${nid}`, 20, 40);
-        doc.text(`Buchungsnummer: ${buchungsnr}`, 20, 50);
-        doc.text("Vielen Dank für Ihre Buchung!", 20, 70);
+        doc.text(`Stornierte Buchungsnummer: ${buchungsnr}`, 20, 50);
 
-        doc.save(`Buchung_${buchungsnr}.pdf`);
+        doc.save(`Stornierung_${buchungsnr}.pdf`);
     });
 </script>
 
