@@ -145,22 +145,28 @@ def tennisplätze():
 def wartungsarbeiter():
     return render_template("wartungsarbeiter.html")
 
+# Definierter Benutzername und Passwort
+USERNAME = "max"
+PASSWORD = "1234"
 
-app = Flask(__name__)
-
-@app.route("/buchung", methods=["GET", "POST"])
-def buchung():
+@app.route("/log", methods=["GET", "POST"])
+@login_required
+def log():
     if request.method == "POST":
-        # Daten aus dem Formular holen
-        nutzer_id = request.form.get("nutzer_id")
-        buchungsnr = request.form.get("buchungsnr")
-        # Optional: speichern in der DB
-        # db.save_buchung(nutzer_id, buchungsnr, ...)
-        
-        # Weiterleiten zur Bestätigungsseite und Daten übergeben
-        return render_template(
-            "buchung_bestaetigt.html",
-            nutzer_id=nutzer_id,
-            buchungsnr=buchungsnr
-        )
-    return render_template("buchung_formular.html")
+        username = request.form["username"]
+        password = request.form["password"]
+
+        if username == USERNAME and password == PASSWORD:
+            return redirect(url_for("verwaltung"))  # Weiterleitung bei Erfolg
+        else:
+            return "<h3>Benutzername oder Passwort ist falsch!</h3><a href='/'>Zurück zum Log</a>"
+
+    return render_template("log.html")  # Zeige das Login-Formular
+
+@app.route("/verwaltung")
+@login_required
+def welcome():
+    return "<h2>Willkommen auf der Zielseite!</h2>"
+
+if __name__ == "__main__":
+    app.run(debug=True)
