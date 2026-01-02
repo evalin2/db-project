@@ -141,7 +141,7 @@ PASSWORD = "1234"
 
 @app.route("/log", methods=["GET", "POST"])
 @login_required
-def log():
+def log_page():  # Name geändert
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
