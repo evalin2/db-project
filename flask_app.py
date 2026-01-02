@@ -125,6 +125,16 @@ def stornieren():
 def sbestätigt():
     return render_template("sbestätigt.html")
 
+@app.route("/verwaltung/login")
+@login_required
+def log():
+    return render_template("log.html")
+
+@app.route("/verwaltung")
+@login_required
+def verwaltung():
+    return render_template("verwaltung.html")
+
 @app.route("/tennisplätze")
 @login_required
 def tennisplätze():
@@ -134,29 +144,3 @@ def tennisplätze():
 @login_required
 def wartungsarbeiter():
     return render_template("wartungsarbeiter.html")
-
-# Definierter Benutzername und Passwort
-USERNAME = "max"
-PASSWORD = "1234"
-
-@app.route("/log", methods=["GET", "POST"])
-@login_required
-def log_page():  # Name geändert
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-
-        if username == USERNAME and password == PASSWORD:
-            return redirect(url_for("verwaltung"))  # Weiterleitung bei Erfolg
-        else:
-            return "<h3>Benutzername oder Passwort ist falsch!</h3><a href='/'>Zurück zum Log</a>"
-
-    return render_template("log.html")  # Zeige das Login-Formular
-
-@app.route("/verwaltung")
-@login_required
-def verwaltung():
-    return render_template("verwaltung.html")
-
-if __name__ == "__main__":
-    app.run(debug=True)
