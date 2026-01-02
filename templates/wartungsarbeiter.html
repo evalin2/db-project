@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Tennisplatz-Buchungssystem</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <img src="logo.png" alt="Logo">
+    <h1>Tennisplatz-Buchungssystem</h1>
+</header>
+
+<h2 class="subheading">Wartungsarbeiter</h2>
+
+<main class="container">
+
+    <!-- Wartungsarbeiter hinzufügen -->
+    <section>
+        <h3>Wartungsarbeiter hinzufügen</h3>
+        <form>
+            <label for="vorname_add">Vorname</label>
+            <input type="text" id="vorname_add" name="vorname">
+
+            <label for="nachname_add">Nachname</label>
+            <input type="text" id="nachname_add" name="nachname">
+
+            <label for="geburtsdatum_add">Geburtsdatum</label>
+            <input type="date" id="geburtsdatum_add" name="geburtsdatum">
+
+            <button type="submit">Hinzufügen</button>
+        </form>
+    </section>
+
+    <!-- Wartungsarbeiter-Daten ändern -->
+    <section>
+        <h3>Wartungsarbeiter-Daten ändern</h3>
+        <form>
+            <label for="arbeiter_id_edit">Wartungsarbeiter-ID</label>
+            <input type="text" id="arbeiter_id_edit" name="wartungsarbeiter_id" required>
+
+            <label for="vorname_edit">Vorname</label>
+            <input type="text" id="vorname_edit" name="vorname">
+
+            <label for="nachname_edit">Nachname</label>
+            <input type="text" id="nachname_edit" name="nachname">
+
+            <label for="geburtsdatum_edit">Geburtsdatum</label>
+            <input type="date" id="geburtsdatum_edit" name="geburtsdatum">
+
+            <button type="submit">Ändern</button>
+        </form>
+    </section>
+
+    <!-- Wartungsarbeiter löschen -->
+    <section>
+        <h3>Wartungsarbeiter löschen</h3>
+        <form>
+            <label for="arbeiter_id_delete">Wartungsarbeiter-ID</label>
+            <input type="text" id="arbeiter_id_delete" name="wartungsarbeiter_id">
+
+            <button type="submit">Löschen</button>
+        </form>
+    </section>
+
+</main>
+
+<footer>
+    <p>
+        Impressum<br>
+        Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt
+    </p>
+</footer>
+
+</body>
+</html>
