@@ -129,3 +129,23 @@ def sbestätigt():
 @login_required
 def log():
     return render_template("log.html")
+
+app = Flask(__name__)
+
+@app.route("/log", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        if username == "verwaltung" and password == "12345":
+            return redirect(url_for("verwaltung"))
+        else:
+            return render_template("log.html", error="Falsche Zugangsdaten")
+
+    return render_template("log.html")
+
+
+@app.route("/verwaltung")
+def verwaltung():
+    return render_template("verwaltung.html")
