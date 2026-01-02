@@ -130,22 +130,30 @@ def sbestätigt():
 def log():
     return render_template("log.html")
 
-app = Flask(__name__)
-
+# Log routes
 @app.route("/log", methods=["GET", "POST"])
-def login():
+def log():
+    error = None
+
     if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
+        user = authenticate(
+            request.form["username"],
+            request.form["password"]
+        )
 
-        if username == "verwaltung" and password == "12345":
-            return redirect(url_for("verwaltung"))
-        else:
-            return render_template("log.html", error="Falsche Zugangsdaten")
+        if user:
+            login_user(user)
+            return redirect(url_for("index"))
 
-    return render_template("log.html")
+        error = "Benutzername oder Passwort ist falsch."
 
-
-@app.route("/verwaltung")
-def verwaltung():
-    return render_template("verwaltung.html")
+    return render_template(
+        "auth.html",
+        title="In dein Konto einloggen",
+        action=url_for("login"),
+        button_label="Einloggen",
+        error=error,
+        footer_text="Noch kein Konto?",
+        footer_link_url=url_for("register"),
+        footer_link_label="Registrieren"
+    )
