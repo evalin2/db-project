@@ -125,10 +125,7 @@ def stornieren():
 def sbestätigt():
     return render_template("sbestätigt.html")
 
-@app.route("/log")
-@login_required
-def log():
-    return render_template("log.html")
+
 
 @app.route("/verwaltung")
 @login_required
