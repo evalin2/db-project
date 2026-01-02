@@ -3,76 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <title>Verwaltung – Login</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background-color: #f5f5f5;
-        }
-        header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 15px;
-            text-align: center;
-        }
-        main {
-            max-width: 400px;
-            margin: 40px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 6px;
-        }
-        label {
-            display: block;
-            margin-top: 15px;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-        }
-        button {
-            margin-top: 20px;
-            width: 100%;
-            padding: 10px;
-        }
-        footer {
-            margin-top: 60px;
-            padding: 20px;
-            background: #eee;
-            font-size: 0.9em;
-        }
-    </style>
 </head>
 <body>
 
-<header>
-    <!-- oben (wie immer) -->
-    <h1>Verwaltung</h1>
-</header>
+<h1>Verwaltung</h1>
 
-<main>
-    <h2>Login</h2>
-    <form>
-        <label for="username">Benutzername</label>
-        <input type="text" id="username" name="username">
+<h2>Login</h2>
 
-        <label for="password">Passwort</label>
-        <input type="password" id="password" name="password">
+<form method="post">
+    <label>Benutzername</label><br>
+    <input type="text" name="username"><br><br>
 
-        <button type="submit">Anmelden</button>
-    </form>
-</main>
+    <label>Passwort</label><br>
+    <input type="password" name="password"><br><br>
 
-<footer>
-    <h3>Impressum</h3>
-    <p>
-        Vereinsname<br>
-        Musterstraße 1<br>
-        12345 Musterstadt<br>
-        E-Mail: info@verein.de
-    </p>
-</footer>
+    <button type="submit">Anmelden</button>
+</form>
+
+{% if error %}
+<p style="color:red;">{{ error }}</p>
+{% endif %}
+
+<hr>
+
+<h3>Impressum</h3>
+<p>
+Vereinsname<br>
+Musterstraße 1<br>
+12345 Musterstadt
+</p>
 
 </body>
 </html>
