@@ -21,7 +21,6 @@ CREATE TABLE wartungsarbeiter (
 
 CREATE TABLE tennisplatz (
     tid INT AUTO_INCREMENT PRIMARY KEY,
-    standort VARCHAR(250),
     tennisanlage VARCHAR(250),
     platznummer VARCHAR(10),
     belag VARCHAR(100),
@@ -50,12 +49,12 @@ INSERT INTO wartungsarbeiter (vorname, nachname, geburtsdatum) VALUES
 ('Anton', 'Alt', 07.05.1965),
 ('Martin', 'Meier', 01.10.1992);
 
-INSERT INTO tennisplatz (standort, tennisanlage, platznummer, belag, wid, datum_der_wartung) VALUES
-('Klauberg', 'Tennis Club Klauberg', 1, 'hart', 1, '10.11.2025').
-('Klauberg', 'Tennis Club Klauberg', 2, 'hart', 1, '10.11.2025'),
-('Klauberg', 'Tennis Club Klauberg', 3, 'hart', 1, '10.11.2025'),
-('Klauberg', 'Tennis Club Klauberg', 4, 'hart', 1, '10.11.2025'),
-('Tann', 'Tanner Tennisclub', 2, 'Sand', 2, '10.11.2025');
+INSERT INTO tennisplatz (tennisanlage, platznummer, belag, wid, datum_der_wartung) VALUES
+('Tennis Club Klauberg', 1, 'hart', 1, '10.11.2025').
+('Tennis Club Klauberg', 2, 'hart', 1, '10.11.2025'),
+('Tennis Club Klauberg', 3, 'hart', 1, '10.11.2025'),
+('Tennis Club Klauberg', 4, 'hart', 1, '10.11.2025'),
+('Tanner Tennisclub', 2, 'Sand', 2, '10.11.2025');
 
 INSERT INTO buchung (nid, tid, spieldatum, spielbeginn, spielende);
 (1, 1, 16.12.2025, 14:00, 15:00),
