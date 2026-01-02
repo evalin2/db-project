@@ -125,13 +125,6 @@ def stornieren():
 def sbestätigt():
     return render_template("sbestätigt.html")
 
-
-
-@app.route("/verwaltung")
-@login_required
-def verwaltung():
-    return render_template("verwaltung.html")
-
 @app.route("/tennisplätze")
 @login_required
 def tennisplätze():
