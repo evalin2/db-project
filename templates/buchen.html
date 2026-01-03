@@ -36,16 +36,17 @@
     <h1>Tennisplatz-Buchungssystem</h1>
 </header>
 
-<form method="POST" action="{{ url_for('buchen') }}">
+<form method="POST" action="{{ url_for('buchen') }}" id="buchungsform">
     {% if fehler %}
         <p class="error">{{ fehler }}</p>
     {% endif %}
+    
+    <div id="js-fehler" class="error" style="display:none;"></div>
 
     <h2>Personalien</h2>
     <div class="form-group">
         <label>Nutzer-ID (optional, nur bestehende IDs)</label>
         <input type="number" name="nid" id="nid" placeholder="Bestehende Nutzer-ID eingeben" value="{{ form_data.nid if form_data else (nutzer.nid if nutzer else '') }}">
-        <span id="nid-error" class="error" style="display:none;">Diese ID existiert nicht!</span>
     </div>
     <div class="form-group">
         <label>Vorname *</label>
@@ -106,26 +107,28 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("spieldatum").setAttribute("min", heute);
     
     // Formular-Validierung hinzufügen
-    const form = document.querySelector('form');
+    const form = document.getElementById('buchungsform');
+    const jsFehlerDiv = document.getElementById('js-fehler');
+    
     if (form) {
         form.addEventListener('submit', function(e) {
+            jsFehlerDiv.style.display = 'none';
+            jsFehlerDiv.textContent = '';
+            
             const beginn = document.getElementById('beginn').value;
             const ende = document.getElementById('ende').value;
-            
-            console.log('Validierung läuft - Beginn:', beginn, 'Ende:', ende);
             
             if (beginn) {
                 const beginnTeile = beginn.split(':');
                 const beginnMinuten = parseInt(beginnTeile[1]);
                 
-                console.log('Beginn Minuten:', beginnMinuten);
-                
                 if (beginnMinuten !== 0 && beginnMinuten !== 30) {
                     e.preventDefault();
-                    e.stopPropagation();
-                    alert('Spielbeginn muss auf :00 oder :30 enden (z.B. 14:00 oder 14:30).\nZeiten wie ' + beginn + ' sind nicht erlaubt.');
+                    jsFehlerDiv.textContent = 'Spielbeginn muss auf :00 oder :30 enden (z.B. 14:00 oder 14:30). Zeiten wie ' + beginn + ' sind nicht erlaubt.';
+                    jsFehlerDiv.style.display = 'block';
                     document.getElementById('beginn').value = '';
                     document.getElementById('beginn').focus();
+                    window.scrollTo(0, 0);
                     return false;
                 }
             }
@@ -134,14 +137,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 const endeTeile = ende.split(':');
                 const endeMinuten = parseInt(endeTeile[1]);
                 
-                console.log('Ende Minuten:', endeMinuten);
-                
                 if (endeMinuten !== 0 && endeMinuten !== 30) {
                     e.preventDefault();
-                    e.stopPropagation();
-                    alert('Spielende muss auf :00 oder :30 enden (z.B. 15:00 oder 15:30).\nZeiten wie ' + ende + ' sind nicht erlaubt.');
+                    jsFehlerDiv.textContent = 'Spielende muss auf :00 oder :30 enden (z.B. 15:00 oder 15:30). Zeiten wie ' + ende + ' sind nicht erlaubt.';
+                    jsFehlerDiv.style.display = 'block';
                     document.getElementById('ende').value = '';
                     document.getElementById('ende').focus();
+                    window.scrollTo(0, 0);
                     return false;
                 }
             }
@@ -152,11 +154,11 @@ document.addEventListener("DOMContentLoaded", function() {
 // Nutzer-ID Validierung
 document.getElementById("nid").addEventListener("blur", function() {
     let nid = this.value;
-    let errorElem = document.getElementById("nid-error");
+    const jsFehlerDiv = document.getElementById('js-fehler');
 
     // Wenn Feld leer ist, Felder leeren und kein Fehler
     if (!nid) {
-        errorElem.style.display = "none";
+        jsFehlerDiv.style.display = 'none';
         document.getElementById("vorname").value = "";
         document.getElementById("nachname").value = "";
         document.getElementById("geburtsdatum").value = "";
@@ -170,14 +172,17 @@ document.getElementById("nid").addEventListener("blur", function() {
     .then(data => {
         if (data.exists === false || !data.vorname) {
             // Nutzer existiert nicht
-            errorElem.style.display = "block";
+            jsFehlerDiv.textContent = 'Diese Nutzer-ID existiert nicht in der Datenbank.';
+            jsFehlerDiv.style.display = 'block';
+            document.getElementById("nid").value = "";
             document.getElementById("vorname").value = "";
             document.getElementById("nachname").value = "";
             document.getElementById("geburtsdatum").value = "";
             document.getElementById("email").value = "";
+            window.scrollTo(0, 0);
         } else {
             // Nutzer existiert - Felder automatisch ausfüllen
-            errorElem.style.display = "none";
+            jsFehlerDiv.style.display = 'none';
             document.getElementById("vorname").value = data.vorname || "";
             document.getElementById("nachname").value = data.nachname || "";
             document.getElementById("geburtsdatum").value = data.geburtsdatum || "";
@@ -186,8 +191,9 @@ document.getElementById("nid").addEventListener("blur", function() {
     })
     .catch(error => {
         console.error("Fehler beim Abrufen der Nutzerdaten:", error);
-        errorElem.textContent = "Fehler beim Abrufen der Nutzerdaten";
-        errorElem.style.display = "block";
+        jsFehlerDiv.textContent = "Fehler beim Abrufen der Nutzerdaten";
+        jsFehlerDiv.style.display = 'block';
+        window.scrollTo(0, 0);
     });
 });
 
