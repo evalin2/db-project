@@ -112,6 +112,7 @@ def index():
 def buchen():
     nutzer = {}
     fehler = None
+    form_data = {}  # Speichert Formulardaten bei Fehler
 
     # Alle Plätze aus DB holen
     try:
@@ -127,8 +128,22 @@ def buchen():
         fehler = "Fehler beim Laden der Tennisplätze."
 
     if request.method == "POST":
+        # Formulardaten speichern
+        form_data = {
+            'nid': request.form.get("nid", ""),
+            'vorname': request.form.get("vorname", ""),
+            'nachname': request.form.get("nachname", ""),
+            'geburtsdatum': request.form.get("geburtsdatum", ""),
+            'email': request.form.get("email", ""),
+            'tennisanlage': request.form.get("tennisanlage", ""),
+            'platznummer': request.form.get("platznummer", ""),
+            'spieldatum': request.form.get("spieldatum", ""),
+            'beginn': request.form.get("beginn", ""),
+            'ende': request.form.get("ende", "")
+        }
+
         # 1. NUTZER VERARBEITEN
-        nid = request.form.get("nid")
+        nid = form_data['nid']
         
         if nid:
             # Bestehender Nutzer
@@ -140,14 +155,15 @@ def buchen():
                     nutzer={},
                     fehler=fehler,
                     anlagen=anlagen,
-                    alle_plaetze=alle_plaetze
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
                 )
         else:
             # Neuer Nutzer erstellen
-            vorname = request.form.get("vorname", "").strip()
-            nachname = request.form.get("nachname", "").strip()
-            geburtsdatum = request.form.get("geburtsdatum")
-            email = request.form.get("email", "").strip()
+            vorname = form_data['vorname'].strip()
+            nachname = form_data['nachname'].strip()
+            geburtsdatum = form_data['geburtsdatum']
+            email = form_data['email'].strip()
             
             if not vorname or not nachname or not email:
                 fehler = "Bitte alle Pflichtfelder (*) ausfüllen."
@@ -156,7 +172,8 @@ def buchen():
                     nutzer={},
                     fehler=fehler,
                     anlagen=anlagen,
-                    alle_plaetze=alle_plaetze
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
                 )
             
             # Prüfen ob Email bereits existiert
@@ -168,7 +185,8 @@ def buchen():
                     nutzer={},
                     fehler=fehler,
                     anlagen=anlagen,
-                    alle_plaetze=alle_plaetze
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
                 )
             
             # Leeres Geburtsdatum auf None setzen
@@ -191,16 +209,17 @@ def buchen():
                     nutzer={},
                     fehler=fehler,
                     anlagen=anlagen,
-                    alle_plaetze=alle_plaetze
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
                 )
 
         # 2. BUCHUNG VERARBEITEN
         if nutzer:
-            tennisanlage = request.form.get("tennisanlage", "").strip()
-            platznummer_str = request.form.get("platznummer", "").strip()
-            spieldatum = request.form.get("spieldatum")
-            beginn = request.form.get("beginn")
-            ende = request.form.get("ende")
+            tennisanlage = form_data['tennisanlage'].strip()
+            platznummer_str = form_data['platznummer'].strip()
+            spieldatum = form_data['spieldatum']
+            beginn = form_data['beginn']
+            ende = form_data['ende']
 
             # Validierung
             if not tennisanlage or not platznummer_str or not spieldatum or not beginn or not ende:
@@ -210,7 +229,8 @@ def buchen():
                     nutzer=nutzer,
                     fehler=fehler,
                     anlagen=anlagen,
-                    alle_plaetze=alle_plaetze
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
                 )
 
             # Prüfen ob Datum in der Zukunft liegt
@@ -225,7 +245,8 @@ def buchen():
                     nutzer=nutzer,
                     fehler=fehler,
                     anlagen=anlagen,
-                    alle_plaetze=alle_plaetze
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
                 )
 
             # Öffnungszeiten prüfen (7:00 - 20:00)
@@ -241,7 +262,8 @@ def buchen():
                     nutzer=nutzer,
                     fehler=fehler,
                     anlagen=anlagen,
-                    alle_plaetze=alle_plaetze
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
                 )
 
             if beginn_time >= ende_time:
@@ -251,7 +273,24 @@ def buchen():
                     nutzer=nutzer,
                     fehler=fehler,
                     anlagen=anlagen,
-                    alle_plaetze=alle_plaetze
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
+                )
+
+            # Prüfen ob Spielzeit maximal 60 Minuten ist
+            from datetime import datetime, timedelta
+            dauer = datetime.combine(date.today(), ende_time) - datetime.combine(date.today(), beginn_time)
+            if dauer > timedelta(hours=1):
+                fehler = "Die maximale Buchungsdauer beträgt 1 Stunde (60 Minuten)."
+                form_data['beginn'] = ''
+                form_data['ende'] = ''
+                return render_template(
+                    "buchen.html",
+                    nutzer=nutzer,
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
                 )
 
             try:
@@ -263,7 +302,8 @@ def buchen():
                     nutzer=nutzer,
                     fehler=fehler,
                     anlagen=anlagen,
-                    alle_plaetze=alle_plaetze
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
                 )
 
             # Tennisplatz aus DB suchen
@@ -280,7 +320,8 @@ def buchen():
                     nutzer=nutzer,
                     fehler=fehler,
                     anlagen=anlagen,
-                    alle_plaetze=alle_plaetze
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
                 )
 
             # Prüfen ob der Platz zur gewählten Zeit bereits gebucht ist
@@ -300,12 +341,16 @@ def buchen():
                     fehler = "Sie haben für diesen Platz am gewählten Datum bereits eine Buchung."
                 else:
                     fehler = "Dieser Platz ist zum gewählten Zeitpunkt nicht mehr verfügbar. Bitte wählen Sie einen anderen Zeitraum."
+                # Zeitfelder löschen bei Konflikt
+                form_data['beginn'] = ''
+                form_data['ende'] = ''
                 return render_template(
                     "buchen.html",
                     nutzer=nutzer,
                     fehler=fehler,
                     anlagen=anlagen,
-                    alle_plaetze=alle_plaetze
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
                 )
 
             # Buchung speichern
@@ -323,7 +368,8 @@ def buchen():
                     nutzer=nutzer,
                     fehler=fehler,
                     anlagen=anlagen,
-                    alle_plaetze=alle_plaetze
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
                 )
 
     return render_template(
@@ -331,7 +377,8 @@ def buchen():
         nutzer=nutzer,
         fehler=fehler,
         anlagen=anlagen,
-        alle_plaetze=alle_plaetze
+        alle_plaetze=alle_plaetze,
+        form_data=form_data
     )
 
 # java script 
