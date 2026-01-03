@@ -56,7 +56,7 @@
         <select name="tennisanlage" id="tennisanlage" required>
             <option value="">-- bitte wählen --</option>
             {% for anlage in anlagen %}
-                <option value="{{ anlage }}">{{ anlage }}</option>
+                <option value="{{ anlage }}" {% if form_data and form_data.tennisanlage == anlage %}selected{% endif %}>{{ anlage }}</option>
             {% endfor %}
         </select>
     </div>
@@ -68,15 +68,15 @@
     </div>
     <div class="form-group">
         <label>Spieldatum *</label>
-        <input type="date" name="spieldatum" id="spieldatum" required>
+        <input type="date" name="spieldatum" id="spieldatum" value="{{ form_data.spieldatum if form_data else '' }}" required>
     </div>
     <div class="form-group">
         <label>Spielbeginn *</label>
-        <input type="time" name="beginn" min="07:00" max="20:00" required>
+        <input type="time" name="beginn" id="beginn" value="{{ form_data.beginn if form_data else '' }}" min="07:00" max="20:00" required>
     </div>
     <div class="form-group">
         <label>Spielende *</label>
-        <input type="time" name="ende" min="07:00" max="20:00" required>
+        <input type="time" name="ende" id="ende" value="{{ form_data.ende if form_data else '' }}" min="07:00" max="20:00" required>
     </div>
 
     <button type="submit">Buchung bestätigen</button>
@@ -153,6 +153,30 @@ document.getElementById("tennisanlage").addEventListener("change", function() {
         option.textContent = `Platz ${platz.platznummer} (${platz.belag})`;
         platznummerSelect.appendChild(option);
     });
+});
+
+// Beim Laden: Wenn Tennisanlage vorausgewählt ist, Platznummern laden
+document.addEventListener("DOMContentLoaded", function() {
+    const tennisanlageSelect = document.getElementById("tennisanlage");
+    const platznummerSelect = document.getElementById("platznummer");
+    const gespeichertePlatznummer = "{{ form_data.platznummer if form_data else '' }}";
+    
+    if (tennisanlageSelect.value) {
+        // Platznummern für vorgewählte Anlage laden
+        const gewaehlteAnlage = tennisanlageSelect.value;
+        const verfuegbarePlaetze = allePlaetze.filter(p => p.tennisanlage === gewaehlteAnlage);
+        
+        platznummerSelect.innerHTML = '<option value="">-- bitte wählen --</option>';
+        verfuegbarePlaetze.forEach(platz => {
+            const option = document.createElement("option");
+            option.value = platz.platznummer;
+            option.textContent = `Platz ${platz.platznummer} (${platz.belag})`;
+            if (gespeichertePlatznummer && platz.platznummer == gespeichertePlatznummer) {
+                option.selected = true;
+            }
+            platznummerSelect.appendChild(option);
+        });
+    }
 });
 </script>
 
