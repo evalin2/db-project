@@ -159,6 +159,18 @@ def buchen():
                     alle_plaetze=alle_plaetze
                 )
             
+            # Prüfen ob Email bereits existiert
+            bestehender_nutzer = db_read("SELECT * FROM nutzer WHERE email=%s", (email,), single=True)
+            if bestehender_nutzer:
+                fehler = f"Diese E-Mail-Adresse ist bereits registriert (Nutzer-ID: {bestehender_nutzer['nid']}). Bitte geben Sie Ihre Nutzer-ID ein."
+                return render_template(
+                    "buchen.html",
+                    nutzer={},
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze
+                )
+            
             # Leeres Geburtsdatum auf None setzen
             if not geburtsdatum:
                 geburtsdatum = None
@@ -173,7 +185,7 @@ def buchen():
                 nutzer = db_read("SELECT * FROM nutzer WHERE email=%s", (email,), single=True)
             except Exception as e:
                 logging.error(f"Fehler beim Erstellen des Nutzers: {e}")
-                fehler = "Fehler beim Erstellen des Nutzers. Möglicherweise existiert die E-Mail bereits."
+                fehler = "Fehler beim Erstellen des Nutzers."
                 return render_template(
                     "buchen.html",
                     nutzer={},
@@ -272,16 +284,14 @@ def buchen():
                 )
 
             # Prüfen ob der Platz zur gewählten Zeit bereits gebucht ist
+            # Zwei Zeiträume überschneiden sich, wenn: Start1 < Ende2 UND Start2 < Ende1
             konflikt = db_read(
                 """SELECT * FROM buchung 
                    WHERE tid = %s 
                    AND spieldatum = %s 
-                   AND (
-                       (spielbeginn < %s AND spielende > %s) OR
-                       (spielbeginn < %s AND spielende > %s) OR
-                       (spielbeginn >= %s AND spielende <= %s)
-                   )""",
-                (platz["tid"], spieldatum, ende, beginn, beginn, ende, beginn, ende),
+                   AND spielbeginn < %s 
+                   AND spielende > %s""",
+                (platz["tid"], spieldatum, ende, beginn),
                 single=True
             )
 
