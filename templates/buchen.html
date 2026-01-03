@@ -55,20 +55,23 @@
 
     <!-- Buchungsdetails -->
     <h2>Buchungsdetails</h2>
+    <!-- Tennisanlage -->
     <div class="form-group">
         <label>Tennisanlage</label>
-        <select name="tennisanlage" required>
-            <option>-- bitte wählen --</option>
-            <option>Standort A</option>
-            <option>Standort B</option>
+        <select name="tennisanlage" id="tennisanlage" required>
+            <option value="">-- bitte wählen --</option>
+            {% for platz in alle_plaetze|groupby("tennisanlage") %}
+                <option value="{{ platz.grouper }}">{{ platz.grouper }}</option>
+            {% endfor %}
         </select>
     </div>
     <div class="form-group">
         <label>Platznummer</label>
-        <select name="platznummer" required>
-            <option>-- bitte wählen --</option>
-            <option>1</option>
-            <option>2</option>
+        <select name="platznummer" id="platznummer" required>
+            <option value="">-- bitte wählen --</option>
+            {% for platz in alle_plaetze %}
+                <option value="{{ platz.platznummer }}">{{ platz.platznummer }} ({{ platz.tennisanlage }})</option>
+            {% endfor %}
         </select>
     </div>
     <div class="form-group">
