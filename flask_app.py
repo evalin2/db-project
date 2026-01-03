@@ -104,65 +104,68 @@ def register():
 @login_required
 def index():
     return render_template("index.html")
+    
 
 @app.route("/buchen", methods=["GET", "POST"])
 @login_required
 def buchen():
+    nutzer = {}  # Daten zum vorausfüllen
+    fehler = None
+
     if request.method == "POST":
-        # Personalien aus Formular
-        vorname = request.form["vorname"]
-        nachname = request.form["nachname"]
-        geburtsdatum = request.form.get("geburtsdatum")
-        email = request.form["email"]
-        nid = request.form.get("nid")  # optional
+        # Nutzer-ID vom Formular
+        nid = request.form.get("nid")
 
-        # 1️⃣ Prüfen, ob Nutzer existiert
-        user = None
         if nid:
-            user = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True)
+            # Prüfen ob Nutzer existiert
+            nutzer = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True) or {}
+        
+        # Wenn keine existierende nid → neue Personalien
+        if not nutzer:
+            vorname = request.form.get("vorname")
+            nachname = request.form.get("nachname")
+            geburtsdatum = request.form.get("geburtsdatum")
+            email = request.form.get("email")
 
-        if not user:
-            user = db_read("SELECT * FROM nutzer WHERE email=%s", (email,), single=True)
+            # Mindestens Vorname, Nachname, Email müssen ausgefüllt sein
+            if vorname and nachname and email:
+                db_write(
+                    "INSERT INTO nutzer (vorname, nachname, geburtsdatum, email) VALUES (%s, %s, %s, %s)",
+                    (vorname, nachname, geburtsdatum, email)
+                )
+                # neu erstellten Nutzer laden
+                nutzer = db_read("SELECT * FROM nutzer WHERE email=%s", (email,), single=True)
+            else:
+                fehler = "Bitte alle Personalien ausfüllen."
 
-        # 2️⃣ Wenn Nutzer noch nicht existiert → anlegen
-        if not user:
-            db_write(
-                "INSERT INTO nutzer (vorname, nachname, geburtsdatum, email) VALUES (%s, %s, %s, %s)",
-                (vorname, nachname, geburtsdatum, email)
+        # Wenn nun ein Nutzer existiert → Buchung speichern
+        if nutzer:
+            # Tennisplatz-ID aus Formular
+            tennisanlage = request.form.get("tennisanlage")
+            platznummer = request.form.get("platznummer")
+            platz = db_read(
+                "SELECT * FROM tennisplatz WHERE tennisanlage=%s AND platznummer=%s",
+                (tennisanlage, platznummer),
+                single=True
             )
-            # neu erstelltes user-Objekt holen
-            user = db_read("SELECT * FROM nutzer WHERE email=%s", (email,), single=True)
+            if not platz:
+                fehler = "Tennisplatz nicht gefunden."
+            else:
+                tid = platz["tid"]
+                spieldatum = request.form.get("spieldatum")
+                beginn = request.form.get("beginn")
+                ende = request.form.get("ende")
 
-        # 3️⃣ Tennisplatz-ID ermitteln
-        tennisanlage = request.form.get("tennisanlage")
-        platznummer = request.form.get("platznummer")
+                if spieldatum and beginn and ende:
+                    db_write(
+                        "INSERT INTO buchung (nid, tid, spieldatum, spielbeginn, spielende) VALUES (%s,%s,%s,%s,%s)",
+                        (nutzer["nid"], tid, spieldatum, beginn, ende)
+                    )
+                    return redirect(url_for("bbestätigt"))
+                else:
+                    fehler = "Bitte alle Buchungsdetails ausfüllen."
 
-        # tid aus tennisplatz-Tabelle holen
-        platz = db_read(
-            "SELECT * FROM tennisplatz WHERE tennisanlage=%s AND platznummer=%s",
-            (tennisanlage, platznummer),
-            single=True
-        )
-        if not platz:
-            return "Platz existiert nicht", 400
-
-        tid = platz["tid"]
-
-        # 4️⃣ Buchung eintragen
-        spieldatum = request.form["spieldatum"]
-        beginn = request.form["beginn"]
-        ende = request.form["ende"]
-
-        db_write(
-            """INSERT INTO buchung (nid, tid, spieldatum, spielbeginn, spielende)
-               VALUES (%s, %s, %s, %s, %s)""",
-            (user["nid"], tid, spieldatum, beginn, ende)
-        )
-
-        return redirect(url_for("bbestätigt"))
-
-    # GET → Formular anzeigen
-    return render_template("buchen.html")
+    return render_template("buchen.html", nutzer=nutzer, fehler=fehler)
 
 
 @app.route("/bbestätigt")
