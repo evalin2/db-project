@@ -85,12 +85,12 @@
         <input type="date" name="spieldatum" id="spieldatum" value="{{ form_data.spieldatum if form_data else '' }}" required>
     </div>
     <div class="form-group">
-        <label>Spielbeginn *</label>
-        <input type="time" name="beginn" id="beginn" value="{{ form_data.beginn if form_data else '' }}" min="07:00" max="20:00" step="1800" required>
+        <label>Spielbeginn * (nur :00 oder :30)</label>
+        <input type="time" name="beginn" id="beginn" value="{{ form_data.beginn if form_data else '' }}" min="07:00" max="20:00" required>
     </div>
     <div class="form-group">
-        <label>Spielende *</label>
-        <input type="time" name="ende" id="ende" value="{{ form_data.ende if form_data else '' }}" min="07:00" max="20:00" step="1800" required>
+        <label>Spielende * (nur :00 oder :30)</label>
+        <input type="time" name="ende" id="ende" value="{{ form_data.ende if form_data else '' }}" min="07:00" max="20:00" required>
     </div>
 
     <button type="submit">Buchung bestätigen</button>
