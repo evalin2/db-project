@@ -100,6 +100,31 @@
 // Plätze für JavaScript verfügbar machen
 const allePlaetze = {{ alle_plaetze | tojson | safe }};
 
+// Formular-Validierung vor dem Absenden (für manuell eingetippte Zeiten)
+document.querySelector('form').addEventListener('submit', function(e) {
+    const beginn = document.getElementById('beginn').value;
+    const ende = document.getElementById('ende').value;
+    
+    if (beginn && ende) {
+        const beginnMinuten = parseInt(beginn.split(':')[1]);
+        const endeMinuten = parseInt(ende.split(':')[1]);
+        
+        if (beginnMinuten !== 0 && beginnMinuten !== 30) {
+            e.preventDefault();
+            alert('Spielbeginn muss auf eine volle oder halbe Stunde fallen (z.B. 14:00 oder 14:30). Bitte verwenden Sie die Zeitauswahl oder geben Sie nur :00 oder :30 ein.');
+            document.getElementById('beginn').value = '';
+            return false;
+        }
+        
+        if (endeMinuten !== 0 && endeMinuten !== 30) {
+            e.preventDefault();
+            alert('Spielende muss auf eine volle oder halbe Stunde fallen (z.B. 15:00 oder 15:30). Bitte verwenden Sie die Zeitauswahl oder geben Sie nur :00 oder :30 ein.');
+            document.getElementById('ende').value = '';
+            return false;
+        }
+    }
+});
+
 // Mindestdatum auf heute setzen
 document.addEventListener("DOMContentLoaded", function() {
     const heute = new Date().toISOString().split('T')[0];
