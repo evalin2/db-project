@@ -22,6 +22,10 @@
         <label>E-Mail</label>
         <input type="email" name="email" required>
     </div>
+    <div class="form-group">
+        <label>Nutzer-ID (optional, leer lassen wenn neu)</label>
+        <input type="text" name="nid" id="nid" placeholder="Wird automatisch erstellt">
+    </div>
 
     <!-- Buchungsdetails -->
     <h3>Buchungsdetails</h3>
@@ -39,7 +43,7 @@
     </div>
     <div class="form-group">
         <label>Tennisanlage</label>
-        <select name="tennisanlage">
+        <select name="tennisanlage" required>
             <option>-- bitte wählen --</option>
             <option>Standort A</option>
             <option>Standort B</option>
@@ -47,10 +51,10 @@
     </div>
     <div class="form-group">
         <label>Platznummer</label>
-        <select name="platznummer">
+        <select name="platznummer" required>
             <option>-- bitte wählen --</option>
-            <option>Platz 1</option>
-            <option>Platz 2</option>
+            <option>1</option>
+            <option>2</option>
         </select>
     </div>
 
