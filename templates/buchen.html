@@ -1,3 +1,13 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Tennisplatz buchen</title>
+</head>
+<body>
+
+<h1>Tennisplatz-Buchung</h1>
+
 <form method="POST" action="{{ url_for('buchen') }}">
     {% if fehler %}
         <p style="color:red">{{ fehler }}</p>
@@ -59,3 +69,6 @@ document.getElementById("nid").addEventListener("blur", function() {
     });
 });
 </script>
+
+</body>
+</html>
