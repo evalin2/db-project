@@ -8,6 +8,7 @@ from db import db_read, db_write
 from auth import login_manager, authenticate, register_user
 from flask_login import login_user, logout_user, login_required, current_user
 import logging
+from flask import jsonify
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -169,13 +170,13 @@ def buchen():
 def get_nutzer(nid):
     user = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True)
     if not user:
-        return {}
-    return {
+        return jsonify({})  # leeres JSON zurück, wenn Nutzer nicht existiert
+    return jsonify({
         "vorname": user["vorname"],
         "nachname": user["nachname"],
         "geburtsdatum": str(user["geburtsdatum"]) if user["geburtsdatum"] else "",
         "email": user["email"]
-    }
+    })
 
 
 @app.route("/bbestätigt")

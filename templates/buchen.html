@@ -52,17 +52,10 @@ document.getElementById("nid").addEventListener("blur", function() {
     fetch(`/get_nutzer/${nid}`)
     .then(response => response.json())
     .then(data => {
-        if (Object.keys(data).length > 0) {
-            document.getElementById("vorname").value = data.vorname;
-            document.getElementById("nachname").value = data.nachname;
-            document.getElementById("geburtsdatum").value = data.geburtsdatum;
-            document.getElementById("email").value = data.email;
-        } else {
-            document.getElementById("vorname").value = "";
-            document.getElementById("nachname").value = "";
-            document.getElementById("geburtsdatum").value = "";
-            document.getElementById("email").value = "";
-        }
+        document.getElementById("vorname").value = data.vorname || "";
+        document.getElementById("nachname").value = data.nachname || "";
+        document.getElementById("geburtsdatum").value = data.geburtsdatum || "";
+        document.getElementById("email").value = data.email || "";
     });
 });
 </script>
