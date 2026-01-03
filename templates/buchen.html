@@ -32,8 +32,9 @@
     <!-- Personalien -->
     <h2>Personalien</h2>
     <div class="form-group">
-        <label>Nutzer-ID (optional)</label>
+        <label>Nutzer-ID (optional, nur bestehende IDs)</label>
         <input type="number" name="nid" id="nid" placeholder="Bestehende Nutzer-ID eingeben" value="{{ nutzer.nid if nutzer else '' }}">
+        <span id="nid-error" class="error" style="display:none;">Diese ID existiert nicht!</span>
     </div>
     <div class="form-group">
         <label>Vorname</label>
@@ -87,19 +88,35 @@
     <button type="submit">Buchung bestätigen</button>
 </form>
 
-<!-- JS für automatisches Ausfüllen -->
+<!-- JS für automatische Nutzer-Auswahl -->
 <script>
 document.getElementById("nid").addEventListener("blur", function() {
     let nid = this.value;
-    if (!nid) return;
+    let errorElem = document.getElementById("nid-error");
+
+    if (!nid) {
+        errorElem.style.display = "none";
+        return; // leer → neuer Nutzer
+    }
 
     fetch(`/get_nutzer/${nid}`)
     .then(response => response.json())
     .then(data => {
-        document.getElementById("vorname").value = data.vorname || "";
-        document.getElementById("nachname").value = data.nachname || "";
-        document.getElementById("geburtsdatum").value = data.geburtsdatum || "";
-        document.getElementById("email").value = data.email || "";
+        if (!data.vorname) {
+            // ID existiert nicht
+            errorElem.style.display = "block";
+            document.getElementById("vorname").value = "";
+            document.getElementById("nachname").value = "";
+            document.getElementById("geburtsdatum").value = "";
+            document.getElementById("email").value = "";
+        } else {
+            // ID existiert → Felder ausfüllen
+            errorElem.style.display = "none";
+            document.getElementById("vorname").value = data.vorname || "";
+            document.getElementById("nachname").value = data.nachname || "";
+            document.getElementById("geburtsdatum").value = data.geburtsdatum || "";
+            document.getElementById("email").value = data.email || "";
+        }
     });
 });
 </script>
