@@ -174,7 +174,6 @@ def buchen():
 
 # java script 
 @app.route("/get_nutzer/<int:nid>")
-@login_required
 def get_nutzer(nid):
     user = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True)
     if not user:
