@@ -17,19 +17,16 @@
 </head>
 <body>
 
-<!-- Header mit Logo -->
 <header>
     <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="max-width:150px;">
     <h1>Tennisplatz-Buchungssystem</h1>
 </header>
 
-<!-- Formular -->
 <form method="POST" action="{{ url_for('buchen') }}">
     {% if fehler %}
         <p class="error">{{ fehler }}</p>
     {% endif %}
 
-    <!-- Personalien -->
     <h2>Personalien</h2>
     <div class="form-group">
         <label>Nutzer-ID (optional, nur bestehende IDs)</label>
@@ -53,22 +50,20 @@
         <input type="email" name="email" id="email" value="{{ nutzer.email if nutzer else '' }}" required>
     </div>
 
-    <!-- Buchungsdetails -->
     <h2>Buchungsdetails</h2>
     <div class="form-group">
         <label>Tennisanlage</label>
-        <select name="tennisanlage" required>
-            <option>-- bitte wählen --</option>
-            <option>Standort A</option>
-            <option>Standort B</option>
+        <select name="tennisanlage" id="tennisanlage" required>
+            <option value="">-- bitte wählen --</option>
+            {% for anlage in anlagen %}
+                <option value="{{ anlage }}">{{ anlage }}</option>
+            {% endfor %}
         </select>
     </div>
     <div class="form-group">
         <label>Platznummer</label>
-        <select name="platznummer" required>
-            <option>-- bitte wählen --</option>
-            <option>1</option>
-            <option>2</option>
+        <select name="platznummer" id="platznummer" required>
+            <option value="">-- bitte wählen --</option>
         </select>
     </div>
     <div class="form-group">
@@ -84,11 +79,9 @@
         <input type="time" name="ende" required>
     </div>
 
-    <!-- Button -->
     <button type="submit">Buchung bestätigen</button>
 </form>
 
-<!-- JS für automatische Nutzer-Auswahl -->
 <script>
 document.getElementById("nid").addEventListener("blur", function() {
     let nid = this.value;
@@ -96,21 +89,19 @@ document.getElementById("nid").addEventListener("blur", function() {
 
     if (!nid) {
         errorElem.style.display = "none";
-        return; // leer → neuer Nutzer
+        return;
     }
 
     fetch(`/get_nutzer/${nid}`)
     .then(response => response.json())
     .then(data => {
         if (!data.vorname) {
-            // ID existiert nicht
             errorElem.style.display = "block";
             document.getElementById("vorname").value = "";
             document.getElementById("nachname").value = "";
             document.getElementById("geburtsdatum").value = "";
             document.getElementById("email").value = "";
         } else {
-            // ID existiert → Felder ausfüllen
             errorElem.style.display = "none";
             document.getElementById("vorname").value = data.vorname || "";
             document.getElementById("nachname").value = data.nachname || "";
@@ -119,9 +110,25 @@ document.getElementById("nid").addEventListener("blur", function() {
         }
     });
 });
+
+// Dynamisches Laden der Platznummern abhängig von Tennisanlage
+const allePlaetze = {{ alle_plaetze|tojson }};
+const anlageSelect = document.getElementById("tennisanlage");
+const platzSelect = document.getElementById("platznummer");
+
+anlageSelect.addEventListener("change", function() {
+    const selectedAnlage = this.value;
+    const plaetze = allePlaetze.filter(p => p.tennisanlage === selectedAnlage);
+    platzSelect.innerHTML = '<option value="">-- bitte wählen --</option>';
+    plaetze.forEach(p => {
+        const option = document.createElement("option");
+        option.value = p.platznummer;
+        option.textContent = p.platznummer;
+        platzSelect.appendChild(option);
+    });
+});
 </script>
 
-<!-- Footer mit Impressum -->
 <footer>
     <p>
         Impressum<br>

@@ -112,16 +112,21 @@ def index():
 def buchen():
     nutzer = {}
     fehler = None
+
+    # Alle Plätze aus DB holen
     alle_plaetze = db_read("SELECT * FROM tennisplatz ORDER BY tennisanlage, platznummer")
+    # Alle Tennisanlagen extrahieren (ohne Duplikate)
     anlagen = sorted({p["tennisanlage"] for p in alle_plaetze})
 
     if request.method == "POST":
+        # Nutzer per ID abrufen
         nid = request.form.get("nid")
         if nid:
             nutzer = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True) or {}
             if not nutzer:
                 fehler = "Diese Nutzer-ID existiert nicht!"
 
+        # Neuer Nutzer
         if not nutzer:
             vorname = request.form.get("vorname")
             nachname = request.form.get("nachname")
@@ -136,17 +141,21 @@ def buchen():
             else:
                 fehler = "Bitte alle Personalien ausfüllen."
 
+        # Buchung speichern
         if nutzer and not fehler:
             tennisanlage = request.form.get("tennisanlage")
             platznummer = request.form.get("platznummer")
             spieldatum = request.form.get("spieldatum")
             beginn = request.form.get("beginn")
             ende = request.form.get("ende")
+
+            # Platz aus DB suchen
             platz = db_read(
                 "SELECT * FROM tennisplatz WHERE tennisanlage=%s AND platznummer=%s",
                 (tennisanlage, platznummer),
                 single=True
             )
+
             if not platz:
                 fehler = "Tennisplatz nicht gefunden."
             elif spieldatum and beginn and ende:
@@ -158,11 +167,13 @@ def buchen():
             else:
                 fehler = "Bitte alle Buchungsdetails ausfüllen."
 
-    return render_template("buchen.html",
-                           nutzer=nutzer,
-                           fehler=fehler,
-                           anlagen=anlagen,
-                           alle_plaetze=alle_plaetze)
+    return render_template(
+        "buchen.html",
+        nutzer=nutzer,
+        fehler=fehler,
+        anlagen=anlagen,
+        alle_plaetze=alle_plaetze
+    )
 
 
 # java script 
