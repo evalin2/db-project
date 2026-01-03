@@ -281,7 +281,7 @@ def buchen():
             from datetime import datetime, timedelta
             dauer = datetime.combine(date.today(), ende_time) - datetime.combine(date.today(), beginn_time)
             if dauer > timedelta(hours=1):
-                fehler = "Die maximale Buchungsdauer beträgt 1 Stunde (60 Minuten)."
+                fehler = "Die maximale Buchungsdauer beträgt 1 Stunde."
                 form_data['beginn'] = ''
                 form_data['ende'] = ''
                 return render_template(
