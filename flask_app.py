@@ -358,7 +358,7 @@ def buchen():
             from datetime import datetime, timedelta
             dauer = datetime.combine(date.today(), ende_time) - datetime.combine(date.today(), beginn_time)
             if dauer > timedelta(hours=1):
-                fehler = "Die maximale Buchungsdauer beträgt 1 Stunde."
+                fehler = "Die maximale Buchungsdauer beträgt 1 Stunde (60 Minuten)."
                 form_data['beginn'] = ''
                 form_data['ende'] = ''
                 return render_template(
@@ -436,10 +436,29 @@ def buchen():
                     "INSERT INTO buchung (nid, tid, spieldatum, spielbeginn, spielende) VALUES (%s,%s,%s,%s,%s)",
                     (nutzer["nid"], platz["tid"], spieldatum, beginn, ende)
                 )
-                # NID in Session speichern für Bestätigungsseite
-                session['letzter_nutzer_nid'] = nutzer["nid"]
-                session['letzter_nutzer_vorname'] = nutzer["vorname"]
-                session['letzter_nutzer_nachname'] = nutzer["nachname"]
+                
+                # Buchungsnummer abrufen (die gerade erstellte Buchung)
+                letzte_buchung = db_read(
+                    "SELECT * FROM buchung WHERE nid=%s ORDER BY buchungsnummer DESC LIMIT 1",
+                    (nutzer["nid"],),
+                    single=True
+                )
+                
+                # Alle Daten in Session speichern für Bestätigungsseite
+                from datetime import datetime
+                session['buchung_details'] = {
+                    'buchungsnummer': letzte_buchung['buchungsnummer'],
+                    'nid': nutzer["nid"],
+                    'vorname': nutzer["vorname"],
+                    'nachname': nutzer["nachname"],
+                    'email': nutzer.get("email", ""),
+                    'tennisanlage': tennisanlage,
+                    'platznummer': platznummer,
+                    'spieldatum': spieldatum,
+                    'spielbeginn': str(letzte_buchung['spielbeginn']),
+                    'spielende': str(letzte_buchung['spielende']),
+                    'buchungszeitpunkt': datetime.now().strftime("%d.%m.%Y um %H:%M Uhr")
+                }
                 
                 return redirect(url_for("bbestätigt"))
             except Exception as e:
@@ -487,11 +506,24 @@ def get_nutzer(nid):
 @app.route("/bbestätigt")
 @login_required
 def bbestätigt():
-    nid = session.get('letzter_nutzer_nid')
-    vorname = session.get('letzter_nutzer_vorname')
-    nachname = session.get('letzter_nutzer_nachname')
+    buchung = session.get('buchung_details', {})
     
-    return render_template("bbestätigt.html", nid=nid, vorname=vorname, nachname=nachname)
+    if not buchung:
+        return redirect(url_for("buchen"))
+    
+    return render_template("bbestätigt.html", 
+        buchungsnummer=buchung.get('buchungsnummer'),
+        nid=buchung.get('nid'),
+        vorname=buchung.get('vorname'),
+        nachname=buchung.get('nachname'),
+        email=buchung.get('email'),
+        tennisanlage=buchung.get('tennisanlage'),
+        platznummer=buchung.get('platznummer'),
+        spieldatum=buchung.get('spieldatum'),
+        spielbeginn=buchung.get('spielbeginn'),
+        spielende=buchung.get('spielende'),
+        buchungszeitpunkt=buchung.get('buchungszeitpunkt')
+    )
 
 @app.route("/stornieren")
 @login_required
