@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Buchung bestätigt</title>
+    <title>Buchung erfasst</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body { 
@@ -32,12 +32,31 @@
             border-radius: 5px;
             padding: 20px;
             margin: 20px 0;
+            text-align: left;
         }
-        .nid-highlight {
-            font-size: 24px;
+        .info-row {
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #555;
+            display: inline-block;
+            width: 150px;
+        }
+        .info-value {
+            color: #2196F3;
+            font-weight: bold;
+        }
+        .buchungsnummer-highlight {
+            font-size: 28px;
             font-weight: bold;
             color: #2196F3;
-            margin: 10px 0;
+            margin: 15px 0;
         }
         .buttons {
             margin-top: 30px;
@@ -49,6 +68,8 @@
             text-decoration: none;
             border-radius: 5px;
             font-weight: bold;
+            cursor: pointer;
+            border: none;
         }
         .btn-primary {
             background-color: #4CAF50;
@@ -58,36 +79,156 @@
             background-color: #2196F3;
             color: white;
         }
+        .btn-pdf {
+            background-color: #FF5722;
+            color: white;
+        }
         .btn:hover {
             opacity: 0.8;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
 <div class="success-box">
     <div class="success-icon">✓</div>
-    <h1>Buchung erfolgreich!</h1>
+    <h1>Buchung erfasst!</h1>
     <p>Ihre Tennisplatz-Buchung wurde erfolgreich gespeichert.</p>
     
-    {% if nid %}
     <div class="info-box">
-        <h3>Ihre Nutzer-Informationen</h3>
-        <p><strong>Name:</strong> {{ vorname }} {{ nachname }}</p>
-        <p><strong>Ihre Nutzer-ID:</strong></p>
-        <div class="nid-highlight">{{ nid }}</div>
-        <p style="font-size: 14px; color: #666; margin-top: 15px;">
-            💡 Merken Sie sich diese Nummer! Bei Ihrer nächsten Buchung können Sie einfach 
-            Ihre Nutzer-ID eingeben und müssen Ihre Daten nicht erneut ausfüllen.
-        </p>
+        <h3 style="text-align: center; margin-top: 0;">Buchungsdetails</h3>
+        
+        <div class="info-row">
+            <span class="info-label">Buchungsnummer:</span>
+            <span class="buchungsnummer-highlight">{{ buchungsnummer }}</span>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label">Name:</span>
+            <span class="info-value">{{ vorname }} {{ nachname }}</span>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label">Nutzer-ID:</span>
+            <span class="info-value">{{ nid }}</span>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label">E-Mail:</span>
+            <span class="info-value">{{ email }}</span>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label">Tennisanlage:</span>
+            <span class="info-value">{{ tennisanlage }}</span>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label">Platznummer:</span>
+            <span class="info-value">{{ platznummer }}</span>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label">Spieldatum:</span>
+            <span class="info-value">{{ spieldatum }}</span>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label">Spielzeit:</span>
+            <span class="info-value">{{ spielbeginn }} - {{ spielende }}</span>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label">Buchungszeitpunkt:</span>
+            <span class="info-value">{{ buchungszeitpunkt }}</span>
+        </div>
     </div>
-    {% endif %}
     
     <div class="buttons">
+        <button onclick="generatePDF()" class="btn btn-pdf">📄 PDF herunterladen</button>
         <a href="{{ url_for('buchen') }}" class="btn btn-primary">Weitere Buchung</a>
         <a href="{{ url_for('index') }}" class="btn btn-secondary">Zur Startseite</a>
     </div>
 </div>
+
+<script>
+function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // Logo-Bereich (Platzhalter - du kannst später ein echtes Logo einfügen)
+    doc.setFillColor(76, 175, 80);
+    doc.rect(15, 15, 180, 30, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(28);
+    doc.setFont(undefined, 'bold');
+    doc.text('cour+', 105, 28, { align: 'center' });
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'normal');
+    doc.text('Tennisplatz-Buchungssystem', 105, 38, { align: 'center' });
+    
+    // Überschrift
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(20);
+    doc.setFont(undefined, 'bold');
+    doc.text('Buchungsbestätigung', 105, 60, { align: 'center' });
+    
+    // Buchungsnummer hervorgehoben
+    doc.setFontSize(16);
+    doc.setTextColor(33, 150, 243);
+    doc.text('Buchungsnummer: {{ buchungsnummer }}', 105, 75, { align: 'center' });
+    
+    // Inhalt
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(12);
+    doc.setFont(undefined, 'normal');
+    
+    let y = 95;
+    const lineHeight = 10;
+    
+    // Personalien
+    doc.setFont(undefined, 'bold');
+    doc.text('Personalien:', 20, y);
+    y += lineHeight;
+    doc.setFont(undefined, 'normal');
+    doc.text('Name: {{ vorname }} {{ nachname }}', 20, y);
+    y += lineHeight;
+    doc.text('Nutzer-ID: {{ nid }}', 20, y);
+    y += lineHeight;
+    doc.text('E-Mail: {{ email }}', 20, y);
+    y += lineHeight * 1.5;
+    
+    // Buchungsdetails
+    doc.setFont(undefined, 'bold');
+    doc.text('Buchungsdetails:', 20, y);
+    y += lineHeight;
+    doc.setFont(undefined, 'normal');
+    doc.text('Tennisanlage: {{ tennisanlage }}', 20, y);
+    y += lineHeight;
+    doc.text('Platznummer: {{ platznummer }}', 20, y);
+    y += lineHeight;
+    doc.text('Spieldatum: {{ spieldatum }}', 20, y);
+    y += lineHeight;
+    doc.text('Spielzeit: {{ spielbeginn }} - {{ spielende }}', 20, y);
+    y += lineHeight * 1.5;
+    
+    // Buchungszeitpunkt
+    doc.setFont(undefined, 'bold');
+    doc.text('Zeitpunkt der Buchung:', 20, y);
+    y += lineHeight;
+    doc.setFont(undefined, 'normal');
+    doc.text('{{ buchungszeitpunkt }}', 20, y);
+    
+    // Footer
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt', 105, 280, { align: 'center' });
+    
+    // PDF speichern
+    doc.save('Buchungsbestaetigung_{{ buchungsnummer }}.pdf');
+}
+</script>
 
 </body>
 </html>
