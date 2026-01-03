@@ -107,6 +107,7 @@ def index():
     return render_template("index.html")
 
 # buchen
+# buchen Route - Ersetze die bestehende /buchen Route mit dieser Version
 @app.route("/buchen", methods=["GET", "POST"])
 @login_required
 def buchen():
@@ -119,53 +120,112 @@ def buchen():
     anlagen = sorted({p["tennisanlage"] for p in alle_plaetze})
 
     if request.method == "POST":
-        # Nutzer per ID abrufen
+        # 1. NUTZER VERARBEITEN
         nid = request.form.get("nid")
+        
         if nid:
-            nutzer = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True) or {}
+            # Bestehender Nutzer
+            nutzer = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True)
             if not nutzer:
                 fehler = "Diese Nutzer-ID existiert nicht!"
-
-        # Neuer Nutzer
-        if not nutzer:
-            vorname = request.form.get("vorname")
-            nachname = request.form.get("nachname")
-            geburtsdatum = request.form.get("geburtsdatum")
-            email = request.form.get("email")
-            if vorname and nachname and email:
-                db_write(
-                    "INSERT INTO nutzer (vorname, nachname, geburtsdatum, email) VALUES (%s,%s,%s,%s)",
-                    (vorname, nachname, geburtsdatum, email)
+                return render_template(
+                    "buchen.html",
+                    nutzer={},
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze
                 )
-                nutzer = db_read("SELECT * FROM nutzer WHERE email=%s", (email,), single=True)
-            else:
-                fehler = "Bitte alle Personalien ausfüllen."
+        else:
+            # Neuer Nutzer erstellen
+            vorname = request.form.get("vorname", "").strip()
+            nachname = request.form.get("nachname", "").strip()
+            geburtsdatum = request.form.get("geburtsdatum") or None
+            email = request.form.get("email", "").strip()
+            
+            if not vorname or not nachname or not email:
+                fehler = "Bitte alle Pflichtfelder (*) ausfüllen."
+                return render_template(
+                    "buchen.html",
+                    nutzer={},
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze
+                )
+            
+            # Nutzer in DB speichern
+            db_write(
+                "INSERT INTO nutzer (vorname, nachname, geburtsdatum, email) VALUES (%s,%s,%s,%s)",
+                (vorname, nachname, geburtsdatum, email)
+            )
+            # Neu erstellten Nutzer abrufen
+            nutzer = db_read("SELECT * FROM nutzer WHERE email=%s", (email,), single=True)
 
-        # Buchung speichern
-        if nutzer and not fehler:
-            tennisanlage = request.form.get("tennisanlage")
-            platznummer = request.form.get("platznummer")
+        # 2. BUCHUNG VERARBEITEN
+        if nutzer:
+            tennisanlage = request.form.get("tennisanlage", "").strip()
+            platznummer = request.form.get("platznummer", "").strip()
             spieldatum = request.form.get("spieldatum")
             beginn = request.form.get("beginn")
             ende = request.form.get("ende")
 
-            # Platz aus DB suchen
+            # Validierung
+            if not tennisanlage or not platznummer or not spieldatum or not beginn or not ende:
+                fehler = "Bitte alle Buchungsdetails ausfüllen."
+                return render_template(
+                    "buchen.html",
+                    nutzer=nutzer,
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze
+                )
+
+            # Tennisplatz aus DB suchen
             platz = db_read(
                 "SELECT * FROM tennisplatz WHERE tennisanlage=%s AND platznummer=%s",
-                (tennisanlage, platznummer),
+                (tennisanlage, int(platznummer)),
                 single=True
             )
 
             if not platz:
-                fehler = "Tennisplatz nicht gefunden."
-            elif spieldatum and beginn and ende:
-                db_write(
-                    "INSERT INTO buchung (nid, tid, spieldatum, spielbeginn, spielende) VALUES (%s,%s,%s,%s,%s)",
-                    (nutzer["nid"], platz["tid"], spieldatum, beginn, ende)
+                fehler = f"Tennisplatz '{tennisanlage}' mit Platznummer {platznummer} existiert nicht in der Datenbank!"
+                return render_template(
+                    "buchen.html",
+                    nutzer=nutzer,
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze
                 )
-                return redirect(url_for("bbestätigt"))
-            else:
-                fehler = "Bitte alle Buchungsdetails ausfüllen."
+
+            # Prüfen ob Platz zur gewählten Zeit bereits gebucht ist
+            konflikt = db_read(
+                """SELECT * FROM buchung 
+                   WHERE tid=%s AND spieldatum=%s 
+                   AND (
+                       (spielbeginn < %s AND spielende > %s) OR
+                       (spielbeginn < %s AND spielende > %s) OR
+                       (spielbeginn >= %s AND spielende <= %s)
+                   )""",
+                (platz["tid"], spieldatum, ende, beginn, beginn, ende, beginn, ende),
+                single=True
+            )
+
+            if konflikt:
+                fehler = "Dieser Platz ist zu dieser Zeit bereits gebucht!"
+                return render_template(
+                    "buchen.html",
+                    nutzer=nutzer,
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze
+                )
+
+            # Buchung speichern
+            db_write(
+                "INSERT INTO buchung (nid, tid, spieldatum, spielbeginn, spielende) VALUES (%s,%s,%s,%s,%s)",
+                (nutzer["nid"], platz["tid"], spieldatum, beginn, ende)
+            )
+            
+            return redirect(url_for("bbestätigt"))
 
     return render_template(
         "buchen.html",
