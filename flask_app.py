@@ -109,31 +109,61 @@ def index():
 @login_required
 def buchen():
     if request.method == "POST":
-        # Daten aus dem Formular holen
+        # Personalien aus Formular
         vorname = request.form["vorname"]
         nachname = request.form["nachname"]
-        geburtsdatum = request.form.get("geburtsdatum")  # optional
+        geburtsdatum = request.form.get("geburtsdatum")
         email = request.form["email"]
-        spieldatum = request.form["spieldatum"]
-        beginn = request.form["beginn"]
-        ende = request.form["ende"]
+        nid = request.form.get("nid")  # optional
+
+        # 1️⃣ Prüfen, ob Nutzer existiert
+        user = None
+        if nid:
+            user = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True)
+
+        if not user:
+            user = db_read("SELECT * FROM nutzer WHERE email=%s", (email,), single=True)
+
+        # 2️⃣ Wenn Nutzer noch nicht existiert → anlegen
+        if not user:
+            db_write(
+                "INSERT INTO nutzer (vorname, nachname, geburtsdatum, email) VALUES (%s, %s, %s, %s)",
+                (vorname, nachname, geburtsdatum, email)
+            )
+            # neu erstelltes user-Objekt holen
+            user = db_read("SELECT * FROM nutzer WHERE email=%s", (email,), single=True)
+
+        # 3️⃣ Tennisplatz-ID ermitteln
         tennisanlage = request.form.get("tennisanlage")
         platznummer = request.form.get("platznummer")
 
-        # In die Datenbank schreiben
+        # tid aus tennisplatz-Tabelle holen
+        platz = db_read(
+            "SELECT * FROM tennisplatz WHERE tennisanlage=%s AND platznummer=%s",
+            (tennisanlage, platznummer),
+            single=True
+        )
+        if not platz:
+            return "Platz existiert nicht", 400
+
+        tid = platz["tid"]
+
+        # 4️⃣ Buchung eintragen
+        spieldatum = request.form["spieldatum"]
+        beginn = request.form["beginn"]
+        ende = request.form["ende"]
+
         db_write(
-            """INSERT INTO buchungen
-            (vorname, nachname, geburtsdatum, email, spieldatum, beginn, ende, tennisanlage, platznummer)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """,
-            (vorname, nachname, geburtsdatum, email, spieldatum, beginn, ende, tennisanlage, platznummer)
+            """INSERT INTO buchung (nid, tid, spieldatum, spielbeginn, spielende)
+               VALUES (%s, %s, %s, %s, %s)""",
+            (user["nid"], tid, spieldatum, beginn, ende)
         )
 
-        # Zur Bestätigungsseite weiterleiten
         return redirect(url_for("bbestätigt"))
 
     # GET → Formular anzeigen
     return render_template("buchen.html")
+
 
 @app.route("/bbestätigt")
 @login_required
