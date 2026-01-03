@@ -293,6 +293,20 @@ def buchen():
             oeffnung = time(7, 0)
             schliessung = time(20, 0)
 
+            # Prüfen ob Zeiten auf volle oder halbe Stunden sind
+            if (beginn_time.minute not in [0, 30]) or (ende_time.minute not in [0, 30]):
+                fehler = "Buchungen sind nur zu vollen oder halben Stunden möglich (z.B. 14:00 oder 14:30)."
+                form_data['beginn'] = ''
+                form_data['ende'] = ''
+                return render_template(
+                    "buchen.html",
+                    nutzer=nutzer,
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
+                )
+
             if beginn_time < oeffnung or ende_time > schliessung:
                 fehler = "Buchungen sind nur zwischen 7:00 und 20:00 Uhr möglich."
                 return render_template(
