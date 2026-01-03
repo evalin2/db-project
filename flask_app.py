@@ -106,7 +106,7 @@ def register():
 def index():
     return render_template("index.html")
 
-# buchen Route 
+# buchen Route - VEREINFACHTE VERSION
 @app.route("/buchen", methods=["GET", "POST"])
 @login_required
 def buchen():
@@ -289,14 +289,17 @@ def buchen():
                 """SELECT * FROM buchung 
                    WHERE tid = %s 
                    AND spieldatum = %s 
-                   AND spielbeginn < %s 
-                   AND spielende > %s""",
-                (platz["tid"], spieldatum, ende, beginn),
+                   AND NOT (spielende <= %s OR spielbeginn >= %s)""",
+                (platz["tid"], spieldatum, beginn, ende),
                 single=True
             )
 
             if konflikt:
-                fehler = "Dieser Platz ist zum gewählten Zeitpunkt nicht mehr verfügbar. Bitte wählen Sie einen anderen Zeitraum."
+                # Prüfen ob es der gleiche Nutzer ist
+                if konflikt["nid"] == nutzer["nid"]:
+                    fehler = "Sie haben für diesen Platz am gewählten Datum bereits eine Buchung."
+                else:
+                    fehler = "Dieser Platz ist zum gewählten Zeitpunkt nicht mehr verfügbar. Bitte wählen Sie einen anderen Zeitraum."
                 return render_template(
                     "buchen.html",
                     nutzer=nutzer,
