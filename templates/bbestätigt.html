@@ -2,57 +2,92 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Buchung erfasst</title>
+    <title>Buchung bestätigt</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px;
+            text-align: center;
+        }
+        .success-box {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            background-color: #f1f8f4;
+        }
+        .success-icon {
+            font-size: 60px;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        .info-box {
+            background-color: #e3f2fd;
+            border: 1px solid #2196F3;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .nid-highlight {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2196F3;
+            margin: 10px 0;
+        }
+        .buttons {
+            margin-top: 30px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            margin: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #2196F3;
+            color: white;
+        }
+        .btn:hover {
+            opacity: 0.8;
+        }
+    </style>
 </head>
 <body>
 
-<header>
-    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
-    <h1>Tennisplatz-Buchungssystem</h1>
-</header>
-
-<main class="form-container" style="text-align:center;">
-
-    <h2>Buchung erfasst</h2>
-
-    <div class="buchungs-info" style="margin:20px 0;">
-        <p><strong>Nutzer-ID:</strong> <span id="nid-display">{{ nutzer_id }}</span></p>
-        <p><strong>Buchungsnummer:</strong> <span id="buchungsnr">{{ buchungsnr }}</span></p>
+<div class="success-box">
+    <div class="success-icon">✓</div>
+    <h1>Buchung erfolgreich!</h1>
+    <p>Ihre Tennisplatz-Buchung wurde erfolgreich gespeichert.</p>
+    
+    {% if nid %}
+    <div class="info-box">
+        <h3>Ihre Nutzer-Informationen</h3>
+        <p><strong>Name:</strong> {{ vorname }} {{ nachname }}</p>
+        <p><strong>Ihre Nutzer-ID:</strong></p>
+        <div class="nid-highlight">{{ nid }}</div>
+        <p style="font-size: 14px; color: #666; margin-top: 15px;">
+            💡 Merken Sie sich diese Nummer! Bei Ihrer nächsten Buchung können Sie einfach 
+            Ihre Nutzer-ID eingeben und müssen Ihre Daten nicht erneut ausfüllen.
+        </p>
     </div>
-
-    <button class="confirm-button" id="download-pdf">Buchungsbestätigung herunterladen</button>
-
-</main>
-
-<footer>
-    <p>
-        Impressum<br>
-        Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt
-    </p>
-</footer>
-
-<script>
-document.getElementById("download-pdf").addEventListener("click", function () {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    const nid = document.getElementById("nid-display").textContent;
-    const buchungsnr = document.getElementById("buchungsnr").textContent;
-
-    doc.setFontSize(18);
-    doc.text("Buchungsbestätigung", 20, 20);
-
-    doc.setFontSize(14);
-    doc.text(`Nutzer-ID: ${nid}`, 20, 40);
-    doc.text(`Buchungsnummer: ${buchungsnr}`, 20, 50);
-    doc.text("Vielen Dank für Ihre Buchung!", 20, 70);
-
-    doc.save(`Buchung_${buchungsnr}.pdf`);
-});
-</script>
+    {% endif %}
+    
+    <div class="buttons">
+        <a href="{{ url_for('buchen') }}" class="btn btn-primary">Weitere Buchung</a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Zur Startseite</a>
+    </div>
+</div>
 
 </body>
 </html>
