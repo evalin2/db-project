@@ -158,6 +158,26 @@ def buchen():
                     alle_plaetze=alle_plaetze,
                     form_data=form_data
                 )
+            
+            # Altersüberprüfung für bestehende Nutzer
+            if nutzer.get('geburtsdatum'):
+                from datetime import date
+                geburtsdatum_date = nutzer['geburtsdatum']
+                if isinstance(geburtsdatum_date, str):
+                    geburtsdatum_date = date.fromisoformat(geburtsdatum_date)
+                heute = date.today()
+                alter = heute.year - geburtsdatum_date.year - ((heute.month, heute.day) < (geburtsdatum_date.month, geburtsdatum_date.day))
+                
+                if alter < 16:
+                    fehler = "Sie müssen mindestens 16 Jahre alt sein, um einen Tennisplatz zu buchen."
+                    return render_template(
+                        "buchen.html",
+                        nutzer={},
+                        fehler=fehler,
+                        anlagen=anlagen,
+                        alle_plaetze=alle_plaetze,
+                        form_data=form_data
+                    )
         else:
             # Neuer Nutzer erstellen
             vorname = form_data['vorname'].strip()
@@ -175,6 +195,24 @@ def buchen():
                     alle_plaetze=alle_plaetze,
                     form_data=form_data
                 )
+            
+            # Altersüberprüfung: Mindestens 16 Jahre alt
+            if geburtsdatum:
+                from datetime import date, timedelta
+                geburtsdatum_date = date.fromisoformat(geburtsdatum)
+                heute = date.today()
+                alter = heute.year - geburtsdatum_date.year - ((heute.month, heute.day) < (geburtsdatum_date.month, geburtsdatum_date.day))
+                
+                if alter < 16:
+                    fehler = "Sie müssen mindestens 16 Jahre alt sein, um einen Tennisplatz zu buchen."
+                    return render_template(
+                        "buchen.html",
+                        nutzer={},
+                        fehler=fehler,
+                        anlagen=anlagen,
+                        alle_plaetze=alle_plaetze,
+                        form_data=form_data
+                    )
             
             # Prüfen ob Email bereits existiert
             bestehender_nutzer = db_read("SELECT * FROM nutzer WHERE email=%s", (email,), single=True)
@@ -281,7 +319,7 @@ def buchen():
             from datetime import datetime, timedelta
             dauer = datetime.combine(date.today(), ende_time) - datetime.combine(date.today(), beginn_time)
             if dauer > timedelta(hours=1):
-                fehler = "Die maximale Buchungsdauer beträgt 1 Stunde."
+                fehler = "Die maximale Buchungsdauer beträgt 1 Stunde (60 Minuten)."
                 form_data['beginn'] = ''
                 form_data['ende'] = ''
                 return render_template(
