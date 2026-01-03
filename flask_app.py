@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, redirect, render_template, request, url_for, jsonify, session
 from dotenv import load_dotenv
 import os
 import git
@@ -8,14 +8,13 @@ from db import db_read, db_write
 from auth import login_manager, authenticate, register_user
 from flask_login import login_user, logout_user, login_required, current_user
 import logging
-from flask import jsonify
 
 logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
 )
 
-# Load .env variablescf
+# Load .env variables
 load_dotenv()
 W_SECRET = os.getenv("W_SECRET")
 
@@ -101,12 +100,18 @@ def register():
         footer_link_label="Einloggen"
     )
 
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("login"))
+
 @app.route("/")
 @login_required
 def index():
     return render_template("index.html")
 
-# buchen Route - VEREINFACHTE VERSION
+# buchen
 @app.route("/buchen", methods=["GET", "POST"])
 @login_required
 def buchen():
@@ -146,7 +151,7 @@ def buchen():
         nid = form_data['nid']
         
         if nid:
-            # Bestehender Nutzer
+            # Bestehender Nutzer über NID laden
             nutzer = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True)
             if not nutzer:
                 fehler = "Diese Nutzer-ID existiert nicht!"
@@ -165,8 +170,11 @@ def buchen():
                 geburtsdatum_date = nutzer['geburtsdatum']
                 if isinstance(geburtsdatum_date, str):
                     geburtsdatum_date = date.fromisoformat(geburtsdatum_date)
+                
                 heute = date.today()
-                alter = heute.year - geburtsdatum_date.year - ((heute.month, heute.day) < (geburtsdatum_date.month, geburtsdatum_date.day))
+                alter = heute.year - geburtsdatum_date.year
+                if (heute.month, heute.day) < (geburtsdatum_date.month, geburtsdatum_date.day):
+                    alter -= 1
                 
                 if alter < 16:
                     fehler = "Sie müssen mindestens 16 Jahre alt sein, um einen Tennisplatz zu buchen."
@@ -198,10 +206,12 @@ def buchen():
             
             # Altersüberprüfung: Mindestens 16 Jahre alt
             if geburtsdatum:
-                from datetime import date, timedelta
+                from datetime import date
                 geburtsdatum_date = date.fromisoformat(geburtsdatum)
                 heute = date.today()
-                alter = heute.year - geburtsdatum_date.year - ((heute.month, heute.day) < (geburtsdatum_date.month, geburtsdatum_date.day))
+                alter = heute.year - geburtsdatum_date.year
+                if (heute.month, heute.day) < (geburtsdatum_date.month, geburtsdatum_date.day):
+                    alter -= 1
                 
                 if alter < 16:
                     fehler = "Sie müssen mindestens 16 Jahre alt sein, um einen Tennisplatz zu buchen."
@@ -214,42 +224,36 @@ def buchen():
                         form_data=form_data
                     )
             
-            # Prüfen ob Email bereits existiert
+            # Prüfen ob Email bereits existiert (anderer Nutzer mit gleicher Email)
             bestehender_nutzer = db_read("SELECT * FROM nutzer WHERE email=%s", (email,), single=True)
             if bestehender_nutzer:
-                fehler = f"Diese E-Mail-Adresse ist bereits registriert (Nutzer-ID: {bestehender_nutzer['nid']}). Bitte geben Sie Ihre Nutzer-ID ein."
-                return render_template(
-                    "buchen.html",
-                    nutzer={},
-                    fehler=fehler,
-                    anlagen=anlagen,
-                    alle_plaetze=alle_plaetze,
-                    form_data=form_data
-                )
-            
-            # Leeres Geburtsdatum auf None setzen
-            if not geburtsdatum:
-                geburtsdatum = None
-            
-            # Nutzer in DB speichern
-            try:
-                db_write(
-                    "INSERT INTO nutzer (vorname, nachname, geburtsdatum, email) VALUES (%s,%s,%s,%s)",
-                    (vorname, nachname, geburtsdatum, email)
-                )
-                # Neu erstellten Nutzer abrufen
-                nutzer = db_read("SELECT * FROM nutzer WHERE email=%s", (email,), single=True)
-            except Exception as e:
-                logging.error(f"Fehler beim Erstellen des Nutzers: {e}")
-                fehler = "Fehler beim Erstellen des Nutzers."
-                return render_template(
-                    "buchen.html",
-                    nutzer={},
-                    fehler=fehler,
-                    anlagen=anlagen,
-                    alle_plaetze=alle_plaetze,
-                    form_data=form_data
-                )
+                # Email existiert bereits - Nutzer hat seine NID vergessen
+                nutzer = bestehender_nutzer
+            else:
+                # Neuen Nutzer erstellen
+                # Leeres Geburtsdatum auf None setzen
+                if not geburtsdatum:
+                    geburtsdatum = None
+                
+                # Nutzer in DB speichern
+                try:
+                    db_write(
+                        "INSERT INTO nutzer (vorname, nachname, geburtsdatum, email) VALUES (%s,%s,%s,%s)",
+                        (vorname, nachname, geburtsdatum, email)
+                    )
+                    # Neu erstellten Nutzer abrufen
+                    nutzer = db_read("SELECT * FROM nutzer WHERE email=%s", (email,), single=True)
+                except Exception as e:
+                    logging.error(f"Fehler beim Erstellen des Nutzers: {e}")
+                    fehler = "Fehler beim Erstellen des Nutzers."
+                    return render_template(
+                        "buchen.html",
+                        nutzer={},
+                        fehler=fehler,
+                        anlagen=anlagen,
+                        alle_plaetze=alle_plaetze,
+                        form_data=form_data
+                    )
 
         # 2. BUCHUNG VERARBEITEN
         if nutzer:
@@ -411,6 +415,11 @@ def buchen():
                     "INSERT INTO buchung (nid, tid, spieldatum, spielbeginn, spielende) VALUES (%s,%s,%s,%s,%s)",
                     (nutzer["nid"], platz["tid"], spieldatum, beginn, ende)
                 )
+                # NID in Session speichern für Bestätigungsseite
+                session['letzter_nutzer_nid'] = nutzer["nid"]
+                session['letzter_nutzer_vorname'] = nutzer["vorname"]
+                session['letzter_nutzer_nachname'] = nutzer["nachname"]
+                
                 return redirect(url_for("bbestätigt"))
             except Exception as e:
                 logging.error(f"Fehler beim Speichern der Buchung: {e}")
@@ -433,25 +442,35 @@ def buchen():
         form_data=form_data
     )
 
-# java script 
+
+# Route für JavaScript - Nutzer-Daten abrufen
 @app.route("/get_nutzer/<int:nid>")
 @login_required
 def get_nutzer(nid):
-    user = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True)
-    if not user:
-        return jsonify({})
-    return jsonify({
-        "vorname": user["vorname"],
-        "nachname": user["nachname"],
-        "geburtsdatum": str(user["geburtsdatum"]) if user["geburtsdatum"] else "",
-        "email": user["email"]
-    })
+    try:
+        user = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True)
+        if not user:
+            return jsonify({"exists": False})
+        return jsonify({
+            "exists": True,
+            "vorname": user["vorname"] or "",
+            "nachname": user["nachname"] or "",
+            "geburtsdatum": str(user["geburtsdatum"]) if user.get("geburtsdatum") else "",
+            "email": user["email"] or ""
+        })
+    except Exception as e:
+        logging.error(f"Fehler bei get_nutzer: {e}")
+        return jsonify({"exists": False, "error": str(e)})
 
 
 @app.route("/bbestätigt")
 @login_required
 def bbestätigt():
-    return render_template("bbestätigt.html")
+    nid = session.get('letzter_nutzer_nid')
+    vorname = session.get('letzter_nutzer_vorname')
+    nachname = session.get('letzter_nutzer_nachname')
+    
+    return render_template("bbestätigt.html", nid=nid, vorname=vorname, nachname=nachname)
 
 @app.route("/stornieren")
 @login_required
