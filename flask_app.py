@@ -154,7 +154,8 @@ def buchen():
             # Bestehender Nutzer über NID laden
             nutzer = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True)
             if not nutzer:
-                fehler = "Diese Nutzer-ID existiert nicht!"
+                fehler = "Diese Nutzer-ID existiert nicht in der Datenbank."
+                form_data['nid'] = ''  # NID-Feld leeren
                 return render_template(
                     "buchen.html",
                     nutzer={},
@@ -275,13 +276,15 @@ def buchen():
                     form_data=form_data
                 )
 
-            # Prüfen ob Datum in der Zukunft liegt
-            from datetime import date, time
+            # Prüfen ob Datum in der Zukunft oder heute liegt
+            from datetime import date, time, datetime
             heute = date.today()
+            jetzt = datetime.now()
             spiel_datum = date.fromisoformat(spieldatum)
             
             if spiel_datum < heute:
                 fehler = "Buchungen sind nur für heute oder zukünftige Termine möglich."
+                form_data['spieldatum'] = ''
                 return render_template(
                     "buchen.html",
                     nutzer=nutzer,
@@ -299,7 +302,7 @@ def buchen():
 
             # Prüfen ob Zeiten auf volle oder halbe Stunden sind
             if (beginn_time.minute not in [0, 30]) or (ende_time.minute not in [0, 30]):
-                fehler = "Buchungen sind nur zu vollen oder halben Stunden möglich (z.B. 14:00 oder 14:30)."
+                fehler = "Buchungen sind nur zu vollen oder halben Stunden möglich (z.B. 14:00 oder 14:30). Zeiten wie 12:20 oder 15:45 sind nicht erlaubt."
                 form_data['beginn'] = ''
                 form_data['ende'] = ''
                 return render_template(
@@ -313,6 +316,8 @@ def buchen():
 
             if beginn_time < oeffnung or ende_time > schliessung:
                 fehler = "Buchungen sind nur zwischen 7:00 und 20:00 Uhr möglich."
+                form_data['beginn'] = ''
+                form_data['ende'] = ''
                 return render_template(
                     "buchen.html",
                     nutzer=nutzer,
@@ -321,6 +326,22 @@ def buchen():
                     alle_plaetze=alle_plaetze,
                     form_data=form_data
                 )
+
+            # Prüfen ob Startzeit in der Vergangenheit liegt (wenn heute gebucht wird)
+            if spiel_datum == heute:
+                aktuelle_zeit = jetzt.time()
+                if beginn_time <= aktuelle_zeit:
+                    fehler = "Die Startzeit liegt in der Vergangenheit. Bitte wählen Sie eine spätere Uhrzeit."
+                    form_data['beginn'] = ''
+                    form_data['ende'] = ''
+                    return render_template(
+                        "buchen.html",
+                        nutzer=nutzer,
+                        fehler=fehler,
+                        anlagen=anlagen,
+                        alle_plaetze=alle_plaetze,
+                        form_data=form_data
+                    )
 
             if beginn_time >= ende_time:
                 fehler = "Die Endzeit muss nach der Startzeit liegen."
