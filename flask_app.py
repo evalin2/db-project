@@ -105,9 +105,34 @@ def register():
 def index():
     return render_template("index.html")
 
-@app.route("/buchen")
+@app.route("/buchen", methods=["GET", "POST"])
 @login_required
 def buchen():
+    if request.method == "POST":
+        # Daten aus dem Formular holen
+        vorname = request.form["vorname"]
+        nachname = request.form["nachname"]
+        geburtsdatum = request.form.get("geburtsdatum")  # optional
+        email = request.form["email"]
+        spieldatum = request.form["spieldatum"]
+        beginn = request.form["beginn"]
+        ende = request.form["ende"]
+        tennisanlage = request.form.get("tennisanlage")
+        platznummer = request.form.get("platznummer")
+
+        # In die Datenbank schreiben
+        db_write(
+            """INSERT INTO buchungen
+            (vorname, nachname, geburtsdatum, email, spieldatum, beginn, ende, tennisanlage, platznummer)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """,
+            (vorname, nachname, geburtsdatum, email, spieldatum, beginn, ende, tennisanlage, platznummer)
+        )
+
+        # Zur Bestätigungsseite weiterleiten
+        return redirect(url_for("bbestätigt"))
+
+    # GET → Formular anzeigen
     return render_template("buchen.html")
 
 @app.route("/bbestätigt")
