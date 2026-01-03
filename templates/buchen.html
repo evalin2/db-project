@@ -30,24 +30,24 @@
     <h2>Personalien</h2>
     <div class="form-group">
         <label>Nutzer-ID (optional, nur bestehende IDs)</label>
-        <input type="number" name="nid" id="nid" placeholder="Bestehende Nutzer-ID eingeben" value="{{ nutzer.nid if nutzer else '' }}">
+        <input type="number" name="nid" id="nid" placeholder="Bestehende Nutzer-ID eingeben" value="{{ form_data.nid if form_data else (nutzer.nid if nutzer else '') }}">
         <span id="nid-error" class="error" style="display:none;">Diese ID existiert nicht!</span>
     </div>
     <div class="form-group">
         <label>Vorname *</label>
-        <input type="text" name="vorname" id="vorname" value="{{ nutzer.vorname if nutzer else '' }}" required>
+        <input type="text" name="vorname" id="vorname" value="{{ form_data.vorname if form_data else (nutzer.vorname if nutzer else '') }}" required>
     </div>
     <div class="form-group">
         <label>Nachname *</label>
-        <input type="text" name="nachname" id="nachname" value="{{ nutzer.nachname if nutzer else '' }}" required>
+        <input type="text" name="nachname" id="nachname" value="{{ form_data.nachname if form_data else (nutzer.nachname if nutzer else '') }}" required>
     </div>
     <div class="form-group">
         <label>Geburtsdatum</label>
-        <input type="date" name="geburtsdatum" id="geburtsdatum" value="{{ nutzer.geburtsdatum if nutzer else '' }}">
+        <input type="date" name="geburtsdatum" id="geburtsdatum" value="{{ form_data.geburtsdatum if form_data else (nutzer.geburtsdatum if nutzer else '') }}">
     </div>
     <div class="form-group">
         <label>E-Mail *</label>
-        <input type="email" name="email" id="email" value="{{ nutzer.email if nutzer else '' }}" required>
+        <input type="email" name="email" id="email" value="{{ form_data.email if form_data else (nutzer.email if nutzer else '') }}" required>
     </div>
 
     <h2>Buchungsdetails</h2>
