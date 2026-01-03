@@ -91,27 +91,40 @@ document.getElementById("nid").addEventListener("blur", function() {
     let nid = this.value;
     let errorElem = document.getElementById("nid-error");
 
+    // Wenn Feld leer ist, Felder leeren und kein Fehler
     if (!nid) {
         errorElem.style.display = "none";
+        document.getElementById("vorname").value = "";
+        document.getElementById("nachname").value = "";
+        document.getElementById("geburtsdatum").value = "";
+        document.getElementById("email").value = "";
         return;
     }
 
+    // Nutzer-Daten vom Server abrufen
     fetch(`/get_nutzer/${nid}`)
     .then(response => response.json())
     .then(data => {
-        if (!data.vorname) {
+        if (data.exists === false || !data.vorname) {
+            // Nutzer existiert nicht
             errorElem.style.display = "block";
             document.getElementById("vorname").value = "";
             document.getElementById("nachname").value = "";
             document.getElementById("geburtsdatum").value = "";
             document.getElementById("email").value = "";
         } else {
+            // Nutzer existiert - Felder automatisch ausfüllen
             errorElem.style.display = "none";
             document.getElementById("vorname").value = data.vorname || "";
             document.getElementById("nachname").value = data.nachname || "";
             document.getElementById("geburtsdatum").value = data.geburtsdatum || "";
             document.getElementById("email").value = data.email || "";
         }
+    })
+    .catch(error => {
+        console.error("Fehler beim Abrufen der Nutzerdaten:", error);
+        errorElem.textContent = "Fehler beim Abrufen der Nutzerdaten";
+        errorElem.style.display = "block";
     });
 });
 
