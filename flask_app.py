@@ -106,8 +106,7 @@ def register():
 def index():
     return render_template("index.html")
 
-# buchen
-# buchen Route - Ersetze die bestehende /buchen Route mit dieser Version
+# buchen Route 
 @app.route("/buchen", methods=["GET", "POST"])
 @login_required
 def buchen():
@@ -115,9 +114,17 @@ def buchen():
     fehler = None
 
     # Alle Plätze aus DB holen
-    alle_plaetze = db_read("SELECT * FROM tennisplatz ORDER BY tennisanlage, platznummer")
-    # Alle Tennisanlagen extrahieren (ohne Duplikate)
-    anlagen = sorted({p["tennisanlage"] for p in alle_plaetze})
+    try:
+        alle_plaetze = db_read("SELECT * FROM tennisplatz ORDER BY tennisanlage, platznummer")
+        if not alle_plaetze:
+            alle_plaetze = []
+        # Alle Tennisanlagen extrahieren (ohne Duplikate)
+        anlagen = sorted(list(set([p["tennisanlage"] for p in alle_plaetze])))
+    except Exception as e:
+        logging.error(f"Fehler beim Laden der Tennisplätze: {e}")
+        alle_plaetze = []
+        anlagen = []
+        fehler = "Fehler beim Laden der Tennisplätze."
 
     if request.method == "POST":
         # 1. NUTZER VERARBEITEN
@@ -139,7 +146,7 @@ def buchen():
             # Neuer Nutzer erstellen
             vorname = request.form.get("vorname", "").strip()
             nachname = request.form.get("nachname", "").strip()
-            geburtsdatum = request.form.get("geburtsdatum") or None
+            geburtsdatum = request.form.get("geburtsdatum")
             email = request.form.get("email", "").strip()
             
             if not vorname or not nachname or not email:
@@ -152,25 +159,52 @@ def buchen():
                     alle_plaetze=alle_plaetze
                 )
             
+            # Leeres Geburtsdatum auf None setzen
+            if not geburtsdatum:
+                geburtsdatum = None
+            
             # Nutzer in DB speichern
-            db_write(
-                "INSERT INTO nutzer (vorname, nachname, geburtsdatum, email) VALUES (%s,%s,%s,%s)",
-                (vorname, nachname, geburtsdatum, email)
-            )
-            # Neu erstellten Nutzer abrufen
-            nutzer = db_read("SELECT * FROM nutzer WHERE email=%s", (email,), single=True)
+            try:
+                db_write(
+                    "INSERT INTO nutzer (vorname, nachname, geburtsdatum, email) VALUES (%s,%s,%s,%s)",
+                    (vorname, nachname, geburtsdatum, email)
+                )
+                # Neu erstellten Nutzer abrufen
+                nutzer = db_read("SELECT * FROM nutzer WHERE email=%s", (email,), single=True)
+            except Exception as e:
+                logging.error(f"Fehler beim Erstellen des Nutzers: {e}")
+                fehler = "Fehler beim Erstellen des Nutzers. Möglicherweise existiert die E-Mail bereits."
+                return render_template(
+                    "buchen.html",
+                    nutzer={},
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze
+                )
 
         # 2. BUCHUNG VERARBEITEN
         if nutzer:
             tennisanlage = request.form.get("tennisanlage", "").strip()
-            platznummer = request.form.get("platznummer", "").strip()
+            platznummer_str = request.form.get("platznummer", "").strip()
             spieldatum = request.form.get("spieldatum")
             beginn = request.form.get("beginn")
             ende = request.form.get("ende")
 
             # Validierung
-            if not tennisanlage or not platznummer or not spieldatum or not beginn or not ende:
+            if not tennisanlage or not platznummer_str or not spieldatum or not beginn or not ende:
                 fehler = "Bitte alle Buchungsdetails ausfüllen."
+                return render_template(
+                    "buchen.html",
+                    nutzer=nutzer,
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze
+                )
+
+            try:
+                platznummer = int(platznummer_str)
+            except ValueError:
+                fehler = "Ungültige Platznummer."
                 return render_template(
                     "buchen.html",
                     nutzer=nutzer,
@@ -182,7 +216,7 @@ def buchen():
             # Tennisplatz aus DB suchen
             platz = db_read(
                 "SELECT * FROM tennisplatz WHERE tennisanlage=%s AND platznummer=%s",
-                (tennisanlage, int(platznummer)),
+                (tennisanlage, platznummer),
                 single=True
             )
 
@@ -196,21 +230,16 @@ def buchen():
                     alle_plaetze=alle_plaetze
                 )
 
-            # Prüfen ob Platz zur gewählten Zeit bereits gebucht ist
-            konflikt = db_read(
-                """SELECT * FROM buchung 
-                   WHERE tid=%s AND spieldatum=%s 
-                   AND (
-                       (spielbeginn < %s AND spielende > %s) OR
-                       (spielbeginn < %s AND spielende > %s) OR
-                       (spielbeginn >= %s AND spielende <= %s)
-                   )""",
-                (platz["tid"], spieldatum, ende, beginn, beginn, ende, beginn, ende),
-                single=True
-            )
-
-            if konflikt:
-                fehler = "Dieser Platz ist zu dieser Zeit bereits gebucht!"
+            # Buchung speichern
+            try:
+                db_write(
+                    "INSERT INTO buchung (nid, tid, spieldatum, spielbeginn, spielende) VALUES (%s,%s,%s,%s,%s)",
+                    (nutzer["nid"], platz["tid"], spieldatum, beginn, ende)
+                )
+                return redirect(url_for("bbestätigt"))
+            except Exception as e:
+                logging.error(f"Fehler beim Speichern der Buchung: {e}")
+                fehler = "Fehler beim Speichern der Buchung."
                 return render_template(
                     "buchen.html",
                     nutzer=nutzer,
@@ -219,14 +248,6 @@ def buchen():
                     alle_plaetze=alle_plaetze
                 )
 
-            # Buchung speichern
-            db_write(
-                "INSERT INTO buchung (nid, tid, spieldatum, spielbeginn, spielende) VALUES (%s,%s,%s,%s,%s)",
-                (nutzer["nid"], platz["tid"], spieldatum, beginn, ende)
-            )
-            
-            return redirect(url_for("bbestätigt"))
-
     return render_template(
         "buchen.html",
         nutzer=nutzer,
@@ -234,7 +255,6 @@ def buchen():
         anlagen=anlagen,
         alle_plaetze=alle_plaetze
     )
-
 
 # java script 
 @app.route("/get_nutzer/<int:nid>")
