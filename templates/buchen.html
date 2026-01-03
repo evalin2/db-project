@@ -3,19 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>Tennisplatz buchen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        header, footer { text-align: center; margin-bottom: 20px; }
+        .form-container { max-width: 600px; margin: 0 auto; }
+        h2, h3 { margin-top: 20px; }
+        label { display: block; margin-top: 10px; }
+        input, select, button { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        button { margin-top: 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+        p.fehler { color: red; }
+    </style>
 </head>
 <body>
 
 <header>
-    <img src="logo.png" alt="Logo">
+    <img src="logo.png" alt="Logo" style="max-height: 80px;">
     <h1>Tennisplatz-Buchungssystem</h1>
 </header>
 
 <main class="form-container">
 
     <h2>Tennisplatz buchen</h2>
+
     {% if fehler %}
-        <p style="color:red">{{ fehler }}</p>
+        <p class="fehler">{{ fehler }}</p>
     {% endif %}
 
     <form method="POST" action="{{ url_for('buchen') }}">
@@ -53,7 +66,7 @@
         <select name="platznummer" id="platznummer" required>
             <option value="">-- bitte wählen --</option>
             {% for p in alle_plaetze %}
-                <option data-anlage="{{ p.tennisanlage }}" value="{{ p.platznummer }}">{{ p.platznummer }} ({{ p.tennisanlage }})</option>
+                <option data-anlage="{{ p.tennisanlage }}" value="{{ p.platznummer }}">{{ p.platznummer }}</option>
             {% endfor %}
         </select>
 
@@ -78,7 +91,7 @@
 </footer>
 
 <script>
-// Automatische Feldausfüllung bei Nutzer-ID
+// Vorausfüllen der Personalien bei bestehender Nutzer-ID
 document.getElementById("nid").addEventListener("blur", function() {
     let nid = this.value;
     if (!nid) return;
@@ -93,10 +106,10 @@ document.getElementById("nid").addEventListener("blur", function() {
     });
 });
 
-// Filter Platznummer nach gewählter Anlage
+// Filter Platznummern nach gewählter Tennisanlage
 const tennisSelect = document.getElementById("tennisanlage");
 const platzSelect = document.getElementById("platznummer");
-const alleOptionen = Array.from(platzSelect.options);
+const alleOptionen = Array.from(platzSelect.querySelectorAll("option[data-anlage]"));
 
 tennisSelect.addEventListener("change", () => {
     const wert = tennisSelect.value;

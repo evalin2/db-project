@@ -119,21 +119,16 @@ def buchen():
 
     if request.method == "POST":
         nid = request.form.get("nid")
-
-        # Prüfen, ob Nutzer existiert
         if nid:
             nutzer = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True) or {}
             if not nutzer:
                 fehler = "Diese Nutzer-ID existiert nicht!"
-                nid = None
 
-        # Neuen Nutzer anlegen, falls keine ID oder nicht gefunden
         if not nutzer:
             vorname = request.form.get("vorname")
             nachname = request.form.get("nachname")
             geburtsdatum = request.form.get("geburtsdatum")
             email = request.form.get("email")
-
             if vorname and nachname and email:
                 db_write(
                     "INSERT INTO nutzer (vorname, nachname, geburtsdatum, email) VALUES (%s,%s,%s,%s)",
@@ -175,6 +170,7 @@ def buchen():
         anlagen=anlagen,
         alle_plaetze=alle_plaetze
     )
+
 
 # java script 
 @app.route("/get_nutzer/<int:nid>")
