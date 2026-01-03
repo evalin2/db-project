@@ -10,7 +10,7 @@
         form { max-width: 500px; margin: 0 auto; }
         .form-group { margin-top: 15px; }
         label { display: block; margin-bottom: 5px; }
-        input, select { width: 100%; padding: 5px; }
+        input, select { width: 100%; padding: 5px; box-sizing: border-box; }
         button { margin-top: 15px; padding: 10px 15px; }
         .error { color: red; }
     </style>
@@ -37,11 +37,11 @@
         <span id="nid-error" class="error" style="display:none;">Diese ID existiert nicht!</span>
     </div>
     <div class="form-group">
-        <label>Vorname</label>
+        <label>Vorname *</label>
         <input type="text" name="vorname" id="vorname" value="{{ nutzer.vorname if nutzer else '' }}" required>
     </div>
     <div class="form-group">
-        <label>Nachname</label>
+        <label>Nachname *</label>
         <input type="text" name="nachname" id="nachname" value="{{ nutzer.nachname if nutzer else '' }}" required>
     </div>
     <div class="form-group">
@@ -49,38 +49,37 @@
         <input type="date" name="geburtsdatum" id="geburtsdatum" value="{{ nutzer.geburtsdatum if nutzer else '' }}">
     </div>
     <div class="form-group">
-        <label>E-Mail</label>
+        <label>E-Mail *</label>
         <input type="email" name="email" id="email" value="{{ nutzer.email if nutzer else '' }}" required>
     </div>
 
     <!-- Buchungsdetails -->
     <h2>Buchungsdetails</h2>
     <div class="form-group">
-        <label>Tennisanlage</label>
-        <select name="tennisanlage" required>
-            <option>-- bitte wählen --</option>
-            <option>Standort A</option>
-            <option>Standort B</option>
+        <label>Tennisanlage *</label>
+        <select name="tennisanlage" id="tennisanlage" required>
+            <option value="">-- bitte wählen --</option>
+            {% for anlage in anlagen %}
+                <option value="{{ anlage }}">{{ anlage }}</option>
+            {% endfor %}
         </select>
     </div>
     <div class="form-group">
-        <label>Platznummer</label>
-        <select name="platznummer" required>
-            <option>-- bitte wählen --</option>
-            <option>1</option>
-            <option>2</option>
+        <label>Platznummer *</label>
+        <select name="platznummer" id="platznummer" required>
+            <option value="">-- zuerst Tennisanlage wählen --</option>
         </select>
     </div>
     <div class="form-group">
-        <label>Spieldatum</label>
+        <label>Spieldatum *</label>
         <input type="date" name="spieldatum" required>
     </div>
     <div class="form-group">
-        <label>Spielbeginn</label>
+        <label>Spielbeginn *</label>
         <input type="time" name="beginn" required>
     </div>
     <div class="form-group">
-        <label>Spielende</label>
+        <label>Spielende *</label>
         <input type="time" name="ende" required>
     </div>
 
@@ -88,8 +87,12 @@
     <button type="submit">Buchung bestätigen</button>
 </form>
 
-<!-- JS für automatische Nutzer-Auswahl -->
+<!-- JS für automatische Nutzer-Auswahl und dynamische Platznummern -->
 <script>
+// Alle Plätze als JSON im Frontend verfügbar machen
+const allePlaetze = {{ alle_plaetze | tojson }};
+
+// Nutzer-ID Validierung
 document.getElementById("nid").addEventListener("blur", function() {
     let nid = this.value;
     let errorElem = document.getElementById("nid-error");
@@ -117,6 +120,30 @@ document.getElementById("nid").addEventListener("blur", function() {
             document.getElementById("geburtsdatum").value = data.geburtsdatum || "";
             document.getElementById("email").value = data.email || "";
         }
+    });
+});
+
+// Dynamische Platznummern basierend auf gewählter Tennisanlage
+document.getElementById("tennisanlage").addEventListener("change", function() {
+    const gewaehlteAnlage = this.value;
+    const platznummerSelect = document.getElementById("platznummer");
+    
+    // Platznummer-Dropdown leeren
+    platznummerSelect.innerHTML = '<option value="">-- bitte wählen --</option>';
+    
+    if (!gewaehlteAnlage) {
+        return;
+    }
+    
+    // Plätze für die gewählte Anlage filtern
+    const verfuegbarePlaetze = allePlaetze.filter(p => p.tennisanlage === gewaehlteAnlage);
+    
+    // Platznummern hinzufügen
+    verfuegbarePlaetze.forEach(platz => {
+        const option = document.createElement("option");
+        option.value = platz.platznummer;
+        option.textContent = `Platz ${platz.platznummer} (${platz.belag})`;
+        platznummerSelect.appendChild(option);
     });
 });
 </script>
