@@ -104,43 +104,39 @@ def register():
 @login_required
 def index():
     return render_template("index.html")
-    
 
+# buchen
 @app.route("/buchen", methods=["GET", "POST"])
 @login_required
 def buchen():
-    nutzer = {}  # Daten zum vorausfüllen
+    nutzer = {}  # Daten für vorausgefüllte Felder
     fehler = None
 
     if request.method == "POST":
-        # Nutzer-ID vom Formular
         nid = request.form.get("nid")
 
+        # Prüfen, ob Nutzer existiert
         if nid:
-            # Prüfen ob Nutzer existiert
             nutzer = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True) or {}
-        
-        # Wenn keine existierende nid → neue Personalien
+
+        # Wenn kein bestehender Nutzer → neuen anlegen
         if not nutzer:
             vorname = request.form.get("vorname")
             nachname = request.form.get("nachname")
             geburtsdatum = request.form.get("geburtsdatum")
             email = request.form.get("email")
 
-            # Mindestens Vorname, Nachname, Email müssen ausgefüllt sein
             if vorname and nachname and email:
                 db_write(
-                    "INSERT INTO nutzer (vorname, nachname, geburtsdatum, email) VALUES (%s, %s, %s, %s)",
+                    "INSERT INTO nutzer (vorname, nachname, geburtsdatum, email) VALUES (%s,%s,%s,%s)",
                     (vorname, nachname, geburtsdatum, email)
                 )
-                # neu erstellten Nutzer laden
                 nutzer = db_read("SELECT * FROM nutzer WHERE email=%s", (email,), single=True)
             else:
                 fehler = "Bitte alle Personalien ausfüllen."
 
-        # Wenn nun ein Nutzer existiert → Buchung speichern
+        # Buchung speichern, wenn Platz ausgewählt
         if nutzer:
-            # Tennisplatz-ID aus Formular
             tennisanlage = request.form.get("tennisanlage")
             platznummer = request.form.get("platznummer")
             platz = db_read(
@@ -166,6 +162,20 @@ def buchen():
                     fehler = "Bitte alle Buchungsdetails ausfüllen."
 
     return render_template("buchen.html", nutzer=nutzer, fehler=fehler)
+
+# java script 
+@app.route("/get_nutzer/<int:nid>")
+@login_required
+def get_nutzer(nid):
+    user = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True)
+    if not user:
+        return {}
+    return {
+        "vorname": user["vorname"],
+        "nachname": user["nachname"],
+        "geburtsdatum": str(user["geburtsdatum"]) if user["geburtsdatum"] else "",
+        "email": user["email"]
+    }
 
 
 @app.route("/bbestätigt")

@@ -3,35 +3,33 @@
         <p style="color:red">{{ fehler }}</p>
     {% endif %}
 
-    <!-- Personalien -->
-    <label>Nutzer-ID (optional, nur für bestehende Nutzer)</label>
-    <input type="number" name="nid" value="{{ nutzer.nid if nutzer else '' }}">
+    <label>Nutzer-ID (optional)</label>
+    <input type="number" name="nid" id="nid" placeholder="Bestehende Nutzer-ID eingeben" value="{{ nutzer.nid if nutzer else '' }}">
 
     <label>Vorname</label>
-    <input type="text" name="vorname" value="{{ nutzer.vorname if nutzer else '' }}" required>
+    <input type="text" name="vorname" id="vorname" value="{{ nutzer.vorname if nutzer else '' }}" required>
 
     <label>Nachname</label>
-    <input type="text" name="nachname" value="{{ nutzer.nachname if nutzer else '' }}" required>
+    <input type="text" name="nachname" id="nachname" value="{{ nutzer.nachname if nutzer else '' }}" required>
 
     <label>Geburtsdatum</label>
-    <input type="date" name="geburtsdatum" value="{{ nutzer.geburtsdatum if nutzer else '' }}">
+    <input type="date" name="geburtsdatum" id="geburtsdatum" value="{{ nutzer.geburtsdatum if nutzer else '' }}">
 
     <label>E-Mail</label>
-    <input type="email" name="email" value="{{ nutzer.email if nutzer else '' }}" required>
+    <input type="email" name="email" id="email" value="{{ nutzer.email if nutzer else '' }}" required>
 
-    <!-- Buchungsdetails -->
     <label>Tennisanlage</label>
     <select name="tennisanlage" required>
         <option>-- bitte wählen --</option>
-        <option {% if nutzer and tennisanlage=='Standort A' %}selected{% endif %}>Standort A</option>
-        <option {% if nutzer and tennisanlage=='Standort B' %}selected{% endif %}>Standort B</option>
+        <option>Standort A</option>
+        <option>Standort B</option>
     </select>
 
     <label>Platznummer</label>
     <select name="platznummer" required>
         <option>-- bitte wählen --</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
+        <option>1</option>
+        <option>2</option>
     </select>
 
     <label>Spieldatum</label>
@@ -45,3 +43,26 @@
 
     <button type="submit">Buchung bestätigen</button>
 </form>
+
+<script>
+document.getElementById("nid").addEventListener("blur", function() {
+    let nid = this.value;
+    if (!nid) return;
+
+    fetch(`/get_nutzer/${nid}`)
+    .then(response => response.json())
+    .then(data => {
+        if (Object.keys(data).length > 0) {
+            document.getElementById("vorname").value = data.vorname;
+            document.getElementById("nachname").value = data.nachname;
+            document.getElementById("geburtsdatum").value = data.geburtsdatum;
+            document.getElementById("email").value = data.email;
+        } else {
+            document.getElementById("vorname").value = "";
+            document.getElementById("nachname").value = "";
+            document.getElementById("geburtsdatum").value = "";
+            document.getElementById("email").value = "";
+        }
+    });
+});
+</script>
