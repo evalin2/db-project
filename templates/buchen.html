@@ -1,67 +1,47 @@
-<main class="form-container">
-
 <form method="POST" action="{{ url_for('buchen') }}">
-
-    <h2>Tennisplatz buchen</h2>
+    {% if fehler %}
+        <p style="color:red">{{ fehler }}</p>
+    {% endif %}
 
     <!-- Personalien -->
-    <h3>Personalien</h3>
-    <div class="form-group">
-        <label>Vorname</label>
-        <input type="text" name="vorname" required>
-    </div>
-    <div class="form-group">
-        <label>Nachname</label>
-        <input type="text" name="nachname" required>
-    </div>
-    <div class="form-group">
-        <label>Geburtsdatum</label>
-        <input type="date" name="geburtsdatum">
-    </div>
-    <div class="form-group">
-        <label>E-Mail</label>
-        <input type="email" name="email" required>
-    </div>
-    <div class="form-group">
-        <label>Nutzer-ID (optional, leer lassen wenn neu)</label>
-        <input type="text" name="nid" id="nid" placeholder="Wird automatisch erstellt">
-    </div>
+    <label>Nutzer-ID (optional, nur für bestehende Nutzer)</label>
+    <input type="number" name="nid" value="{{ nutzer.nid if nutzer else '' }}">
+
+    <label>Vorname</label>
+    <input type="text" name="vorname" value="{{ nutzer.vorname if nutzer else '' }}" required>
+
+    <label>Nachname</label>
+    <input type="text" name="nachname" value="{{ nutzer.nachname if nutzer else '' }}" required>
+
+    <label>Geburtsdatum</label>
+    <input type="date" name="geburtsdatum" value="{{ nutzer.geburtsdatum if nutzer else '' }}">
+
+    <label>E-Mail</label>
+    <input type="email" name="email" value="{{ nutzer.email if nutzer else '' }}" required>
 
     <!-- Buchungsdetails -->
-    <h3>Buchungsdetails</h3>
-    <div class="form-group">
-        <label>Spieldatum</label>
-        <input type="date" name="spieldatum" required>
-    </div>
-    <div class="form-group">
-        <label>Spielbeginn</label>
-        <input type="time" name="beginn" required>
-    </div>
-    <div class="form-group">
-        <label>Spielende</label>
-        <input type="time" name="ende" required>
-    </div>
-    <div class="form-group">
-        <label>Tennisanlage</label>
-        <select name="tennisanlage" required>
-            <option>-- bitte wählen --</option>
-            <option>Standort A</option>
-            <option>Standort B</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label>Platznummer</label>
-        <select name="platznummer" required>
-            <option>-- bitte wählen --</option>
-            <option>1</option>
-            <option>2</option>
-        </select>
-    </div>
+    <label>Tennisanlage</label>
+    <select name="tennisanlage" required>
+        <option>-- bitte wählen --</option>
+        <option {% if nutzer and tennisanlage=='Standort A' %}selected{% endif %}>Standort A</option>
+        <option {% if nutzer and tennisanlage=='Standort B' %}selected{% endif %}>Standort B</option>
+    </select>
 
-    <button type="submit" class="confirm-button">
-        Buchung bestätigen
-    </button>
+    <label>Platznummer</label>
+    <select name="platznummer" required>
+        <option>-- bitte wählen --</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+    </select>
 
+    <label>Spieldatum</label>
+    <input type="date" name="spieldatum" required>
+
+    <label>Spielbeginn</label>
+    <input type="time" name="beginn" required>
+
+    <label>Spielende</label>
+    <input type="time" name="ende" required>
+
+    <button type="submit">Buchung bestätigen</button>
 </form>
-
-</main>
