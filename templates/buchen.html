@@ -68,15 +68,15 @@
     </div>
     <div class="form-group">
         <label>Spieldatum *</label>
-        <input type="date" name="spieldatum" required>
+        <input type="date" name="spieldatum" id="spieldatum" required>
     </div>
     <div class="form-group">
-        <label>Spielbeginn *</label>
-        <input type="time" name="beginn" required>
+        <label>Spielbeginn * (7:00 - 20:00 Uhr)</label>
+        <input type="time" name="beginn" min="07:00" max="20:00" required>
     </div>
     <div class="form-group">
-        <label>Spielende *</label>
-        <input type="time" name="ende" required>
+        <label>Spielende * (7:00 - 20:00 Uhr)</label>
+        <input type="time" name="ende" min="07:00" max="20:00" required>
     </div>
 
     <button type="submit">Buchung bestätigen</button>
@@ -85,6 +85,12 @@
 <script>
 // Plätze für JavaScript verfügbar machen
 const allePlaetze = {{ alle_plaetze | tojson | safe }};
+
+// Mindestdatum auf heute setzen
+document.addEventListener("DOMContentLoaded", function() {
+    const heute = new Date().toISOString().split('T')[0];
+    document.getElementById("spieldatum").setAttribute("min", heute);
+});
 
 // Nutzer-ID Validierung
 document.getElementById("nid").addEventListener("blur", function() {

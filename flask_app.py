@@ -201,6 +201,47 @@ def buchen():
                     alle_plaetze=alle_plaetze
                 )
 
+            # Prüfen ob Datum in der Zukunft liegt
+            from datetime import date, time
+            heute = date.today()
+            spiel_datum = date.fromisoformat(spieldatum)
+            
+            if spiel_datum < heute:
+                fehler = "Buchungen sind nur für heute oder zukünftige Termine möglich."
+                return render_template(
+                    "buchen.html",
+                    nutzer=nutzer,
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze
+                )
+
+            # Öffnungszeiten prüfen (7:00 - 20:00)
+            beginn_time = time.fromisoformat(beginn)
+            ende_time = time.fromisoformat(ende)
+            oeffnung = time(7, 0)
+            schliessung = time(20, 0)
+
+            if beginn_time < oeffnung or ende_time > schliessung:
+                fehler = "Buchungen sind nur zwischen 7:00 und 20:00 Uhr möglich."
+                return render_template(
+                    "buchen.html",
+                    nutzer=nutzer,
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze
+                )
+
+            if beginn_time >= ende_time:
+                fehler = "Die Endzeit muss nach der Startzeit liegen."
+                return render_template(
+                    "buchen.html",
+                    nutzer=nutzer,
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze
+                )
+
             try:
                 platznummer = int(platznummer_str)
             except ValueError:
@@ -222,6 +263,30 @@ def buchen():
 
             if not platz:
                 fehler = f"Tennisplatz '{tennisanlage}' mit Platznummer {platznummer} existiert nicht in der Datenbank!"
+                return render_template(
+                    "buchen.html",
+                    nutzer=nutzer,
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze
+                )
+
+            # Prüfen ob der Platz zur gewählten Zeit bereits gebucht ist
+            konflikt = db_read(
+                """SELECT * FROM buchung 
+                   WHERE tid = %s 
+                   AND spieldatum = %s 
+                   AND (
+                       (spielbeginn < %s AND spielende > %s) OR
+                       (spielbeginn < %s AND spielende > %s) OR
+                       (spielbeginn >= %s AND spielende <= %s)
+                   )""",
+                (platz["tid"], spieldatum, ende, beginn, beginn, ende, beginn, ende),
+                single=True
+            )
+
+            if konflikt:
+                fehler = "Dieser Platz ist zum gewählten Zeitpunkt nicht mehr verfügbar. Bitte wählen Sie einen anderen Zeitraum."
                 return render_template(
                     "buchen.html",
                     nutzer=nutzer,
