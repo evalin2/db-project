@@ -110,8 +110,11 @@ def index():
 @app.route("/buchen", methods=["GET", "POST"])
 @login_required
 def buchen():
-    nutzer = {}  # Felder vorausfüllen
+    nutzer = {}
     fehler = None
+
+    # Tennisplätze aus DB holen
+    alle_plaetze = db_read("SELECT * FROM tennisplatz ORDER BY tennisanlage, platznummer")
 
     if request.method == "POST":
         nid = request.form.get("nid")
@@ -121,7 +124,7 @@ def buchen():
             nutzer = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True) or {}
             if not nutzer:
                 fehler = "Diese Nutzer-ID existiert nicht!"
-                nid = None  # ungültige ID ignorieren
+                nid = None
 
         # 2️⃣ Neuen Nutzer anlegen, falls keine ID oder nicht gefunden
         if not nutzer:
@@ -135,7 +138,6 @@ def buchen():
                     "INSERT INTO nutzer (vorname, nachname, geburtsdatum, email) VALUES (%s,%s,%s,%s)",
                     (vorname, nachname, geburtsdatum, email)
                 )
-                # neuen Nutzer direkt wieder auslesen
                 nutzer = db_read("SELECT * FROM nutzer WHERE email=%s", (email,), single=True)
             else:
                 fehler = "Bitte alle Personalien ausfüllen."
@@ -148,7 +150,6 @@ def buchen():
             beginn = request.form.get("beginn")
             ende = request.form.get("ende")
 
-            # tid der Tennisplatz-Tabelle holen
             platz = db_read(
                 "SELECT * FROM tennisplatz WHERE tennisanlage=%s AND platznummer=%s",
                 (tennisanlage, platznummer),
@@ -166,7 +167,7 @@ def buchen():
             else:
                 fehler = "Bitte alle Buchungsdetails ausfüllen."
 
-    return render_template("buchen.html", nutzer=nutzer, fehler=fehler)
+    return render_template("buchen.html", nutzer=nutzer, fehler=fehler, alle_plaetze=alle_plaetze)
 
 # java script 
 @app.route("/get_nutzer/<int:nid>")
