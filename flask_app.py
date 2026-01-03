@@ -110,51 +110,43 @@ def index():
 @app.route("/buchen", methods=["GET", "POST"])
 @login_required
 def buchen():
-    nutzer = {}  # Felder vorausfüllen
+    nutzer = {}
     fehler = None
+    alle_plaetze = db_read("SELECT * FROM tennisplatz ORDER BY tennisanlage, platznummer")
+    anlagen = sorted({p["tennisanlage"] for p in alle_plaetze})
 
     if request.method == "POST":
         nid = request.form.get("nid")
-
-        # 1️⃣ Prüfen, ob die Nutzer-ID existiert
         if nid:
             nutzer = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True) or {}
             if not nutzer:
                 fehler = "Diese Nutzer-ID existiert nicht!"
-                nid = None  # ungültige ID ignorieren
 
-        # 2️⃣ Neuen Nutzer anlegen, falls keine ID oder nicht gefunden
         if not nutzer:
             vorname = request.form.get("vorname")
             nachname = request.form.get("nachname")
             geburtsdatum = request.form.get("geburtsdatum")
             email = request.form.get("email")
-
             if vorname and nachname and email:
                 db_write(
                     "INSERT INTO nutzer (vorname, nachname, geburtsdatum, email) VALUES (%s,%s,%s,%s)",
                     (vorname, nachname, geburtsdatum, email)
                 )
-                # neuen Nutzer direkt wieder auslesen
                 nutzer = db_read("SELECT * FROM nutzer WHERE email=%s", (email,), single=True)
             else:
                 fehler = "Bitte alle Personalien ausfüllen."
 
-        # 3️⃣ Buchungsdetails speichern
         if nutzer and not fehler:
             tennisanlage = request.form.get("tennisanlage")
             platznummer = request.form.get("platznummer")
             spieldatum = request.form.get("spieldatum")
             beginn = request.form.get("beginn")
             ende = request.form.get("ende")
-
-            # tid der Tennisplatz-Tabelle holen
             platz = db_read(
                 "SELECT * FROM tennisplatz WHERE tennisanlage=%s AND platznummer=%s",
                 (tennisanlage, platznummer),
                 single=True
             )
-
             if not platz:
                 fehler = "Tennisplatz nicht gefunden."
             elif spieldatum and beginn and ende:
@@ -166,7 +158,12 @@ def buchen():
             else:
                 fehler = "Bitte alle Buchungsdetails ausfüllen."
 
-    return render_template("buchen.html", nutzer=nutzer, fehler=fehler)
+    return render_template("buchen.html",
+                           nutzer=nutzer,
+                           fehler=fehler,
+                           anlagen=anlagen,
+                           alle_plaetze=alle_plaetze)
+
 
 # java script 
 @app.route("/get_nutzer/<int:nid>")

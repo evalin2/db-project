@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <title>Tennisplatz buchen</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        header, footer { text-align: center; margin-bottom: 20px; }
-        .form-container { max-width: 600px; margin: 0 auto; }
-        h2, h3 { margin-top: 20px; }
-        label { display: block; margin-top: 10px; }
-        input, select, button { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
-        button { margin-top: 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-        button:hover { background-color: #45a049; }
-        p.fehler { color: red; }
-    </style>
+<meta charset="UTF-8">
+<title>Tennisplatz buchen</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body { font-family: Arial, sans-serif; margin: 20px; }
+header, footer { text-align: center; margin-bottom: 20px; }
+.form-container { max-width: 600px; margin: 0 auto; }
+h2, h3 { margin-top: 20px; }
+label { display: block; margin-top: 10px; }
+input, select, button { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+button { margin-top: 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+button:hover { background-color: #45a049; }
+p.fehler { color: red; }
+</style>
 </head>
 <body>
 
@@ -25,79 +25,72 @@
 
 <main class="form-container">
 
-    <h2>Tennisplatz buchen</h2>
+<h2>Tennisplatz buchen</h2>
+{% if fehler %}
+<p class="fehler">{{ fehler }}</p>
+{% endif %}
 
-    {% if fehler %}
-        <p class="fehler">{{ fehler }}</p>
-    {% endif %}
+<form method="POST" action="{{ url_for('buchen') }}">
 
-    <form method="POST" action="{{ url_for('buchen') }}">
+<h3>Personalien</h3>
+<label>Nutzer-ID (optional)</label>
+<input type="number" name="nid" id="nid" placeholder="Bestehende Nutzer-ID" value="{{ nutzer.nid if nutzer else '' }}">
 
-        <!-- Personalien -->
-        <h3>Personalien</h3>
+<label>Vorname</label>
+<input type="text" name="vorname" id="vorname" value="{{ nutzer.vorname if nutzer else '' }}" required>
 
-        <label>Nutzer-ID (optional)</label>
-        <input type="number" name="nid" id="nid" placeholder="Bestehende Nutzer-ID" value="{{ nutzer.nid if nutzer else '' }}">
+<label>Nachname</label>
+<input type="text" name="nachname" id="nachname" value="{{ nutzer.nachname if nutzer else '' }}" required>
 
-        <label>Vorname</label>
-        <input type="text" name="vorname" id="vorname" value="{{ nutzer.vorname if nutzer else '' }}" required>
+<label>Geburtsdatum</label>
+<input type="date" name="geburtsdatum" id="geburtsdatum" value="{{ nutzer.geburtsdatum if nutzer else '' }}">
 
-        <label>Nachname</label>
-        <input type="text" name="nachname" id="nachname" value="{{ nutzer.nachname if nutzer else '' }}" required>
+<label>E-Mail</label>
+<input type="email" name="email" id="email" value="{{ nutzer.email if nutzer else '' }}" required>
 
-        <label>Geburtsdatum</label>
-        <input type="date" name="geburtsdatum" id="geburtsdatum" value="{{ nutzer.geburtsdatum if nutzer else '' }}">
+<h3>Buchungsdetails</h3>
+<label>Tennisanlage</label>
+<select name="tennisanlage" id="tennisanlage" required>
+<option value="">-- bitte wählen --</option>
+{% for a in anlagen %}
+<option value="{{ a }}">{{ a }}</option>
+{% endfor %}
+</select>
 
-        <label>E-Mail</label>
-        <input type="email" name="email" id="email" value="{{ nutzer.email if nutzer else '' }}" required>
+<label>Platznummer</label>
+<select name="platznummer" id="platznummer" required>
+<option value="">-- bitte wählen --</option>
+{% for p in alle_plaetze %}
+<option data-anlage="{{ p.tennisanlage }}" value="{{ p.platznummer }}">{{ p.platznummer }}</option>
+{% endfor %}
+</select>
 
-        <!-- Buchungsdetails -->
-        <h3>Buchungsdetails</h3>
+<label>Spieldatum</label>
+<input type="date" name="spieldatum" required>
 
-        <label>Tennisanlage</label>
-        <select name="tennisanlage" id="tennisanlage" required>
-            <option value="">-- bitte wählen --</option>
-            {% for a in anlagen %}
-                <option value="{{ a }}">{{ a }}</option>
-            {% endfor %}
-        </select>
+<label>Spielbeginn</label>
+<input type="time" name="beginn" required>
 
-        <label>Platznummer</label>
-        <select name="platznummer" id="platznummer" required>
-            <option value="">-- bitte wählen --</option>
-            {% for p in alle_plaetze %}
-                <option data-anlage="{{ p.tennisanlage }}" value="{{ p.platznummer }}">{{ p.platznummer }}</option>
-            {% endfor %}
-        </select>
+<label>Spielende</label>
+<input type="time" name="ende" required>
 
-        <label>Spieldatum</label>
-        <input type="date" name="spieldatum" required>
-
-        <label>Spielbeginn</label>
-        <input type="time" name="beginn" required>
-
-        <label>Spielende</label>
-        <input type="time" name="ende" required>
-
-        <button type="submit">Buchung bestätigen</button>
-    </form>
+<button type="submit">Buchung bestätigen</button>
+</form>
 </main>
 
 <footer>
-    <p>
-        Impressum<br>
-        Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt
-    </p>
+<p>Impressum<br>
+Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt
+</p>
 </footer>
 
 <script>
-// Vorausfüllen der Personalien bei bestehender Nutzer-ID
 document.getElementById("nid").addEventListener("blur", function() {
     let nid = this.value;
     if (!nid) return;
 
     fetch(`/get_nutzer/${nid}`)
-    .then(response => response.json())
+    .then(r => r.json())
     .then(data => {
         document.getElementById("vorname").value = data.vorname || "";
         document.getElementById("nachname").value = data.nachname || "";
@@ -106,21 +99,15 @@ document.getElementById("nid").addEventListener("blur", function() {
     });
 });
 
-// Filter Platznummern nach gewählter Tennisanlage
+// Filter Platznummern nach gewählter Anlage
 const tennisSelect = document.getElementById("tennisanlage");
 const platzSelect = document.getElementById("platznummer");
 const alleOptionen = Array.from(platzSelect.querySelectorAll("option[data-anlage]"));
-
 tennisSelect.addEventListener("change", () => {
     const wert = tennisSelect.value;
     platzSelect.innerHTML = '<option value="">-- bitte wählen --</option>';
-    alleOptionen.forEach(opt => {
-        if (opt.dataset.anlage === wert) {
-            platzSelect.appendChild(opt);
-        }
-    });
+    alleOptionen.forEach(opt => { if(opt.dataset.anlage === wert) platzSelect.appendChild(opt); });
 });
 </script>
-
 </body>
 </html>
