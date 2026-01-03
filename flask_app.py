@@ -113,22 +113,21 @@ def buchen():
     nutzer = {}
     fehler = None
 
-    # Alle Tennisplätze holen
+    # Alle Tennisplätze aus DB
     alle_plaetze = db_read("SELECT * FROM tennisplatz ORDER BY tennisanlage, platznummer")
-    anlagen = sorted(list({p["tennisanlage"] for p in alle_plaetze}))
-    plaetze = alle_plaetze
+    anlagen = sorted({p["tennisanlage"] for p in alle_plaetze})
 
     if request.method == "POST":
         nid = request.form.get("nid")
 
-        # 1️⃣ Prüfen, ob Nutzer existiert
+        # Prüfen, ob Nutzer existiert
         if nid:
             nutzer = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True) or {}
             if not nutzer:
                 fehler = "Diese Nutzer-ID existiert nicht!"
                 nid = None
 
-        # 2️⃣ Neuen Nutzer anlegen, falls keine ID oder nicht gefunden
+        # Neuen Nutzer anlegen, falls keine ID oder nicht gefunden
         if not nutzer:
             vorname = request.form.get("vorname")
             nachname = request.form.get("nachname")
@@ -144,7 +143,7 @@ def buchen():
             else:
                 fehler = "Bitte alle Personalien ausfüllen."
 
-        # 3️⃣ Buchungsdetails speichern
+        # Buchung speichern
         if nutzer and not fehler:
             tennisanlage = request.form.get("tennisanlage")
             platznummer = request.form.get("platznummer")
@@ -169,8 +168,13 @@ def buchen():
             else:
                 fehler = "Bitte alle Buchungsdetails ausfüllen."
 
-    return render_template("buchen.html", nutzer=nutzer, fehler=fehler, anlagen=anlagen, plaetze=plaetze)
-
+    return render_template(
+        "buchen.html",
+        nutzer=nutzer,
+        fehler=fehler,
+        anlagen=anlagen,
+        alle_plaetze=alle_plaetze
+    )
 
 # java script 
 @app.route("/get_nutzer/<int:nid>")
