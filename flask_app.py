@@ -169,7 +169,7 @@ def buchen():
 def get_nutzer(nid):
     user = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True)
     if not user:
-        return jsonify({})  # leeres JSON zurück, wenn Nutzer nicht existiert
+        return jsonify({})
     return jsonify({
         "vorname": user["vorname"],
         "nachname": user["nachname"],
