@@ -231,10 +231,10 @@
                 <input type="text" id="platz_id_edit" name="platz_id" required placeholder="ID aus der Liste unten">
 
                 <label for="anlage_edit">Tennisanlage *</label>
-                <input type="text" id="anlage_edit" name="anlage" required>
+                <input type="text" id="anlage_edit" name="anlage" required readonly style="background-color: #f0f0f0;">
 
                 <label for="platznummer_edit">Platznummer *</label>
-                <input type="text" id="platznummer_edit" name="platznummer" required>
+                <input type="text" id="platznummer_edit" name="platznummer" required readonly style="background-color: #f0f0f0;">
 
                 <label for="belag_edit">Belag *</label>
                 <select id="belag_edit" name="belag" required>
@@ -255,7 +255,7 @@
         <!-- Tennisplatz löschen -->
         <section>
             <h3>Tennisplatz löschen</h3>
-            <form method="POST" onsubmit="return confirm('Möchten Sie diesen Tennisplatz wirklich löschen?');">
+            <form method="POST">
                 <input type="hidden" name="aktion" value="loeschen">
                 
                 <label for="platz_id_delete">Tennisplatz-ID *</label>
@@ -291,5 +291,38 @@
             Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt
         </p>
     </footer>
+
+    <script>
+        // Auto-Fill beim Ändern: TID eingeben -> Daten aus Datenbank laden
+        document.getElementById('platz_id_edit').addEventListener('blur', function() {
+            const tid = this.value.trim();
+            if (!tid) return;
+
+            // Suche den Platz in der Liste
+            try {
+                const plaetze = {{ alle_plaetze | tojson | safe }};
+                const platz = plaetze.find(p => p.tid == tid);
+
+                if (platz) {
+                    document.getElementById('anlage_edit').value = platz.tennisanlage || '';
+                    document.getElementById('platznummer_edit').value = platz.platznummer || '';
+                    document.getElementById('belag_edit').value = platz.belag || '';
+                    if (platz.wartung) {
+                        document.getElementById('wartung_edit').value = platz.wartung;
+                    } else {
+                        document.getElementById('wartung_edit').value = '';
+                    }
+                } else {
+                    // Felder leeren wenn TID nicht gefunden
+                    document.getElementById('anlage_edit').value = '';
+                    document.getElementById('platznummer_edit').value = '';
+                    document.getElementById('belag_edit').value = '';
+                    document.getElementById('wartung_edit').value = '';
+                }
+            } catch (error) {
+                console.error('Fehler beim Laden der Platz-Daten:', error);
+            }
+        });
+    </script>
 </body>
 </html>

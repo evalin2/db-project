@@ -867,12 +867,9 @@ def tennisplätze():
                     if existiert:
                         fehler = f"Tennisplatz '{anlage}' mit Platznummer {platznummer_int} existiert bereits."
                     else:
-                        # Wartungsdatum optional
-                        wartung_datum = wartung if wartung else None
-                        
                         db_write(
                             "INSERT INTO tennisplatz (tennisanlage, platznummer, belag, wartung) VALUES (%s,%s,%s,%s)",
-                            (anlage, platznummer_int, belag, wartung_datum)
+                            (anlage, platznummer_int, belag, wartung)
                         )
                         erfolg = f"Tennisplatz '{anlage}' - Platz {platznummer_int} wurde erfolgreich hinzugefügt."
                         
