@@ -444,20 +444,48 @@ def buchen():
                     single=True
                 )
                 
-                # Alle Daten in Session speichern für Bestätigungsseite
+                # Datum formatieren
                 from datetime import datetime
-                session['buchung_details'] = {
+                spieldatum_obj = datetime.strptime(spieldatum, '%Y-%m-%d')
+                spieldatum_formatiert = spieldatum_obj.strftime('%d.%m.%Y')
+                
+                # Geburtsdatum formatieren
+                geburtsdatum_formatiert = ""
+                if nutzer.get("geburtsdatum"):
+                    try:
+                        if isinstance(nutzer["geburtsdatum"], str):
+                            geb_obj = datetime.strptime(str(nutzer["geburtsdatum"]), '%Y-%m-%d')
+                        else:
+                            geb_obj = nutzer["geburtsdatum"]
+                        geburtsdatum_formatiert = geb_obj.strftime('%d.%m.%Y')
+                    except:
+                        pass
+                
+                # Zeiten formatieren
+                if hasattr(letzte_buchung['spielbeginn'], 'strftime'):
+                    spielbeginn_formatiert = letzte_buchung['spielbeginn'].strftime('%H:%M')
+                    spielende_formatiert = letzte_buchung['spielende'].strftime('%H:%M')
+                else:
+                    spielbeginn_formatiert = str(letzte_buchung['spielbeginn'])[:5]
+                    spielende_formatiert = str(letzte_buchung['spielende'])[:5]
+                
+                buchungszeitpunkt = datetime.now().strftime("%d.%m.%Y um %H:%M Uhr")
+                
+                # In Session für Redirect
+                session['buchung_info'] = {
                     'buchungsnummer': letzte_buchung['buchungsnummer'],
                     'nid': nutzer["nid"],
                     'vorname': nutzer["vorname"],
                     'nachname': nutzer["nachname"],
                     'email': nutzer.get("email", ""),
+                    'geburtsdatum': geburtsdatum_formatiert,
                     'tennisanlage': tennisanlage,
                     'platznummer': platznummer,
-                    'spieldatum': spieldatum,
-                    'spielbeginn': str(letzte_buchung['spielbeginn']),
-                    'spielende': str(letzte_buchung['spielende']),
-                    'buchungszeitpunkt': datetime.now().strftime("%d.%m.%Y um %H:%M Uhr")
+                    'belag': platz.get("belag", ""),
+                    'spieldatum_formatiert': spieldatum_formatiert,
+                    'spielbeginn': spielbeginn_formatiert,
+                    'spielende': spielende_formatiert,
+                    'buchungszeitpunkt': buchungszeitpunkt
                 }
                 
                 return redirect(url_for("bbestätigt"))
@@ -506,23 +534,25 @@ def get_nutzer(nid):
 @app.route("/bbestätigt")
 @login_required
 def bbestätigt():
-    buchung = session.get('buchung_details', {})
+    info = session.get('buchung_info', {})
     
-    if not buchung:
+    if not info:
         return redirect(url_for("buchen"))
     
     return render_template("bbestätigt.html", 
-        buchungsnummer=buchung.get('buchungsnummer'),
-        nid=buchung.get('nid'),
-        vorname=buchung.get('vorname'),
-        nachname=buchung.get('nachname'),
-        email=buchung.get('email'),
-        tennisanlage=buchung.get('tennisanlage'),
-        platznummer=buchung.get('platznummer'),
-        spieldatum=buchung.get('spieldatum'),
-        spielbeginn=buchung.get('spielbeginn'),
-        spielende=buchung.get('spielende'),
-        buchungszeitpunkt=buchung.get('buchungszeitpunkt')
+        buchungsnummer=info.get('buchungsnummer', ''),
+        nid=info.get('nid', ''),
+        vorname=info.get('vorname', ''),
+        nachname=info.get('nachname', ''),
+        email=info.get('email', ''),
+        geburtsdatum=info.get('geburtsdatum', ''),
+        tennisanlage=info.get('tennisanlage', ''),
+        platznummer=info.get('platznummer', ''),
+        belag=info.get('belag', ''),
+        spieldatum_formatiert=info.get('spieldatum_formatiert', ''),
+        spielbeginn_formatiert=info.get('spielbeginn', ''),
+        spielende_formatiert=info.get('spielende', ''),
+        buchungszeitpunkt=info.get('buchungszeitpunkt', '')
     )
 
 @app.route("/stornieren")
