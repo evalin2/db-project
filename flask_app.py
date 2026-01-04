@@ -970,10 +970,10 @@ def tennisplätze():
                     logging.error(f"Fehler beim Löschen des Tennisplatzes: {e}")
                     fehler = f"Fehler beim Löschen des Tennisplatzes: {str(e)}"
     
-    # Alle Tennisplätze für die Übersicht laden
+    # Alle Tennisplätze für die Übersicht laden - sortiert nach ID
     # datum_der_wartung wird als "wartung" umbenannt für das Template
     try:
-        alle_plaetze = db_read("SELECT tid, tennisanlage, platznummer, belag, datum_der_wartung, wid FROM tennisplatz ORDER BY tennisanlage, platznummer")
+        alle_plaetze = db_read("SELECT tid, tennisanlage, platznummer, belag, datum_der_wartung, wid FROM tennisplatz ORDER BY tid")
         # Umbenennen für Template-Kompatibilität
         if alle_plaetze:
             for platz in alle_plaetze:
