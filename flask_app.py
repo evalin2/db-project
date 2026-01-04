@@ -834,6 +834,8 @@ def verwaltung():
 def wartungsarbeiter():
     return render_template("wartungsarbeiter.html")
 
+# Ersetze die kompletten tennisplätze und get_tennisplatz Routen in deiner app.py:
+
 # API Route für AJAX - Tennisplatz-Daten abrufen
 @app.route("/get_tennisplatz/<int:tid>")
 @login_required
@@ -848,11 +850,12 @@ def get_tennisplatz(tid):
             "tennisanlage": platz["tennisanlage"] or "",
             "platznummer": platz["platznummer"] or "",
             "belag": platz["belag"] or "",
-            "wartung": str(platz["wartung"]) if platz.get("wartung") else ""
+            "wartung": str(platz["datum_der_wartung"]) if platz.get("datum_der_wartung") else ""
         })
     except Exception as e:
         logging.error(f"Fehler bei get_tennisplatz: {e}")
         return jsonify({"exists": False, "error": str(e)})
+
 
 # tennisplätze route
 @app.route("/tennisplätze", methods=["GET", "POST"])
@@ -887,9 +890,11 @@ def tennisplätze():
                     if existiert:
                         fehler = f"Tennisplatz '{anlage}' mit Platznummer {platznummer_int} existiert bereits."
                     else:
+                        # Default Wartungsarbeiter-ID = 1 (falls du keinen bestimmten hast)
+                        # Du kannst das später anpassen, um einen echten Wartungsarbeiter auszuwählen
                         db_write(
-                            "INSERT INTO tennisplatz (tennisanlage, platznummer, belag, wartung) VALUES (%s,%s,%s,%s)",
-                            (anlage, platznummer_int, belag, wartung)
+                            "INSERT INTO tennisplatz (tennisanlage, platznummer, belag, datum_der_wartung, wid) VALUES (%s,%s,%s,%s,%s)",
+                            (anlage, platznummer_int, belag, wartung, 1)
                         )
                         erfolg = f"Tennisplatz '{anlage}' - Platz {platznummer_int} wurde erfolgreich hinzugefügt."
                         
@@ -897,7 +902,7 @@ def tennisplätze():
                     fehler = "Platznummer muss eine Zahl sein."
                 except Exception as e:
                     logging.error(f"Fehler beim Hinzufügen des Tennisplatzes: {e}")
-                    fehler = "Fehler beim Hinzufügen des Tennisplatzes."
+                    fehler = f"Fehler beim Hinzufügen des Tennisplatzes: {str(e)}"
         
         # Tennisplatz ändern
         elif aktion == "aendern":
@@ -922,7 +927,7 @@ def tennisplätze():
                     else:
                         # Alle Felder aktualisieren
                         db_write(
-                            "UPDATE tennisplatz SET tennisanlage=%s, platznummer=%s, belag=%s, wartung=%s WHERE tid=%s",
+                            "UPDATE tennisplatz SET tennisanlage=%s, platznummer=%s, belag=%s, datum_der_wartung=%s WHERE tid=%s",
                             (anlage, platznummer_int, belag, wartung, tid)
                         )
                         
@@ -932,7 +937,7 @@ def tennisplätze():
                     fehler = "Tennisplatz-ID und Platznummer müssen Zahlen sein."
                 except Exception as e:
                     logging.error(f"Fehler beim Ändern des Tennisplatzes: {e}")
-                    fehler = "Fehler beim Ändern des Tennisplatzes."
+                    fehler = f"Fehler beim Ändern des Tennisplatzes: {str(e)}"
         
         # Tennisplatz löschen
         elif aktion == "loeschen":
@@ -963,14 +968,18 @@ def tennisplätze():
                     fehler = "Tennisplatz-ID muss eine Zahl sein."
                 except Exception as e:
                     logging.error(f"Fehler beim Löschen des Tennisplatzes: {e}")
-                    fehler = "Fehler beim Löschen des Tennisplatzes."
+                    fehler = f"Fehler beim Löschen des Tennisplatzes: {str(e)}"
     
     # Alle Tennisplätze für die Übersicht laden
+    # datum_der_wartung wird als "wartung" umbenannt für das Template
     try:
-        alle_plaetze = db_read("SELECT * FROM tennisplatz ORDER BY tennisanlage, platznummer")
+        alle_plaetze = db_read("SELECT tid, tennisanlage, platznummer, belag, datum_der_wartung, wid FROM tennisplatz ORDER BY tennisanlage, platznummer")
+        # Umbenennen für Template-Kompatibilität
+        if alle_plaetze:
+            for platz in alle_plaetze:
+                platz['wartung'] = platz.get('datum_der_wartung')
     except Exception as e:
         logging.error(f"Fehler beim Laden der Tennisplätze: {e}")
         alle_plaetze = []
     
     return render_template("tennisplätze.html", fehler=fehler, erfolg=erfolg, alle_plaetze=alle_plaetze)
-
