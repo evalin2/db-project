@@ -117,12 +117,13 @@ function generatePDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     
-    // Logo und Titel
+    // Titel oben
+    doc.setTextColor(0, 0, 0);
     doc.setFontSize(20);
     doc.setFont(undefined, 'bold');
     doc.text('cour+', 105, 25, { align: 'center' });
     
-    doc.setFontSize(12);
+    doc.setFontSize(10);
     doc.setFont(undefined, 'normal');
     doc.text('Tennisplatz-Buchungssystem', 105, 32, { align: 'center' });
     
@@ -137,63 +138,72 @@ function generatePDF() {
     
     // Buchungsnummer
     doc.setFontSize(11);
-    doc.text('Buchungsnummer: {{ buchungsnummer }}', 20, 58);
+    doc.text('Buchungsnummer: ' + '{{ buchungsnummer }}', 20, 58);
     
     // Inhalt
-    doc.setFontSize(11);
+    doc.setFontSize(10);
     doc.setFont(undefined, 'normal');
     
-    let y = 75;
-    const lineHeight = 8;
+    let y = 73;
+    const lineHeight = 7;
     
     // Personalien
     doc.setFont(undefined, 'bold');
     doc.text('Personalien', 20, y);
-    y += lineHeight;
+    y += lineHeight + 2;
     doc.setFont(undefined, 'normal');
-    doc.text('Name:', 20, y);
-    doc.text('{{ vorname }} {{ nachname }}', 70, y);
+    
+    doc.text('Name:', 25, y);
+    doc.text('{{ vorname }} {{ nachname }}', 75, y);
     y += lineHeight;
-    doc.text('Nutzer-ID:', 20, y);
-    doc.text('{{ nid }}', 70, y);
+    
+    doc.text('Nutzer-ID:', 25, y);
+    doc.text('{{ nid }}', 75, y);
     y += lineHeight;
-    doc.text('E-Mail:', 20, y);
-    doc.text('{{ email }}', 70, y);
+    
+    doc.text('E-Mail:', 25, y);
+    doc.text('{{ email }}', 75, y);
     y += lineHeight;
+    
     {% if geburtsdatum %}
-    doc.text('Geburtsdatum:', 20, y);
-    doc.text('{{ geburtsdatum }}', 70, y);
+    doc.text('Geburtsdatum:', 25, y);
+    doc.text('{{ geburtsdatum }}', 75, y);
     y += lineHeight;
     {% endif %}
+    
     y += lineHeight;
     
     // Buchungsdetails
     doc.setFont(undefined, 'bold');
     doc.text('Buchungsdetails', 20, y);
-    y += lineHeight;
+    y += lineHeight + 2;
     doc.setFont(undefined, 'normal');
-    doc.text('Tennisanlage:', 20, y);
-    doc.text('{{ tennisanlage }}', 70, y);
+    
+    doc.text('Tennisanlage:', 25, y);
+    doc.text('{{ tennisanlage }}', 75, y);
     y += lineHeight;
-    doc.text('Platznummer:', 20, y);
-    doc.text('Platz {{ platznummer }} ({{ belag }})', 70, y);
+    
+    doc.text('Platznummer:', 25, y);
+    doc.text('Platz {{ platznummer }} ({{ belag }})', 75, y);
     y += lineHeight;
-    doc.text('Spieldatum:', 20, y);
-    doc.text('{{ spieldatum_formatiert }}', 70, y);
+    
+    doc.text('Spieldatum:', 25, y);
+    doc.text('{{ spieldatum_formatiert }}', 75, y);
     y += lineHeight;
-    doc.text('Spielzeit:', 20, y);
-    doc.text('{{ spielbeginn_formatiert }} - {{ spielende_formatiert }} Uhr', 70, y);
-    y += lineHeight * 2;
+    
+    doc.text('Spielzeit:', 25, y);
+    doc.text('{{ spielbeginn_formatiert }} - {{ spielende_formatiert }} Uhr', 75, y);
+    y += lineHeight + lineHeight;
     
     // Buchungszeitpunkt
     doc.setFont(undefined, 'bold');
     doc.text('Zeitpunkt der Buchung', 20, y);
-    y += lineHeight;
+    y += lineHeight + 2;
     doc.setFont(undefined, 'normal');
-    doc.text('{{ buchungszeitpunkt }}', 20, y);
+    doc.text('{{ buchungszeitpunkt }}', 25, y);
     
     // Footer
-    doc.setFontSize(9);
+    doc.setFontSize(8);
     doc.setTextColor(100, 100, 100);
     doc.text('Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt', 105, 280, { align: 'center' });
     
