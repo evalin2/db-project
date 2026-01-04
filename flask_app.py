@@ -445,6 +445,7 @@ def buchen():
                 )
                 
                 logging.info(f"Letzte Buchung: {letzte_buchung}")
+                logging.info(f"Nutzer Daten: vorname={nutzer.get('vorname')}, email={nutzer.get('email')}")
                 
                 # Datum formatieren für Session
                 from datetime import datetime
@@ -486,22 +487,31 @@ def buchen():
                 logging.info(f"Spielende formatiert: {spielende_str}")
                 logging.info(f"Belag: {platz.get('belag', 'unbekannt')}")
                 
+                # Email sicher abrufen
+                email_str = nutzer.get("email", "")
+                if not email_str:
+                    email_str = nutzer.get("Email", "")  # Manchmal großgeschrieben
+                if not email_str:
+                    email_str = "keine E-Mail"
+                
+                logging.info(f"Email final: {email_str}")
+                
                 # Alle Daten in Session speichern für Bestätigungsseite
                 session['buchung_details'] = {
-                    'buchungsnummer': letzte_buchung['buchungsnummer'],
-                    'nid': nutzer["nid"],
-                    'vorname': nutzer["vorname"],
-                    'nachname': nutzer["nachname"],
-                    'email': nutzer.get("email", ""),
-                    'geburtsdatum': geburtsdatum_str,
-                    'tennisanlage': tennisanlage,
-                    'platznummer': platznummer,
-                    'belag': platz.get("belag", "unbekannt"),
-                    'spieldatum': spieldatum,
-                    'spieldatum_formatiert': spieldatum_formatiert,
-                    'spielbeginn': spielbeginn_str,
-                    'spielende': spielende_str,
-                    'buchungszeitpunkt': datetime.now().strftime("%d.%m.%Y um %H:%M Uhr")
+                    'buchungsnummer': int(letzte_buchung['buchungsnummer']),
+                    'nid': int(nutzer["nid"]),
+                    'vorname': str(nutzer["vorname"]),
+                    'nachname': str(nutzer["nachname"]),
+                    'email': str(email_str),
+                    'geburtsdatum': str(geburtsdatum_str),
+                    'tennisanlage': str(tennisanlage),
+                    'platznummer': int(platznummer),
+                    'belag': str(platz.get("belag", "unbekannt")),
+                    'spieldatum': str(spieldatum),
+                    'spieldatum_formatiert': str(spieldatum_formatiert),
+                    'spielbeginn': str(spielbeginn_str),
+                    'spielende': str(spielende_str),
+                    'buchungszeitpunkt': str(datetime.now().strftime("%d.%m.%Y um %H:%M Uhr"))
                 }
                 
                 # DEBUG: Ausgabe der Session-Daten
