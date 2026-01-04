@@ -834,8 +834,7 @@ def verwaltung():
 def wartungsarbeiter():
     return render_template("wartungsarbeiter.html")
 
-# Füge diese Routes zu deiner app.py hinzu (nach der wartungsarbeiter Route)
-
+# tennisplätze route
 @app.route("/tennisplätze", methods=["GET", "POST"])
 @login_required
 def tennisplätze():
@@ -902,10 +901,7 @@ def tennisplätze():
                     
                     if not platz:
                         fehler = f"Tennisplatz mit ID {tid} existiert nicht."
-                    else:
-                        # Nur ausgefüllte Felder aktualisieren
-                        if anlage:
-                            db_write("UPDATE tennisplatz SET tennisanlage=%s WHERE tid=%s", (anlage, tid))
+ tid=%s", (anlage, tid))
                         if platznummer:
                             try:
                                 platznummer_int = int(platznummer)
