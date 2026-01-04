@@ -326,7 +326,11 @@
                                 // Felder mit Daten füllen
                                 document.getElementById('anlage_edit').value = data.tennisanlage;
                                 document.getElementById('platznummer_edit').value = data.platznummer;
-                                document.getElementById('belag_edit').value = data.belag;
+                                
+                                // Belag Dropdown setzen
+                                var belagSelect = document.getElementById('belag_edit');
+                                belagSelect.value = data.belag;
+                                
                                 document.getElementById('wartung_edit').value = data.wartung;
                             } else {
                                 // TID nicht gefunden - Felder leeren
