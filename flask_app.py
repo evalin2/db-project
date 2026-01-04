@@ -829,11 +829,6 @@ def verwaltung():
     return render_template("verwaltung.html")
 
 
-@app.route("/wartungsarbeiter")
-@login_required
-def wartungsarbeiter():
-    return render_template("wartungsarbeiter.html")
-
 # Ersetze die kompletten tennisplätze und get_tennisplatz Routen in deiner app.py:
 
 # API Route für AJAX - Tennisplatz-Daten abrufen
@@ -983,3 +978,101 @@ def tennisplätze():
         alle_plaetze = []
     
     return render_template("tennisplätze.html", fehler=fehler, erfolg=erfolg, alle_plaetze=alle_plaetze)
+
+# API Route für AJAX - Wartungsarbeiter-Daten abrufen
+@app.route("/get_wartungsarbeiter/<int:wid>")
+@login_required
+def get_wartungsarbeiter(wid):
+    try:
+        arbeiter = db_read("SELECT * FROM wartungsarbeiter WHERE wid=%s", (wid,), single=True)
+        if not arbeiter:
+            return jsonify({"exists": False})
+        return jsonify({
+            "exists": True,
+            "wid": arbeiter["wid"],
+            "vorname": arbeiter["vorname"] or "",
+            "nachname": arbeiter["nachname"] or "",
+            "geburtsdatum": str(arbeiter["geburtsdatum"]) if arbeiter.get("geburtsdatum") else ""
+        })
+    except Exception as e:
+        logging.error(f"Fehler bei get_wartungsarbeiter: {e}")
+        return jsonify({"exists": False, "error": str(e)})
+
+
+# wartungsarbeiter route
+@app.route("/wartungsarbeiter", methods=["GET", "POST"])
+@login_required
+def wartungsarbeiter():
+    fehler = None
+    erfolg = None
+    
+    if request.method == "POST":
+        aktion = request.form.get("aktion")
+        
+        # Wartungsarbeiter hinzufügen
+        if aktion == "hinzufuegen":
+            vorname = request.form.get("vorname", "").strip()
+            nachname = request.form.get("nachname", "").strip()
+            geburtsdatum = request.form.get("geburtsdatum", "").strip()
+            
+            if not vorname or not nachname or not geburtsdatum:
+                fehler = "Bitte alle Pflichtfelder ausfüllen (Vorname, Nachname, Geburtsdatum)."
+            else:
+                try:
+                    # Prüfen ob Arbeiter bereits existiert
+                    existiert = db_read(
+                        "SELECT * FROM wartungsarbeiter WHERE vorname=%s AND nachname=%s AND geburtsdatum=%s",
+                        (vorname, nachname, geburtsdatum),
+                        single=True
+                    )
+                    
+                    if existiert:
+                        fehler = f"Wartungsarbeiter '{vorname} {nachname}' mit diesem Geburtsdatum existiert bereits."
+                    else:
+                        db_write(
+                            "INSERT INTO wartungsarbeiter (vorname, nachname, geburtsdatum) VALUES (%s,%s,%s)",
+                            (vorname, nachname, geburtsdatum)
+                        )
+                        erfolg = f"Wartungsarbeiter '{vorname} {nachname}' wurde erfolgreich hinzugefügt."
+                        
+                except Exception as e:
+                    logging.error(f"Fehler beim Hinzufügen des Wartungsarbeiters: {e}")
+                    fehler = f"Fehler beim Hinzufügen des Wartungsarbeiters: {str(e)}"
+        
+        # Wartungsarbeiter löschen
+        elif aktion == "loeschen":
+            arbeiter_id = request.form.get("arbeiter_id", "").strip()
+            
+            if not arbeiter_id:
+                fehler = "Bitte Wartungsarbeiter-ID eingeben."
+            else:
+                try:
+                    wid = int(arbeiter_id)
+                    
+                    # Prüfen ob Arbeiter existiert
+                    arbeiter = db_read("SELECT * FROM wartungsarbeiter WHERE wid=%s", (wid,), single=True)
+                    
+                    if not arbeiter:
+                        fehler = f"Wartungsarbeiter mit ID {wid} existiert nicht."
+                    else:
+                        # Tennisplätze, die diesem Arbeiter zugeordnet sind, auf NULL setzen
+                        db_write("UPDATE tennisplatz SET wid=NULL WHERE wid=%s", (wid,))
+                        
+                        # Wartungsarbeiter löschen
+                        db_write("DELETE FROM wartungsarbeiter WHERE wid=%s", (wid,))
+                        erfolg = f"Wartungsarbeiter '{arbeiter['vorname']} {arbeiter['nachname']}' (ID: {wid}) wurde erfolgreich gelöscht. Alle zugeordneten Tennisplätze wurden aktualisiert."
+                            
+                except ValueError:
+                    fehler = "Wartungsarbeiter-ID muss eine Zahl sein."
+                except Exception as e:
+                    logging.error(f"Fehler beim Löschen des Wartungsarbeiters: {e}")
+                    fehler = f"Fehler beim Löschen des Wartungsarbeiters: {str(e)}"
+    
+    # Alle Wartungsarbeiter für die Übersicht laden - sortiert nach ID
+    try:
+        alle_arbeiter = db_read("SELECT wid, vorname, nachname, geburtsdatum FROM wartungsarbeiter ORDER BY wid")
+    except Exception as e:
+        logging.error(f"Fehler beim Laden der Wartungsarbeiter: {e}")
+        alle_arbeiter = []
+    
+    return render_template("wartungsarbeiter.html", fehler=fehler, erfolg=erfolg, alle_arbeiter=alle_arbeiter)
