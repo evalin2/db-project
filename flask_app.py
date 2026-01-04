@@ -828,12 +828,143 @@ def sbestätigt():
 def verwaltung():
     return render_template("verwaltung.html")
 
-@app.route("/tennisplätze")
-@login_required
-def tennisplätze():
-    return render_template("tennisplätze.html")
 
 @app.route("/wartungsarbeiter")
 @login_required
 def wartungsarbeiter():
     return render_template("wartungsarbeiter.html")
+
+# Füge diese Routes zu deiner app.py hinzu (nach der wartungsarbeiter Route)
+
+@app.route("/tennisplätze", methods=["GET", "POST"])
+@login_required
+def tennisplätze():
+    fehler = None
+    erfolg = None
+    
+    if request.method == "POST":
+        aktion = request.form.get("aktion")
+        
+        # Tennisplatz hinzufügen
+        if aktion == "hinzufuegen":
+            anlage = request.form.get("anlage", "").strip()
+            platznummer = request.form.get("platznummer", "").strip()
+            belag = request.form.get("belag", "").strip()
+            wartung = request.form.get("wartung", "").strip()
+            
+            if not anlage or not platznummer or not belag:
+                fehler = "Bitte alle Pflichtfelder ausfüllen (Tennisanlage, Platznummer, Belag)."
+            else:
+                try:
+                    platznummer_int = int(platznummer)
+                    
+                    # Prüfen ob Platz bereits existiert
+                    existiert = db_read(
+                        "SELECT * FROM tennisplatz WHERE tennisanlage=%s AND platznummer=%s",
+                        (anlage, platznummer_int),
+                        single=True
+                    )
+                    
+                    if existiert:
+                        fehler = f"Tennisplatz '{anlage}' mit Platznummer {platznummer_int} existiert bereits."
+                    else:
+                        # Wartungsdatum optional
+                        wartung_datum = wartung if wartung else None
+                        
+                        db_write(
+                            "INSERT INTO tennisplatz (tennisanlage, platznummer, belag, wartung) VALUES (%s,%s,%s,%s)",
+                            (anlage, platznummer_int, belag, wartung_datum)
+                        )
+                        erfolg = f"Tennisplatz '{anlage}' - Platz {platznummer_int} wurde erfolgreich hinzugefügt."
+                        
+                except ValueError:
+                    fehler = "Platznummer muss eine Zahl sein."
+                except Exception as e:
+                    logging.error(f"Fehler beim Hinzufügen des Tennisplatzes: {e}")
+                    fehler = "Fehler beim Hinzufügen des Tennisplatzes."
+        
+        # Tennisplatz ändern
+        elif aktion == "aendern":
+            platz_id = request.form.get("platz_id", "").strip()
+            anlage = request.form.get("anlage", "").strip()
+            platznummer = request.form.get("platznummer", "").strip()
+            belag = request.form.get("belag", "").strip()
+            wartung = request.form.get("wartung", "").strip()
+            
+            if not platz_id:
+                fehler = "Bitte Tennisplatz-ID eingeben."
+            else:
+                try:
+                    tid = int(platz_id)
+                    
+                    # Prüfen ob Platz existiert
+                    platz = db_read("SELECT * FROM tennisplatz WHERE tid=%s", (tid,), single=True)
+                    
+                    if not platz:
+                        fehler = f"Tennisplatz mit ID {tid} existiert nicht."
+                    else:
+                        # Nur ausgefüllte Felder aktualisieren
+                        if anlage:
+                            db_write("UPDATE tennisplatz SET tennisanlage=%s WHERE tid=%s", (anlage, tid))
+                        if platznummer:
+                            try:
+                                platznummer_int = int(platznummer)
+                                db_write("UPDATE tennisplatz SET platznummer=%s WHERE tid=%s", (platznummer_int, tid))
+                            except ValueError:
+                                fehler = "Platznummer muss eine Zahl sein."
+                                return render_template("tennisplätze.html", fehler=fehler, erfolg=erfolg)
+                        if belag:
+                            db_write("UPDATE tennisplatz SET belag=%s WHERE tid=%s", (belag, tid))
+                        
+                        # Wartungsdatum immer aktualisieren (auch wenn leer - auf NULL setzen)
+                        from datetime import date
+                        wartung_datum = wartung if wartung else date.today()
+                        db_write("UPDATE tennisplatz SET wartung=%s WHERE tid=%s", (wartung_datum, tid))
+                        
+                        erfolg = f"Tennisplatz mit ID {tid} wurde erfolgreich aktualisiert. Wartungsdatum gesetzt auf {wartung_datum}."
+                        
+                except ValueError:
+                    fehler = "Tennisplatz-ID muss eine Zahl sein."
+                except Exception as e:
+                    logging.error(f"Fehler beim Ändern des Tennisplatzes: {e}")
+                    fehler = "Fehler beim Ändern des Tennisplatzes."
+        
+        # Tennisplatz löschen
+        elif aktion == "loeschen":
+            platz_id = request.form.get("platz_id", "").strip()
+            
+            if not platz_id:
+                fehler = "Bitte Tennisplatz-ID eingeben."
+            else:
+                try:
+                    tid = int(platz_id)
+                    
+                    # Prüfen ob Platz existiert
+                    platz = db_read("SELECT * FROM tennisplatz WHERE tid=%s", (tid,), single=True)
+                    
+                    if not platz:
+                        fehler = f"Tennisplatz mit ID {tid} existiert nicht."
+                    else:
+                        # Prüfen ob noch Buchungen für diesen Platz existieren
+                        buchungen = db_read("SELECT * FROM buchung WHERE tid=%s", (tid,))
+                        
+                        if buchungen and len(buchungen) > 0:
+                            fehler = f"Tennisplatz mit ID {tid} kann nicht gelöscht werden, da noch {len(buchungen)} Buchung(en) vorhanden sind. Bitte erst alle Buchungen stornieren."
+                        else:
+                            db_write("DELETE FROM tennisplatz WHERE tid=%s", (tid,))
+                            erfolg = f"Tennisplatz '{platz['tennisanlage']}' - Platz {platz['platznummer']} (ID: {tid}) wurde erfolgreich gelöscht."
+                            
+                except ValueError:
+                    fehler = "Tennisplatz-ID muss eine Zahl sein."
+                except Exception as e:
+                    logging.error(f"Fehler beim Löschen des Tennisplatzes: {e}")
+                    fehler = "Fehler beim Löschen des Tennisplatzes."
+    
+    # Alle Tennisplätze für die Übersicht laden
+    try:
+        alle_plaetze = db_read("SELECT * FROM tennisplatz ORDER BY tennisanlage, platznummer")
+    except Exception as e:
+        logging.error(f"Fehler beim Laden der Tennisplätze: {e}")
+        alle_plaetze = []
+    
+    return render_template("tennisplätze.html", fehler=fehler, erfolg=erfolg, alle_plaetze=alle_plaetze)
