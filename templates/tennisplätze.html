@@ -299,28 +299,22 @@
             if (!tid) return;
 
             // Suche den Platz in der Liste
-            try {
-                const plaetze = {{ alle_plaetze | tojson | safe }};
-                const platz = plaetze.find(p => p.tid == tid);
+            const plaetze = {{ alle_plaetze | tojson }};
+            const platz = plaetze.find(p => p.tid == tid);
 
-                if (platz) {
-                    document.getElementById('anlage_edit').value = platz.tennisanlage || '';
-                    document.getElementById('platznummer_edit').value = platz.platznummer || '';
-                    document.getElementById('belag_edit').value = platz.belag || '';
-                    if (platz.wartung) {
-                        document.getElementById('wartung_edit').value = platz.wartung;
-                    } else {
-                        document.getElementById('wartung_edit').value = '';
-                    }
-                } else {
-                    // Felder leeren wenn TID nicht gefunden
-                    document.getElementById('anlage_edit').value = '';
-                    document.getElementById('platznummer_edit').value = '';
-                    document.getElementById('belag_edit').value = '';
-                    document.getElementById('wartung_edit').value = '';
+            if (platz) {
+                document.getElementById('anlage_edit').value = platz.tennisanlage;
+                document.getElementById('platznummer_edit').value = platz.platznummer;
+                document.getElementById('belag_edit').value = platz.belag;
+                if (platz.wartung) {
+                    document.getElementById('wartung_edit').value = platz.wartung;
                 }
-            } catch (error) {
-                console.error('Fehler beim Laden der Platz-Daten:', error);
+            } else {
+                // Felder leeren wenn TID nicht gefunden
+                document.getElementById('anlage_edit').value = '';
+                document.getElementById('platznummer_edit').value = '';
+                document.getElementById('belag_edit').value = '';
+                document.getElementById('wartung_edit').value = '';
             }
         });
     </script>
