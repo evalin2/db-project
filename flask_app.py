@@ -834,6 +834,26 @@ def verwaltung():
 def wartungsarbeiter():
     return render_template("wartungsarbeiter.html")
 
+# API Route für AJAX - Tennisplatz-Daten abrufen
+@app.route("/get_tennisplatz/<int:tid>")
+@login_required
+def get_tennisplatz(tid):
+    try:
+        platz = db_read("SELECT * FROM tennisplatz WHERE tid=%s", (tid,), single=True)
+        if not platz:
+            return jsonify({"exists": False})
+        return jsonify({
+            "exists": True,
+            "tid": platz["tid"],
+            "tennisanlage": platz["tennisanlage"] or "",
+            "platznummer": platz["platznummer"] or "",
+            "belag": platz["belag"] or "",
+            "wartung": str(platz["wartung"]) if platz.get("wartung") else ""
+        })
+    except Exception as e:
+        logging.error(f"Fehler bei get_tennisplatz: {e}")
+        return jsonify({"exists": False, "error": str(e)})
+
 # tennisplätze route
 @app.route("/tennisplätze", methods=["GET", "POST"])
 @login_required
@@ -954,23 +974,3 @@ def tennisplätze():
     
     return render_template("tennisplätze.html", fehler=fehler, erfolg=erfolg, alle_plaetze=alle_plaetze)
 
-
-# API Route für AJAX - Tennisplatz-Daten abrufen
-@app.route("/get_tennisplatz/<int:tid>")
-@login_required
-def get_tennisplatz(tid):
-    try:
-        platz = db_read("SELECT * FROM tennisplatz WHERE tid=%s", (tid,), single=True)
-        if not platz:
-            return jsonify({"exists": False})
-        return jsonify({
-            "exists": True,
-            "tid": platz["tid"],
-            "tennisanlage": platz["tennisanlage"] or "",
-            "platznummer": platz["platznummer"] or "",
-            "belag": platz["belag"] or "",
-            "wartung": str(platz["wartung"]) if platz.get("wartung") else ""
-        })
-    except Exception as e:
-        logging.error(f"Fehler bei get_tennisplatz: {e}")
-        return jsonify({"exists": False, "error": str(e)})
