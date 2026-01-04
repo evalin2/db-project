@@ -437,53 +437,28 @@ def buchen():
                     (nutzer["nid"], platz["tid"], spieldatum, beginn, ende)
                 )
                 
-                # Buchungsnummer abrufen (die gerade erstellte Buchung)
+                # Buchungsnummer abrufen
                 letzte_buchung = db_read(
-                    "SELECT * FROM buchung WHERE nid=%s ORDER BY buchungsnummer DESC LIMIT 1",
+                    "SELECT buchungsnummer FROM buchung WHERE nid=%s ORDER BY buchungsnummer DESC LIMIT 1",
                     (nutzer["nid"],),
                     single=True
                 )
                 
-                # Datum formatieren
-                from datetime import datetime
-                spieldatum_obj = datetime.strptime(spieldatum, '%Y-%m-%d')
-                spieldatum_formatiert = spieldatum_obj.strftime('%d.%m.%Y')
-                
-                # Geburtsdatum formatieren
-                geburtsdatum_formatiert = ""
-                if nutzer.get("geburtsdatum"):
-                    try:
-                        if isinstance(nutzer["geburtsdatum"], str):
-                            geb_obj = datetime.strptime(str(nutzer["geburtsdatum"]), '%Y-%m-%d')
-                        else:
-                            geb_obj = nutzer["geburtsdatum"]
-                        geburtsdatum_formatiert = geb_obj.strftime('%d.%m.%Y')
-                    except:
-                        pass
-                
-                # Zeiten formatieren
-                if hasattr(letzte_buchung['spielbeginn'], 'strftime'):
-                    spielbeginn_formatiert = letzte_buchung['spielbeginn'].strftime('%H:%M')
-                    spielende_formatiert = letzte_buchung['spielende'].strftime('%H:%M')
-                else:
-                    spielbeginn_formatiert = str(letzte_buchung['spielbeginn'])[:5]
-                    spielende_formatiert = str(letzte_buchung['spielende'])[:5]
-                
-                buchungszeitpunkt = datetime.now().strftime("%d.%m.%Y um %H:%M Uhr")
-                
-                # In Session für Redirect
+                # Daten DIREKT speichern ohne Formatierung
                 session['buchungs_nr'] = letzte_buchung['buchungsnummer']
                 session['nutzer_nid'] = nutzer["nid"]
                 session['nutzer_vorname'] = nutzer["vorname"]
                 session['nutzer_nachname'] = nutzer["nachname"]
                 session['nutzer_email'] = nutzer.get("email", "")
-                session['nutzer_geburtsdatum'] = geburtsdatum_formatiert
+                session['nutzer_geburtsdatum'] = str(nutzer.get("geburtsdatum", "")) if nutzer.get("geburtsdatum") else ""
                 session['buchung_anlage'] = tennisanlage
                 session['buchung_platz'] = platznummer
-                session['buchung_datum'] = spieldatum_formatiert
-                session['buchung_beginn'] = spielbeginn_formatiert
-                session['buchung_ende'] = spielende_formatiert
-                session['buchung_zeitpunkt'] = buchungszeitpunkt
+                session['buchung_datum'] = spieldatum  # Format: YYYY-MM-DD
+                session['buchung_beginn'] = beginn  # Format: HH:MM
+                session['buchung_ende'] = ende  # Format: HH:MM
+                
+                from datetime import datetime
+                session['buchung_zeitpunkt'] = datetime.now().strftime("%d.%m.%Y um %H:%M Uhr")
                 
                 return redirect(url_for("bbestätigt"))
             except Exception as e:
@@ -537,16 +512,30 @@ def bbestätigt():
     vorname = session.get('nutzer_vorname', '')
     nachname = session.get('nutzer_nachname', '')
     email = session.get('nutzer_email', '')
-    geburtsdatum = session.get('nutzer_geburtsdatum', '')
+    geburtsdatum_raw = session.get('nutzer_geburtsdatum', '')
     tennisanlage = session.get('buchung_anlage', '')
     platznummer = session.get('buchung_platz', '')
-    spieldatum_formatiert = session.get('buchung_datum', '')
-    spielbeginn_formatiert = session.get('buchung_beginn', '')
-    spielende_formatiert = session.get('buchung_ende', '')
+    spieldatum_raw = session.get('buchung_datum', '')  # YYYY-MM-DD
+    spielbeginn = session.get('buchung_beginn', '')  # HH:MM
+    spielende = session.get('buchung_ende', '')  # HH:MM
     buchungszeitpunkt = session.get('buchung_zeitpunkt', '')
     
     if not buchungsnummer:
         return redirect(url_for("buchen"))
+    
+    # Datum formatieren für Anzeige: YYYY-MM-DD -> DD.MM.YYYY
+    spieldatum_formatiert = spieldatum_raw
+    if spieldatum_raw and len(spieldatum_raw) == 10:
+        teile = spieldatum_raw.split('-')
+        if len(teile) == 3:
+            spieldatum_formatiert = f"{teile[2]}.{teile[1]}.{teile[0]}"
+    
+    # Geburtsdatum formatieren
+    geburtsdatum = geburtsdatum_raw
+    if geburtsdatum_raw and len(geburtsdatum_raw) == 10:
+        teile = geburtsdatum_raw.split('-')
+        if len(teile) == 3:
+            geburtsdatum = f"{teile[2]}.{teile[1]}.{teile[0]}"
     
     return render_template("bbestätigt.html", 
         buchungsnummer=buchungsnummer,
@@ -559,8 +548,8 @@ def bbestätigt():
         platznummer=platznummer,
         belag='',
         spieldatum_formatiert=spieldatum_formatiert,
-        spielbeginn_formatiert=spielbeginn_formatiert,
-        spielende_formatiert=spielende_formatiert,
+        spielbeginn_formatiert=spielbeginn,
+        spielende_formatiert=spielende,
         buchungszeitpunkt=buchungszeitpunkt
     )
 
