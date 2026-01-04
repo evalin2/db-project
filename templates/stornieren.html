@@ -109,59 +109,53 @@
 // Plätze für JavaScript verfügbar machen
 const allePlaetze = {{ alle_plaetze | tojson | safe }};
 
-// Nutzer-ID Validierung - beim Verlassen des Feldes
-document.addEventListener("DOMContentLoaded", function() {
-    const nidInput = document.getElementById("nid");
-    
-    if (nidInput) {
-        nidInput.addEventListener("blur", function() {
-            let nid = this.value.trim();
-            const jsFehlerDiv = document.getElementById('js-fehler');
-            const jsInfoDiv = document.getElementById('js-info');
+// Nutzer-ID Validierung
+document.getElementById("nid").addEventListener("blur", function() {
+    let nid = this.value;
+    const jsFehlerDiv = document.getElementById('js-fehler');
+    const jsInfoDiv = document.getElementById('js-info');
 
-            // Wenn Feld leer ist, Felder leeren und kein Fehler
-            if (!nid) {
-                jsFehlerDiv.style.display = 'none';
-                jsInfoDiv.style.display = 'none';
-                document.getElementById("vorname").value = "";
-                document.getElementById("nachname").value = "";
-                document.getElementById("email").value = "";
-                return;
-            }
-
-            // Nutzer-Daten vom Server abrufen
-            fetch(`/get_nutzer/${nid}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.exists === false || !data.vorname) {
-                    // Nutzer existiert nicht
-                    jsFehlerDiv.textContent = 'Diese Nutzer-ID existiert nicht in der Datenbank.';
-                    jsFehlerDiv.style.display = 'block';
-                    jsInfoDiv.style.display = 'none';
-                    document.getElementById("nid").value = "";
-                    document.getElementById("vorname").value = "";
-                    document.getElementById("nachname").value = "";
-                    document.getElementById("email").value = "";
-                    window.scrollTo(0, 0);
-                } else {
-                    // Nutzer existiert - Felder automatisch ausfüllen
-                    jsFehlerDiv.style.display = 'none';
-                    jsInfoDiv.textContent = 'Nutzerdaten wurden automatisch ausgefüllt.';
-                    jsInfoDiv.style.display = 'block';
-                    document.getElementById("vorname").value = data.vorname || "";
-                    document.getElementById("nachname").value = data.nachname || "";
-                    document.getElementById("email").value = data.email || "";
-                }
-            })
-            .catch(error => {
-                console.error("Fehler beim Abrufen der Nutzerdaten:", error);
-                jsFehlerDiv.textContent = "Fehler beim Abrufen der Nutzerdaten";
-                jsFehlerDiv.style.display = 'block';
-                jsInfoDiv.style.display = 'none';
-                window.scrollTo(0, 0);
-            });
-        });
+    // Wenn Feld leer ist, Felder leeren und kein Fehler
+    if (!nid) {
+        jsFehlerDiv.style.display = 'none';
+        jsInfoDiv.style.display = 'none';
+        document.getElementById("vorname").value = "";
+        document.getElementById("nachname").value = "";
+        document.getElementById("email").value = "";
+        return;
     }
+
+    // Nutzer-Daten vom Server abrufen
+    fetch(`/get_nutzer/${nid}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.exists === false || !data.vorname) {
+            // Nutzer existiert nicht
+            jsFehlerDiv.textContent = 'Diese Nutzer-ID existiert nicht in der Datenbank.';
+            jsFehlerDiv.style.display = 'block';
+            jsInfoDiv.style.display = 'none';
+            document.getElementById("nid").value = "";
+            document.getElementById("vorname").value = "";
+            document.getElementById("nachname").value = "";
+            document.getElementById("email").value = "";
+            window.scrollTo(0, 0);
+        } else {
+            // Nutzer existiert - Felder automatisch ausfüllen
+            jsFehlerDiv.style.display = 'none';
+            jsInfoDiv.textContent = 'Nutzerdaten wurden automatisch ausgefüllt.';
+            jsInfoDiv.style.display = 'block';
+            document.getElementById("vorname").value = data.vorname || "";
+            document.getElementById("nachname").value = data.nachname || "";
+            document.getElementById("email").value = data.email || "";
+        }
+    })
+    .catch(error => {
+        console.error("Fehler beim Abrufen der Nutzerdaten:", error);
+        jsFehlerDiv.textContent = "Fehler beim Abrufen der Nutzerdaten";
+        jsFehlerDiv.style.display = 'block';
+        jsInfoDiv.style.display = 'none';
+        window.scrollTo(0, 0);
+    });
 });
 
 // Dynamische Platznummern
