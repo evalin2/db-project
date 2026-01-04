@@ -103,11 +103,6 @@
             <span class="info-label">Nutzer-ID:</span>
             <span class="info-value">{{ nid }}</span>
         </div>
-        
-        <div class="info-row">
-            <span class="info-label">Datum:</span>
-            <span class="info-value">{{ spieldatum_formatiert }}</span>
-        </div>
     </div>
     
     <div class="buttons">
@@ -181,7 +176,7 @@ function generatePDF() {
     doc.text('{{ tennisanlage }}', 70, y);
     y += lineHeight;
     doc.text('Platznummer:', 20, y);
-    doc.text('{{ platznummer }} ({{ belag }})', 70, y);
+    doc.text('Platz {{ platznummer }} ({{ belag }})', 70, y);
     y += lineHeight;
     doc.text('Spieldatum:', 20, y);
     doc.text('{{ spieldatum_formatiert }}', 70, y);
