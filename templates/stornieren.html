@@ -105,6 +105,10 @@
         <label>Spielbeginn</label>
         <input type="time" name="beginn" id="beginn" value="{{ form_data.beginn if form_data else '' }}">
     </div>
+    <div class="form-group">
+        <label>Spielende</label>
+        <input type="time" name="ende" id="ende" value="{{ form_data.ende if form_data else '' }}">
+    </div>
 
     <button type="submit">Stornierung bestätigen</button>
 </form>
@@ -113,9 +117,16 @@
 // Plätze für JavaScript verfügbar machen
 const allePlaetze = {{ alle_plaetze | tojson | safe }};
 
+// DEBUG: Testen ob Script läuft
+console.log("Script geladen!");
+console.log("NID Element:", document.getElementById("nid"));
+
 // Nutzer-ID Validierung
 document.getElementById("nid").addEventListener("blur", function() {
+    console.log("Blur event ausgelöst!");
     let nid = this.value;
+    console.log("Eingegebene NID:", nid);
+    
     const jsFehlerDiv = document.getElementById('js-fehler');
 
     // Wenn Feld leer ist, Felder leeren und kein Fehler
@@ -127,10 +138,16 @@ document.getElementById("nid").addEventListener("blur", function() {
         return;
     }
 
+    console.log("Sende Request an /get_nutzer/" + nid);
+    
     // Nutzer-Daten vom Server abrufen
     fetch(`/get_nutzer/${nid}`)
-    .then(response => response.json())
+    .then(response => {
+        console.log("Response erhalten:", response);
+        return response.json();
+    })
     .then(data => {
+        console.log("Daten erhalten:", data);
         if (data.exists === false || !data.vorname) {
             // Nutzer existiert nicht
             jsFehlerDiv.textContent = 'Diese Nutzer-ID existiert nicht in der Datenbank.';
@@ -142,6 +159,7 @@ document.getElementById("nid").addEventListener("blur", function() {
             window.scrollTo(0, 0);
         } else {
             // Nutzer existiert - Felder automatisch ausfüllen
+            console.log("Fülle Felder aus mit:", data);
             jsFehlerDiv.style.display = 'none';
             document.getElementById("vorname").value = data.vorname || "";
             document.getElementById("nachname").value = data.nachname || "";
