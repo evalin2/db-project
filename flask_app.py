@@ -851,8 +851,8 @@ def tennisplätze():
             belag = request.form.get("belag", "").strip()
             wartung = request.form.get("wartung", "").strip()
             
-            if not anlage or not platznummer or not belag:
-                fehler = "Bitte alle Pflichtfelder ausfüllen (Tennisanlage, Platznummer, Belag)."
+            if not anlage or not platznummer or not belag or not wartung:
+                fehler = "Bitte alle Pflichtfelder ausfüllen (Tennisanlage, Platznummer, Belag, Wartungsdatum)."
             else:
                 try:
                     platznummer_int = int(platznummer)
