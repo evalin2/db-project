@@ -29,6 +29,12 @@
             padding: 12px;
             margin-bottom: 20px;
         }
+        #nid-error {
+            background: none;
+            border: none;
+            padding: 5px 0;
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
@@ -44,7 +50,6 @@
     {% endif %}
     
     <div id="js-fehler" class="error" style="display:none;"></div>
-    <div id="js-info" class="info" style="display:none;"></div>
 
     <h2>Tennisplatz stornieren</h2>
 
@@ -62,7 +67,6 @@
     <div class="form-group">
         <label>Nutzer-ID (optional)</label>
         <input type="number" name="nid" id="nid" placeholder="Ihre Nutzer-ID" value="{{ form_data.nid if form_data else '' }}">
-        <div id="nid-error" class="error" style="display:none;"></div>
     </div>
     <div class="form-group">
         <label>Vorname</label>
@@ -113,12 +117,10 @@ const allePlaetze = {{ alle_plaetze | tojson | safe }};
 document.getElementById("nid").addEventListener("blur", function() {
     let nid = this.value;
     const jsFehlerDiv = document.getElementById('js-fehler');
-    const jsInfoDiv = document.getElementById('js-info');
 
     // Wenn Feld leer ist, Felder leeren und kein Fehler
     if (!nid) {
         jsFehlerDiv.style.display = 'none';
-        jsInfoDiv.style.display = 'none';
         document.getElementById("vorname").value = "";
         document.getElementById("nachname").value = "";
         document.getElementById("email").value = "";
@@ -133,7 +135,6 @@ document.getElementById("nid").addEventListener("blur", function() {
             // Nutzer existiert nicht
             jsFehlerDiv.textContent = 'Diese Nutzer-ID existiert nicht in der Datenbank.';
             jsFehlerDiv.style.display = 'block';
-            jsInfoDiv.style.display = 'none';
             document.getElementById("nid").value = "";
             document.getElementById("vorname").value = "";
             document.getElementById("nachname").value = "";
@@ -142,8 +143,6 @@ document.getElementById("nid").addEventListener("blur", function() {
         } else {
             // Nutzer existiert - Felder automatisch ausfüllen
             jsFehlerDiv.style.display = 'none';
-            jsInfoDiv.textContent = 'Nutzerdaten wurden automatisch ausgefüllt.';
-            jsInfoDiv.style.display = 'block';
             document.getElementById("vorname").value = data.vorname || "";
             document.getElementById("nachname").value = data.nachname || "";
             document.getElementById("email").value = data.email || "";
@@ -153,7 +152,6 @@ document.getElementById("nid").addEventListener("blur", function() {
         console.error("Fehler beim Abrufen der Nutzerdaten:", error);
         jsFehlerDiv.textContent = "Fehler beim Abrufen der Nutzerdaten";
         jsFehlerDiv.style.display = 'block';
-        jsInfoDiv.style.display = 'none';
         window.scrollTo(0, 0);
     });
 });
