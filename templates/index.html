@@ -2,35 +2,129 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Tennisplatz-Buchungssystem</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style/index.css">
+    <title>cour+ | Tennisplatz-Buchung Schweiz</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<header>
-    <img src="{{ url_for('static', filename='Name') }}" alt="Logo">
-    <h1>Tennisplatz-Buchungssystem</h1>
-</header>
-
-<div class="container">
-    <nav>
-        <a href="{{ url_for('buchen') }}">Tennisplatz buchen</a>
-        <a href="{{ url_for('stornieren') }}">Tennisplatz stornieren</a>
-        <a href="{{ url_for('verwaltung') }}">Verwaltung</a>
+    <!-- Tennis Court Lines Background -->
+    <div class="court-lines"></div>
+    
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="nav-links">
+                <a href="#buchen" class="nav-link">Buchen</a>
+                <a href="#stornieren" class="nav-link">Stornieren</a>
+                <a href="#verwaltung" class="nav-link">Verwaltung</a>
+            </div>
+            <div class="nav-badge">
+                <span class="swiss-flag">🇨🇭</span>
+                <span class="badge-text">Swiss Made</span>
+            </div>
+        </div>
     </nav>
 
-    <main>
-        <img src="tennisplatz.jpg" alt="Tennisplatz">
-    </main>
-</div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-logo-container">
+                <img src="cour+_logo.png" alt="cour+" class="hero-logo">
+                <div class="logo-glow"></div>
+            </div>
 
-<footer>
-    <p>
-        Impressum<br>
-        Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt
-    </p>
-</footer>
+            <!-- NEW SINGLE-LINE SLOGAN -->
+            <h1 class="hero-heading single-line">
+  Viel Spiel. <span class="highlight-slogan">Mit Stil</span> zum Ziel.
+</h1>
 
+            <p class="hero-description">
+                Die einfache Plattform für Tennisplatz-Buchungen in der Schweiz.
+            </p>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-container">
+            <h2 class="cta-title">Jetzt deinen Platz sichern</h2>
+            <p class="cta-text">Einfach buchen. Flexibel stornieren. Alles an einem Ort.</p>
+            <a href="#buchen" class="cta-button">Platz buchen</a>
+        </div>
+    </section>
+
+    <!-- Services Grid -->
+    <section class="services">
+        <div class="services-container">
+            
+            <!-- Schnellbuchung -->
+            <div class="service-card card-primary">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <h3 class="card-title">Schnellbuchung</h3>
+                </div>
+                <p class="card-description">
+                    Plätze unkompliziert reservieren – klar, übersichtlich und ohne Aufwand.
+                </p>
+            </div>
+
+            <!-- Stornierung -->
+            <div class="service-card card-secondary">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11l3 3L22 4"/>
+                            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+                        </svg>
+                    </div>
+                    <h3 class="card-title">Stornierung</h3>
+                </div>
+                <p class="card-description">
+                    Buchungen flexibel anpassen oder stornieren – transparent und fair.
+                </p>
+            </div>
+
+            <!-- Verwaltung -->
+            <div class="service-card card-tertiary">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            <path d="M9 3v18M15 3v18M3 9h18M3 15h18"/>
+                        </svg>
+                    </div>
+                    <h3 class="card-title">Verwaltung</h3>
+                </div>
+                <p class="card-description">
+                    Alle Buchungen zentral im Überblick – einfach und intuitiv.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="cour+_logo.png" alt="cour+" class="footer-logo-img">
+            </div>
+            <div class="footer-info">
+                <h4 class="footer-heading">Kontakt</h4>
+                <p class="footer-text">
+                    cour+ Plattform Schweiz<br>
+                    info@cour+.ch
+                </p>
+            </div>
+            <div class="footer-bottom">
+                <p class="copyright">© 2025 cour+ · Swiss Made</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
