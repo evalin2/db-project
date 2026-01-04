@@ -503,7 +503,8 @@ def get_nutzer(nid):
         return jsonify({"exists": False, "error": str(e)})
 
 
-#stornieren Route
+# Ersetze die /stornieren Route in app.py mit dieser korrigierten Version:
+
 @app.route("/stornieren", methods=["GET", "POST"])
 @login_required
 def stornieren():
@@ -533,7 +534,8 @@ def stornieren():
             'tennisanlage': request.form.get("tennisanlage", ""),
             'platznummer': request.form.get("platznummer", ""),
             'spieldatum': request.form.get("spieldatum", ""),
-            'beginn': request.form.get("beginn", "")
+            'beginn': request.form.get("beginn", ""),
+            'ende': request.form.get("ende", "")
         }
 
         buchungsnummer = form_data['buchungsnummer'].strip()
