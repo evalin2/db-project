@@ -504,6 +504,7 @@ def get_nutzer(nid):
 
 
 # Ersetze die /stornieren Route in app.py mit dieser korrigierten Version:
+# Ersetze die /stornieren Route in app.py mit dieser korrigierten Version:
 
 @app.route("/stornieren", methods=["GET", "POST"])
 @login_required
@@ -542,22 +543,36 @@ def stornieren():
         
         buchung = None
 
-        # Fall 1: Suche über Buchungsnummer
+        # Fall 1: Suche über Buchungsnummer + E-Mail
         if buchungsnummer:
+            email = form_data['email'].strip()
+            
+            # E-Mail Validierung
+            if not email:
+                fehler = "Bitte geben Sie Ihre E-Mail-Adresse zur Bestätigung ein."
+                return render_template(
+                    "stornieren.html",
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
+                )
+            
             try:
                 buchung = db_read(
                     """SELECT b.*, n.vorname, n.nachname, n.email, t.tennisanlage, t.platznummer
                        FROM buchung b
                        JOIN nutzer n ON b.nid = n.nid
                        JOIN tennisplatz t ON b.tid = t.tid
-                       WHERE b.buchungsnummer = %s""",
-                    (buchungsnummer,),
+                       WHERE b.buchungsnummer = %s AND n.email = %s""",
+                    (buchungsnummer, email),
                     single=True
                 )
                 
                 if not buchung:
-                    fehler = "Buchung mit dieser Buchungsnummer wurde nicht gefunden."
+                    fehler = "Buchung mit dieser Buchungsnummer und E-Mail-Adresse wurde nicht gefunden. Bitte überprüfen Sie Ihre Angaben."
                     form_data['buchungsnummer'] = ''
+                    form_data['email'] = ''
                     return render_template(
                         "stornieren.html",
                         fehler=fehler,
@@ -578,7 +593,6 @@ def stornieren():
 
         # Fall 2: Suche über Personalien + Buchungsdetails
         else:
-            nid = form_data['nid'].strip()
             vorname = form_data['vorname'].strip()
             nachname = form_data['nachname'].strip()
             email = form_data['email'].strip()
@@ -587,38 +601,9 @@ def stornieren():
             spieldatum = form_data['spieldatum']
             beginn = form_data['beginn']
 
-            # Nutzer identifizieren (ZUERST!)
-            nutzer = None
-            if nid:
-                nutzer = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True)
-                if not nutzer:
-                    fehler = "Nutzer mit dieser ID wurde nicht gefunden."
-                    form_data['nid'] = ''
-                    return render_template(
-                        "stornieren.html",
-                        fehler=fehler,
-                        anlagen=anlagen,
-                        alle_plaetze=alle_plaetze,
-                        form_data=form_data
-                    )
-            elif vorname and nachname and email:
-                # Suche über Name und Email
-                nutzer = db_read(
-                    "SELECT * FROM nutzer WHERE vorname=%s AND nachname=%s AND email=%s",
-                    (vorname, nachname, email),
-                    single=True
-                )
-                if not nutzer:
-                    fehler = "Kein Nutzer mit diesen Personalien gefunden."
-                    return render_template(
-                        "stornieren.html",
-                        fehler=fehler,
-                        anlagen=anlagen,
-                        alle_plaetze=alle_plaetze,
-                        form_data=form_data
-                    )
-            else:
-                fehler = "Bitte geben Sie entweder Ihre Nutzer-ID oder vollständige Personalien (Vorname, Nachname, E-Mail) ein."
+            # Validierung: Alle Felder müssen ausgefüllt sein
+            if not vorname or not nachname or not email:
+                fehler = "Bitte geben Sie Vorname, Nachname und E-Mail-Adresse ein."
                 return render_template(
                     "stornieren.html",
                     fehler=fehler,
@@ -627,9 +612,26 @@ def stornieren():
                     form_data=form_data
                 )
 
-            # Validierung der Buchungsdetails (NACH Nutzeridentifikation!)
+            # Validierung der Buchungsdetails
             if not tennisanlage or not platznummer or not spieldatum or not beginn:
                 fehler = "Bitte alle Buchungsdetails ausfüllen."
+                return render_template(
+                    "stornieren.html",
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
+                )
+
+            # Nutzer über Name und Email finden
+            nutzer = db_read(
+                "SELECT * FROM nutzer WHERE vorname=%s AND nachname=%s AND email=%s",
+                (vorname, nachname, email),
+                single=True
+            )
+            
+            if not nutzer:
+                fehler = "Kein Nutzer mit diesen Personalien gefunden."
                 return render_template(
                     "stornieren.html",
                     fehler=fehler,

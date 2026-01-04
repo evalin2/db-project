@@ -46,7 +46,7 @@
     <h2>Tennisplatz stornieren</h2>
 
     <h3>Buchung identifizieren</h3>
-    <p style="color: #666; font-size: 14px;">Geben Sie entweder Ihre Buchungsnummer ODER Ihre Personalien + Buchungsdetails ein.</p>
+    <p style="color: #666; font-size: 14px;">Geben Sie entweder Ihre Buchungsnummer + E-Mail ODER Ihre vollständigen Personalien + Buchungsdetails ein.</p>
 
     <div class="form-group">
         <label>Buchungsnummer (falls bekannt)</label>
@@ -57,8 +57,8 @@
 
     <h3>Personalien</h3>
     <div class="form-group">
-        <label>Nutzer-ID (optional)</label>
-        <input type="number" name="nid" id="nid" placeholder="Ihre Nutzer-ID" value="{{ form_data.nid if form_data else '' }}">
+        <label>E-Mail *</label>
+        <input type="email" name="email" id="email" placeholder="Ihre E-Mail-Adresse" value="{{ form_data.email if form_data else '' }}">
     </div>
     <div class="form-group">
         <label>Vorname</label>
@@ -67,10 +67,6 @@
     <div class="form-group">
         <label>Nachname</label>
         <input type="text" name="nachname" id="nachname" value="{{ form_data.nachname if form_data else '' }}">
-    </div>
-    <div class="form-group">
-        <label>E-Mail</label>
-        <input type="email" name="email" id="email" value="{{ form_data.email if form_data else '' }}">
     </div>
 
     <h3>Buchungsdetails</h3>
@@ -108,49 +104,6 @@
 <script>
 // Plätze für JavaScript verfügbar machen
 const allePlaetze = {{ alle_plaetze | tojson | safe }};
-
-// Nutzer-ID Validierung
-document.getElementById("nid").addEventListener("blur", function() {
-    let nid = this.value;
-    const jsFehlerDiv = document.getElementById('js-fehler');
-
-    // Wenn Feld leer ist, Felder leeren und kein Fehler
-    if (!nid) {
-        jsFehlerDiv.style.display = 'none';
-        document.getElementById("vorname").value = "";
-        document.getElementById("nachname").value = "";
-        document.getElementById("email").value = "";
-        return;
-    }
-
-    // Nutzer-Daten vom Server abrufen
-    fetch(`/get_nutzer/${nid}`)
-    .then(response => response.json())
-    .then(data => {
-        if (data.exists === false || !data.vorname) {
-            // Nutzer existiert nicht
-            jsFehlerDiv.textContent = 'Diese Nutzer-ID existiert nicht in der Datenbank.';
-            jsFehlerDiv.style.display = 'block';
-            document.getElementById("nid").value = "";
-            document.getElementById("vorname").value = "";
-            document.getElementById("nachname").value = "";
-            document.getElementById("email").value = "";
-            window.scrollTo(0, 0);
-        } else {
-            // Nutzer existiert - Felder automatisch ausfüllen
-            jsFehlerDiv.style.display = 'none';
-            document.getElementById("vorname").value = data.vorname || "";
-            document.getElementById("nachname").value = data.nachname || "";
-            document.getElementById("email").value = data.email || "";
-        }
-    })
-    .catch(error => {
-        console.error("Fehler beim Abrufen der Nutzerdaten:", error);
-        jsFehlerDiv.textContent = "Fehler beim Abrufen der Nutzerdaten";
-        jsFehlerDiv.style.display = 'block';
-        window.scrollTo(0, 0);
-    });
-});
 
 // Dynamische Platznummern
 document.getElementById("tennisanlage").addEventListener("change", function() {
