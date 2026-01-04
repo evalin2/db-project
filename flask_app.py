@@ -472,21 +472,18 @@ def buchen():
                 buchungszeitpunkt = datetime.now().strftime("%d.%m.%Y um %H:%M Uhr")
                 
                 # In Session für Redirect
-                session['buchung_info'] = {
-                    'buchungsnummer': letzte_buchung['buchungsnummer'],
-                    'nid': nutzer["nid"],
-                    'vorname': nutzer["vorname"],
-                    'nachname': nutzer["nachname"],
-                    'email': nutzer.get("email", ""),
-                    'geburtsdatum': geburtsdatum_formatiert,
-                    'tennisanlage': tennisanlage,
-                    'platznummer': platznummer,
-                    'belag': platz.get("belag", ""),
-                    'spieldatum_formatiert': spieldatum_formatiert,
-                    'spielbeginn': spielbeginn_formatiert,
-                    'spielende': spielende_formatiert,
-                    'buchungszeitpunkt': buchungszeitpunkt
-                }
+                session['buchungs_nr'] = letzte_buchung['buchungsnummer']
+                session['nutzer_nid'] = nutzer["nid"]
+                session['nutzer_vorname'] = nutzer["vorname"]
+                session['nutzer_nachname'] = nutzer["nachname"]
+                session['nutzer_email'] = nutzer.get("email", "")
+                session['nutzer_geburtsdatum'] = geburtsdatum_formatiert
+                session['buchung_anlage'] = tennisanlage
+                session['buchung_platz'] = platznummer
+                session['buchung_datum'] = spieldatum_formatiert
+                session['buchung_beginn'] = spielbeginn_formatiert
+                session['buchung_ende'] = spielende_formatiert
+                session['buchung_zeitpunkt'] = buchungszeitpunkt
                 
                 return redirect(url_for("bbestätigt"))
             except Exception as e:
@@ -534,25 +531,37 @@ def get_nutzer(nid):
 @app.route("/bbestätigt")
 @login_required
 def bbestätigt():
-    info = session.get('buchung_info', {})
+    # Daten direkt aus Session holen
+    buchungsnummer = session.get('buchungs_nr', '')
+    nid = session.get('nutzer_nid', '')
+    vorname = session.get('nutzer_vorname', '')
+    nachname = session.get('nutzer_nachname', '')
+    email = session.get('nutzer_email', '')
+    geburtsdatum = session.get('nutzer_geburtsdatum', '')
+    tennisanlage = session.get('buchung_anlage', '')
+    platznummer = session.get('buchung_platz', '')
+    spieldatum_formatiert = session.get('buchung_datum', '')
+    spielbeginn_formatiert = session.get('buchung_beginn', '')
+    spielende_formatiert = session.get('buchung_ende', '')
+    buchungszeitpunkt = session.get('buchung_zeitpunkt', '')
     
-    if not info:
+    if not buchungsnummer:
         return redirect(url_for("buchen"))
     
     return render_template("bbestätigt.html", 
-        buchungsnummer=info.get('buchungsnummer', ''),
-        nid=info.get('nid', ''),
-        vorname=info.get('vorname', ''),
-        nachname=info.get('nachname', ''),
-        email=info.get('email', ''),
-        geburtsdatum=info.get('geburtsdatum', ''),
-        tennisanlage=info.get('tennisanlage', ''),
-        platznummer=info.get('platznummer', ''),
-        belag=info.get('belag', ''),
-        spieldatum_formatiert=info.get('spieldatum_formatiert', ''),
-        spielbeginn_formatiert=info.get('spielbeginn', ''),
-        spielende_formatiert=info.get('spielende', ''),
-        buchungszeitpunkt=info.get('buchungszeitpunkt', '')
+        buchungsnummer=buchungsnummer,
+        nid=nid,
+        vorname=vorname,
+        nachname=nachname,
+        email=email,
+        geburtsdatum=geburtsdatum,
+        tennisanlage=tennisanlage,
+        platznummer=platznummer,
+        belag='',
+        spieldatum_formatiert=spieldatum_formatiert,
+        spielbeginn_formatiert=spielbeginn_formatiert,
+        spielende_formatiert=spielende_formatiert,
+        buchungszeitpunkt=buchungszeitpunkt
     )
 
 @app.route("/stornieren")
