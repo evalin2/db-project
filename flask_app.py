@@ -553,15 +553,321 @@ def bbestätigt():
         buchungszeitpunkt=buchungszeitpunkt
     )
 
-@app.route("/stornieren")
+#stornieren Route
+@app.route("/stornieren", methods=["GET", "POST"])
 @login_required
 def stornieren():
-    return render_template("stornieren.html")
+    fehler = None
+    form_data = {}
 
+    # Alle Plätze aus DB holen
+    try:
+        alle_plaetze = db_read("SELECT * FROM tennisplatz ORDER BY tennisanlage, platznummer")
+        if not alle_plaetze:
+            alle_plaetze = []
+        anlagen = sorted(list(set([p["tennisanlage"] for p in alle_plaetze])))
+    except Exception as e:
+        logging.error(f"Fehler beim Laden der Tennisplätze: {e}")
+        alle_plaetze = []
+        anlagen = []
+        fehler = "Fehler beim Laden der Tennisplätze."
+
+    if request.method == "POST":
+        # Formulardaten speichern
+        form_data = {
+            'buchungsnummer': request.form.get("buchungsnummer", ""),
+            'nid': request.form.get("nid", ""),
+            'vorname': request.form.get("vorname", ""),
+            'nachname': request.form.get("nachname", ""),
+            'email': request.form.get("email", ""),
+            'tennisanlage': request.form.get("tennisanlage", ""),
+            'platznummer': request.form.get("platznummer", ""),
+            'spieldatum': request.form.get("spieldatum", ""),
+            'beginn': request.form.get("beginn", "")
+        }
+
+        buchungsnummer = form_data['buchungsnummer'].strip()
+        
+        buchung = None
+
+        # Fall 1: Suche über Buchungsnummer
+        if buchungsnummer:
+            try:
+                buchung = db_read(
+                    """SELECT b.*, n.vorname, n.nachname, n.email, t.tennisanlage, t.platznummer
+                       FROM buchung b
+                       JOIN nutzer n ON b.nid = n.nid
+                       JOIN tennisplatz t ON b.tid = t.tid
+                       WHERE b.buchungsnummer = %s""",
+                    (buchungsnummer,),
+                    single=True
+                )
+                
+                if not buchung:
+                    fehler = "Buchung mit dieser Buchungsnummer wurde nicht gefunden."
+                    form_data['buchungsnummer'] = ''
+                    return render_template(
+                        "stornieren.html",
+                        fehler=fehler,
+                        anlagen=anlagen,
+                        alle_plaetze=alle_plaetze,
+                        form_data=form_data
+                    )
+            except Exception as e:
+                logging.error(f"Fehler bei Buchungssuche: {e}")
+                fehler = "Fehler bei der Suche nach der Buchung."
+                return render_template(
+                    "stornieren.html",
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
+                )
+
+        # Fall 2: Suche über Personalien + Buchungsdetails
+        else:
+            nid = form_data['nid'].strip()
+            vorname = form_data['vorname'].strip()
+            nachname = form_data['nachname'].strip()
+            email = form_data['email'].strip()
+            tennisanlage = form_data['tennisanlage'].strip()
+            platznummer = form_data['platznummer'].strip()
+            spieldatum = form_data['spieldatum']
+            beginn = form_data['beginn']
+
+            # Validierung
+            if not tennisanlage or not platznummer or not spieldatum or not beginn:
+                fehler = "Bitte geben Sie entweder die Buchungsnummer oder alle erforderlichen Buchungsdetails ein."
+                return render_template(
+                    "stornieren.html",
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
+                )
+
+            # Nutzer identifizieren
+            nutzer = None
+            if nid:
+                nutzer = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True)
+                if not nutzer:
+                    fehler = "Nutzer mit dieser ID wurde nicht gefunden."
+                    form_data['nid'] = ''
+                    return render_template(
+                        "stornieren.html",
+                        fehler=fehler,
+                        anlagen=anlagen,
+                        alle_plaetze=alle_plaetze,
+                        form_data=form_data
+                    )
+            elif vorname and nachname and email:
+                # Suche über Name und Email
+                nutzer = db_read(
+                    "SELECT * FROM nutzer WHERE vorname=%s AND nachname=%s AND email=%s",
+                    (vorname, nachname, email),
+                    single=True
+                )
+                if not nutzer:
+                    fehler = "Kein Nutzer mit diesen Personalien gefunden."
+                    return render_template(
+                        "stornieren.html",
+                        fehler=fehler,
+                        anlagen=anlagen,
+                        alle_plaetze=alle_plaetze,
+                        form_data=form_data
+                    )
+            else:
+                fehler = "Bitte geben Sie entweder Ihre Nutzer-ID oder vollständige Personalien (Vorname, Nachname, E-Mail) ein."
+                return render_template(
+                    "stornieren.html",
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
+                )
+
+            # Tennisplatz finden
+            try:
+                platznummer_int = int(platznummer)
+            except ValueError:
+                fehler = "Ungültige Platznummer."
+                return render_template(
+                    "stornieren.html",
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
+                )
+
+            platz = db_read(
+                "SELECT * FROM tennisplatz WHERE tennisanlage=%s AND platznummer=%s",
+                (tennisanlage, platznummer_int),
+                single=True
+            )
+
+            if not platz:
+                fehler = f"Tennisplatz '{tennisanlage}' mit Platznummer {platznummer_int} existiert nicht."
+                return render_template(
+                    "stornieren.html",
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
+                )
+
+            # Buchung finden
+            try:
+                buchung = db_read(
+                    """SELECT b.*, n.vorname, n.nachname, n.email, t.tennisanlage, t.platznummer
+                       FROM buchung b
+                       JOIN nutzer n ON b.nid = n.nid
+                       JOIN tennisplatz t ON b.tid = t.tid
+                       WHERE b.nid = %s AND b.tid = %s AND b.spieldatum = %s AND b.spielbeginn = %s""",
+                    (nutzer["nid"], platz["tid"], spieldatum, beginn),
+                    single=True
+                )
+
+                if not buchung:
+                    fehler = "Keine Buchung mit diesen Angaben gefunden."
+                    return render_template(
+                        "stornieren.html",
+                        fehler=fehler,
+                        anlagen=anlagen,
+                        alle_plaetze=alle_plaetze,
+                        form_data=form_data
+                    )
+            except Exception as e:
+                logging.error(f"Fehler bei Buchungssuche: {e}")
+                fehler = "Fehler bei der Suche nach der Buchung."
+                return render_template(
+                    "stornieren.html",
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
+                )
+
+        # Buchung gefunden - Stornierung durchführen
+        if buchung:
+            # Prüfen ob Buchung in der Vergangenheit liegt
+            from datetime import date, datetime
+            heute = date.today()
+            jetzt = datetime.now()
+            
+            spieldatum_date = buchung['spieldatum']
+            if isinstance(spieldatum_date, str):
+                spieldatum_date = date.fromisoformat(spieldatum_date)
+            
+            # Wenn Spieldatum in der Vergangenheit liegt
+            if spieldatum_date < heute:
+                fehler = "Diese Buchung liegt in der Vergangenheit und kann nicht mehr storniert werden."
+                return render_template(
+                    "stornieren.html",
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
+                )
+            
+            # Wenn Spieldatum heute ist, prüfen ob Spielbeginn schon vorbei ist
+            if spieldatum_date == heute:
+                from datetime import time
+                spielbeginn_time = buchung['spielbeginn']
+                if isinstance(spielbeginn_time, str):
+                    spielbeginn_time = time.fromisoformat(spielbeginn_time)
+                
+                aktuelle_zeit = jetzt.time()
+                if spielbeginn_time <= aktuelle_zeit:
+                    fehler = "Der Spielbeginn liegt in der Vergangenheit. Diese Buchung kann nicht mehr storniert werden."
+                    return render_template(
+                        "stornieren.html",
+                        fehler=fehler,
+                        anlagen=anlagen,
+                        alle_plaetze=alle_plaetze,
+                        form_data=form_data
+                    )
+
+            # Buchung löschen
+            try:
+                db_write(
+                    "DELETE FROM buchung WHERE buchungsnummer = %s",
+                    (buchung['buchungsnummer'],)
+                )
+
+                # Daten für Bestätigungsseite in Session speichern
+                session['stornierung_buchungsnummer'] = buchung['buchungsnummer']
+                session['stornierung_nid'] = buchung['nid']
+                session['stornierung_vorname'] = buchung['vorname']
+                session['stornierung_nachname'] = buchung['nachname']
+                session['stornierung_email'] = buchung['email']
+                session['stornierung_tennisanlage'] = buchung['tennisanlage']
+                session['stornierung_platznummer'] = buchung['platznummer']
+                session['stornierung_spieldatum'] = str(buchung['spieldatum'])
+                session['stornierung_spielbeginn'] = str(buchung['spielbeginn'])
+                session['stornierung_spielende'] = str(buchung['spielende'])
+                session['stornierung_zeitpunkt'] = datetime.now().strftime("%d.%m.%Y um %H:%M Uhr")
+
+                return redirect(url_for("sbestätigt"))
+
+            except Exception as e:
+                logging.error(f"Fehler beim Stornieren der Buchung: {e}")
+                fehler = "Fehler beim Stornieren der Buchung."
+                return render_template(
+                    "stornieren.html",
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
+                )
+
+    return render_template(
+        "stornieren.html",
+        fehler=fehler,
+        anlagen=anlagen,
+        alle_plaetze=alle_plaetze,
+        form_data=form_data
+    )
+
+#sbestätigt Route
 @app.route("/sbestätigt")
 @login_required
 def sbestätigt():
-    return render_template("sbestätigt.html")
+    # Daten aus Session holen
+    buchungsnummer = session.get('stornierung_buchungsnummer', '')
+    nid = session.get('stornierung_nid', '')
+    vorname = session.get('stornierung_vorname', '')
+    nachname = session.get('stornierung_nachname', '')
+    email = session.get('stornierung_email', '')
+    tennisanlage = session.get('stornierung_tennisanlage', '')
+    platznummer = session.get('stornierung_platznummer', '')
+    spieldatum_raw = session.get('stornierung_spieldatum', '')
+    spielbeginn = session.get('stornierung_spielbeginn', '')
+    spielende = session.get('stornierung_spielende', '')
+    stornierungszeitpunkt = session.get('stornierung_zeitpunkt', '')
+
+    if not buchungsnummer:
+        return redirect(url_for("stornieren"))
+
+    # Datum formatieren
+    spieldatum_formatiert = spieldatum_raw
+    if spieldatum_raw and len(spieldatum_raw) == 10:
+        teile = spieldatum_raw.split('-')
+        if len(teile) == 3:
+            spieldatum_formatiert = f"{teile[2]}.{teile[1]}.{teile[0]}"
+
+    return render_template("sbestätigt.html",
+        buchungsnummer=buchungsnummer,
+        nid=nid,
+        vorname=vorname,
+        nachname=nachname,
+        email=email,
+        tennisanlage=tennisanlage,
+        platznummer=platznummer,
+        spieldatum_formatiert=spieldatum_formatiert,
+        spielbeginn_formatiert=spielbeginn,
+        spielende_formatiert=spielende,
+        stornierungszeitpunkt=stornierungszeitpunkt
+    )
 
 @app.route("/verwaltung")
 @login_required
