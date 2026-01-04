@@ -999,7 +999,7 @@ def get_wartungsarbeiter(wid):
         return jsonify({"exists": False, "error": str(e)})
 
 
-# wartungsarbeiter route
+# wartungsarbeiter route - KOMPLETTE VERSION ZUM ERSETZEN
 @app.route("/wartungsarbeiter", methods=["GET", "POST"])
 @login_required
 def wartungsarbeiter():
@@ -1071,6 +1071,8 @@ def wartungsarbeiter():
     # Alle Wartungsarbeiter für die Übersicht laden - sortiert nach ID
     try:
         alle_arbeiter = db_read("SELECT wid, vorname, nachname, geburtsdatum FROM wartungsarbeiter ORDER BY wid")
+        if not alle_arbeiter:
+            alle_arbeiter = []
     except Exception as e:
         logging.error(f"Fehler beim Laden der Wartungsarbeiter: {e}")
         alle_arbeiter = []
