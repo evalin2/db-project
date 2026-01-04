@@ -444,78 +444,21 @@ def buchen():
                     single=True
                 )
                 
-                logging.info(f"Letzte Buchung: {letzte_buchung}")
-                logging.info(f"Nutzer Daten: vorname={nutzer.get('vorname')}, email={nutzer.get('email')}")
-                
-                # Datum formatieren für Session
-                from datetime import datetime
-                spieldatum_obj = datetime.strptime(spieldatum, '%Y-%m-%d')
-                spieldatum_formatiert = spieldatum_obj.strftime('%d.%m.%Y')
-                
-                logging.info(f"Spieldatum formatiert: {spieldatum_formatiert}")
-                
-                # Geburtsdatum formatieren falls vorhanden
-                geburtsdatum_str = ""
-                if nutzer.get("geburtsdatum"):
-                    try:
-                        if isinstance(nutzer["geburtsdatum"], str):
-                            geburtsdatum_obj = datetime.strptime(nutzer["geburtsdatum"], '%Y-%m-%d')
-                        else:
-                            geburtsdatum_obj = nutzer["geburtsdatum"]
-                        geburtsdatum_str = geburtsdatum_obj.strftime('%d.%m.%Y')
-                    except Exception as e:
-                        logging.error(f"Fehler bei Geburtsdatum: {e}")
-                
-                # Spielzeiten formatieren (HH:MM ohne Sekunden)
-                spielbeginn_raw = letzte_buchung.get('spielbeginn')
-                spielende_raw = letzte_buchung.get('spielende')
-                
-                logging.info(f"Spielbeginn raw: {spielbeginn_raw}, Typ: {type(spielbeginn_raw)}")
-                logging.info(f"Spielende raw: {spielende_raw}, Typ: {type(spielende_raw)}")
-                
-                # Konvertiere zu String und formatiere
-                if hasattr(spielbeginn_raw, 'strftime'):
-                    # Es ist ein datetime/time Objekt
-                    spielbeginn_str = spielbeginn_raw.strftime('%H:%M')
-                    spielende_str = spielende_raw.strftime('%H:%M')
-                else:
-                    # Es ist bereits ein String
-                    spielbeginn_str = str(spielbeginn_raw)[:5]
-                    spielende_str = str(spielende_raw)[:5]
-                
-                logging.info(f"Spielbeginn formatiert: {spielbeginn_str}")
-                logging.info(f"Spielende formatiert: {spielende_str}")
-                logging.info(f"Belag: {platz.get('belag', 'unbekannt')}")
-                
-                # Email sicher abrufen
-                email_str = nutzer.get("email", "")
-                if not email_str:
-                    email_str = nutzer.get("Email", "")  # Manchmal großgeschrieben
-                if not email_str:
-                    email_str = "keine E-Mail"
-                
-                logging.info(f"Email final: {email_str}")
-                
                 # Alle Daten in Session speichern für Bestätigungsseite
+                from datetime import datetime
                 session['buchung_details'] = {
-                    'buchungsnummer': int(letzte_buchung['buchungsnummer']),
-                    'nid': int(nutzer["nid"]),
-                    'vorname': str(nutzer["vorname"]),
-                    'nachname': str(nutzer["nachname"]),
-                    'email': str(email_str),
-                    'geburtsdatum': str(geburtsdatum_str),
-                    'tennisanlage': str(tennisanlage),
-                    'platznummer': int(platznummer),
-                    'belag': str(platz.get("belag", "unbekannt")),
-                    'spieldatum': str(spieldatum),
-                    'spieldatum_formatiert': str(spieldatum_formatiert),
-                    'spielbeginn': str(spielbeginn_str),
-                    'spielende': str(spielende_str),
-                    'buchungszeitpunkt': str(datetime.now().strftime("%d.%m.%Y um %H:%M Uhr"))
+                    'buchungsnummer': letzte_buchung['buchungsnummer'],
+                    'nid': nutzer["nid"],
+                    'vorname': nutzer["vorname"],
+                    'nachname': nutzer["nachname"],
+                    'email': nutzer.get("email", ""),
+                    'tennisanlage': tennisanlage,
+                    'platznummer': platznummer,
+                    'spieldatum': spieldatum,
+                    'spielbeginn': str(letzte_buchung['spielbeginn']),
+                    'spielende': str(letzte_buchung['spielende']),
+                    'buchungszeitpunkt': datetime.now().strftime("%d.%m.%Y um %H:%M Uhr")
                 }
-                
-                # DEBUG: Ausgabe der Session-Daten
-                logging.info(f"Session Buchung Details gespeichert: {session['buchung_details']}")
                 
                 return redirect(url_for("bbestätigt"))
             except Exception as e:
@@ -565,26 +508,21 @@ def get_nutzer(nid):
 def bbestätigt():
     buchung = session.get('buchung_details', {})
     
-    # DEBUG: Log was in der Session ist
-    logging.info(f"Bestätigungsseite - Buchung Details: {buchung}")
-    
     if not buchung:
         return redirect(url_for("buchen"))
     
     return render_template("bbestätigt.html", 
-        buchungsnummer=buchung.get('buchungsnummer', 'FEHLT'),
-        nid=buchung.get('nid', 'FEHLT'),
-        vorname=buchung.get('vorname', 'FEHLT'),
-        nachname=buchung.get('nachname', 'FEHLT'),
-        email=buchung.get('email', 'FEHLT'),
-        geburtsdatum=buchung.get('geburtsdatum', ''),
-        tennisanlage=buchung.get('tennisanlage', 'FEHLT'),
-        platznummer=buchung.get('platznummer', 'FEHLT'),
-        belag=buchung.get('belag', 'FEHLT'),
-        spieldatum_formatiert=buchung.get('spieldatum_formatiert', 'FEHLT'),
-        spielbeginn_formatiert=buchung.get('spielbeginn', 'FEHLT'),
-        spielende_formatiert=buchung.get('spielende', 'FEHLT'),
-        buchungszeitpunkt=buchung.get('buchungszeitpunkt', 'FEHLT')
+        buchungsnummer=buchung.get('buchungsnummer'),
+        nid=buchung.get('nid'),
+        vorname=buchung.get('vorname'),
+        nachname=buchung.get('nachname'),
+        email=buchung.get('email'),
+        tennisanlage=buchung.get('tennisanlage'),
+        platznummer=buchung.get('platznummer'),
+        spieldatum=buchung.get('spieldatum'),
+        spielbeginn=buchung.get('spielbeginn'),
+        spielende=buchung.get('spielende'),
+        buchungszeitpunkt=buchung.get('buchungszeitpunkt')
     )
 
 @app.route("/stornieren")
