@@ -90,6 +90,11 @@
             box-shadow: 0 0 0 2px rgba(159, 204, 59, 0.2);
         }
         
+        input[readonly] {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
+        }
+        
         button {
             margin-top: 20px;
             padding: 12px;
@@ -293,34 +298,49 @@
     </footer>
 
     <script>
-        // Auto-Fill beim Ändern: TID eingeben -> Daten per AJAX vom Server laden
-        document.getElementById('platz_id_edit').addEventListener('blur', function() {
-            const tid = this.value.trim();
-            if (!tid) return;
-
-            // AJAX-Call zum Server
-            fetch(`/get_tennisplatz/${tid}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.exists) {
-                        // Felder ausfüllen
-                        document.getElementById('anlage_edit').value = data.tennisanlage;
-                        document.getElementById('platznummer_edit').value = data.platznummer;
-                        document.getElementById('belag_edit').value = data.belag;
-                        document.getElementById('wartung_edit').value = data.wartung;
-                    } else {
-                        // Felder leeren wenn TID nicht gefunden
+        // Warte bis die Seite komplett geladen ist
+        document.addEventListener('DOMContentLoaded', function() {
+            var tidInput = document.getElementById('platz_id_edit');
+            
+            if (tidInput) {
+                // Event Listener für Eingabe in TID-Feld
+                tidInput.addEventListener('input', function() {
+                    var tid = this.value.trim();
+                    
+                    // Felder leeren wenn TID leer ist
+                    if (!tid) {
                         document.getElementById('anlage_edit').value = '';
                         document.getElementById('platznummer_edit').value = '';
                         document.getElementById('belag_edit').value = '';
                         document.getElementById('wartung_edit').value = '';
-                        alert('Tennisplatz mit dieser ID wurde nicht gefunden.');
+                        return;
                     }
-                })
-                .catch(error => {
-                    console.error('Fehler beim Laden der Platz-Daten:', error);
-                    alert('Fehler beim Laden der Daten. Bitte versuchen Sie es erneut.');
+                    
+                    // AJAX-Call zum Server - Daten für diese TID laden
+                    fetch('/get_tennisplatz/' + tid)
+                        .then(function(response) {
+                            return response.json();
+                        })
+                        .then(function(data) {
+                            if (data.exists) {
+                                // Felder mit Daten füllen
+                                document.getElementById('anlage_edit').value = data.tennisanlage;
+                                document.getElementById('platznummer_edit').value = data.platznummer;
+                                document.getElementById('belag_edit').value = data.belag;
+                                document.getElementById('wartung_edit').value = data.wartung;
+                            } else {
+                                // TID nicht gefunden - Felder leeren
+                                document.getElementById('anlage_edit').value = '';
+                                document.getElementById('platznummer_edit').value = '';
+                                document.getElementById('belag_edit').value = '';
+                                document.getElementById('wartung_edit').value = '';
+                            }
+                        })
+                        .catch(function(error) {
+                            console.error('Fehler beim Laden:', error);
+                        });
                 });
+            }
         });
     </script>
 </body>
