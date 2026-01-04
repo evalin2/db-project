@@ -175,8 +175,6 @@
             margin: 0;
             line-height: 1.6;
         }
-
-
     </style>
 </head>
 <body>
@@ -201,7 +199,7 @@
         <!-- Wartungsarbeiter hinzufügen -->
         <section>
             <h3>Wartungsarbeiter hinzufügen</h3>
-            <form method="POST">
+            <form method="POST" action="{{ url_for('wartungsarbeiter') }}">
                 <input type="hidden" name="aktion" value="hinzufuegen">
                 
                 <label for="vorname_add">Vorname *</label>
@@ -220,7 +218,7 @@
         <!-- Wartungsarbeiter löschen -->
         <section>
             <h3>Wartungsarbeiter löschen</h3>
-            <form method="POST">
+            <form method="POST" action="{{ url_for('wartungsarbeiter') }}">
                 <input type="hidden" name="aktion" value="loeschen">
                 
                 <label for="arbeiter_id_delete">Wartungsarbeiter-ID *</label>
