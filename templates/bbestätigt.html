@@ -88,6 +88,22 @@
     <div class="success-icon">✓</div>
     <h1>Buchung erfasst</h1>
     
+    <!-- DEBUG: Zeige alle Werte -->
+    <div style="background: #ffebee; padding: 10px; margin: 10px 0; text-align: left; font-size: 12px;">
+        <strong>DEBUG - Was im Template ankommt:</strong><br>
+        Buchungsnummer: {{ buchungsnummer }}<br>
+        NID: {{ nid }}<br>
+        Name: {{ vorname }} {{ nachname }}<br>
+        Email: {{ email }}<br>
+        Geburtsdatum: {{ geburtsdatum }}<br>
+        Anlage: {{ tennisanlage }}<br>
+        Platz: {{ platznummer }}<br>
+        Datum: {{ spieldatum_formatiert }}<br>
+        Beginn: {{ spielbeginn_formatiert }}<br>
+        Ende: {{ spielende_formatiert }}<br>
+        Zeitpunkt: {{ buchungszeitpunkt }}
+    </div>
+    
     <div class="info-box">
         <div class="info-row">
             <span class="info-label">Buchungsnummer:</span>
