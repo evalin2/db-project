@@ -10,98 +10,88 @@
             margin: 20px;
             text-align: center;
         }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
         .success-box {
-            max-width: 600px;
+            max-width: 500px;
             margin: 50px auto;
             padding: 30px;
-            border: 2px solid #4CAF50;
-            border-radius: 10px;
-            background-color: #f1f8f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
         }
         .success-icon {
-            font-size: 60px;
+            font-size: 48px;
             color: #4CAF50;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         h1 {
-            color: #4CAF50;
+            color: #333;
+            font-size: 24px;
         }
         .info-box {
-            background-color: #e3f2fd;
-            border: 1px solid #2196F3;
-            border-radius: 5px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 3px;
             padding: 20px;
             margin: 20px 0;
             text-align: left;
         }
         .info-row {
-            margin: 10px 0;
+            margin: 12px 0;
             padding: 8px 0;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #eee;
         }
         .info-row:last-child {
             border-bottom: none;
         }
         .info-label {
-            font-weight: bold;
-            color: #555;
+            font-weight: normal;
+            color: #666;
             display: inline-block;
-            width: 150px;
+            width: 140px;
         }
         .info-value {
-            color: #2196F3;
-            font-weight: bold;
-        }
-        .buchungsnummer-highlight {
-            font-size: 28px;
-            font-weight: bold;
-            color: #2196F3;
-            margin: 15px 0;
+            color: #333;
         }
         .buttons {
             margin-top: 30px;
         }
         .btn {
             display: inline-block;
-            padding: 12px 25px;
-            margin: 10px;
+            padding: 10px 20px;
+            margin: 5px;
             text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            color: #333;
             cursor: pointer;
-            border: none;
-        }
-        .btn-primary {
-            background-color: #4CAF50;
-            color: white;
-        }
-        .btn-secondary {
-            background-color: #2196F3;
-            color: white;
-        }
-        .btn-pdf {
-            background-color: #FF5722;
-            color: white;
         }
         .btn:hover {
-            opacity: 0.8;
+            background-color: #f5f5f5;
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
+<header>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="max-width:150px;">
+    <h1>cour+</h1>
+    <p style="color: #666; margin-top: -10px;">Tennisplatz-Buchungssystem</p>
+</header>
+
 <div class="success-box">
     <div class="success-icon">✓</div>
-    <h1>Buchung erfasst!</h1>
-    <p>Ihre Tennisplatz-Buchung wurde erfolgreich gespeichert.</p>
+    <h1>Buchung erfasst</h1>
     
     <div class="info-box">
-        <h3 style="text-align: center; margin-top: 0;">Buchungsdetails</h3>
-        
         <div class="info-row">
             <span class="info-label">Buchungsnummer:</span>
-            <span class="buchungsnummer-highlight">{{ buchungsnummer }}</span>
+            <span class="info-value"><strong>{{ buchungsnummer }}</strong></span>
         </div>
         
         <div class="info-row">
@@ -115,40 +105,15 @@
         </div>
         
         <div class="info-row">
-            <span class="info-label">E-Mail:</span>
-            <span class="info-value">{{ email }}</span>
-        </div>
-        
-        <div class="info-row">
-            <span class="info-label">Tennisanlage:</span>
-            <span class="info-value">{{ tennisanlage }}</span>
-        </div>
-        
-        <div class="info-row">
-            <span class="info-label">Platznummer:</span>
-            <span class="info-value">{{ platznummer }}</span>
-        </div>
-        
-        <div class="info-row">
-            <span class="info-label">Spieldatum:</span>
-            <span class="info-value">{{ spieldatum }}</span>
-        </div>
-        
-        <div class="info-row">
-            <span class="info-label">Spielzeit:</span>
-            <span class="info-value">{{ spielbeginn }} - {{ spielende }}</span>
-        </div>
-        
-        <div class="info-row">
-            <span class="info-label">Buchungszeitpunkt:</span>
-            <span class="info-value">{{ buchungszeitpunkt }}</span>
+            <span class="info-label">Datum:</span>
+            <span class="info-value">{{ spieldatum_formatiert }}</span>
         </div>
     </div>
     
     <div class="buttons">
-        <button onclick="generatePDF()" class="btn btn-pdf">📄 PDF herunterladen</button>
-        <a href="{{ url_for('buchen') }}" class="btn btn-primary">Weitere Buchung</a>
-        <a href="{{ url_for('index') }}" class="btn btn-secondary">Zur Startseite</a>
+        <button onclick="generatePDF()" class="btn">📄 PDF herunterladen</button>
+        <a href="{{ url_for('buchen') }}" class="btn">Weitere Buchung</a>
+        <a href="{{ url_for('index') }}" class="btn">Zur Startseite</a>
     </div>
 </div>
 
@@ -157,71 +122,83 @@ function generatePDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     
-    // Logo-Bereich (Platzhalter - du kannst später ein echtes Logo einfügen)
-    doc.setFillColor(76, 175, 80);
-    doc.rect(15, 15, 180, 30, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(28);
-    doc.setFont(undefined, 'bold');
-    doc.text('cour+', 105, 28, { align: 'center' });
-    doc.setFontSize(14);
-    doc.setFont(undefined, 'normal');
-    doc.text('Tennisplatz-Buchungssystem', 105, 38, { align: 'center' });
-    
-    // Überschrift
-    doc.setTextColor(0, 0, 0);
+    // Logo und Titel
     doc.setFontSize(20);
     doc.setFont(undefined, 'bold');
-    doc.text('Buchungsbestätigung', 105, 60, { align: 'center' });
+    doc.text('cour+', 105, 25, { align: 'center' });
     
-    // Buchungsnummer hervorgehoben
-    doc.setFontSize(16);
-    doc.setTextColor(33, 150, 243);
-    doc.text('Buchungsnummer: {{ buchungsnummer }}', 105, 75, { align: 'center' });
-    
-    // Inhalt
-    doc.setTextColor(0, 0, 0);
     doc.setFontSize(12);
     doc.setFont(undefined, 'normal');
+    doc.text('Tennisplatz-Buchungssystem', 105, 32, { align: 'center' });
     
-    let y = 95;
-    const lineHeight = 10;
+    // Linie
+    doc.setDrawColor(200, 200, 200);
+    doc.line(20, 38, 190, 38);
+    
+    // Überschrift
+    doc.setFontSize(16);
+    doc.setFont(undefined, 'bold');
+    doc.text('Buchungsbestätigung', 20, 50);
+    
+    // Buchungsnummer
+    doc.setFontSize(11);
+    doc.text('Buchungsnummer: {{ buchungsnummer }}', 20, 58);
+    
+    // Inhalt
+    doc.setFontSize(11);
+    doc.setFont(undefined, 'normal');
+    
+    let y = 75;
+    const lineHeight = 8;
     
     // Personalien
     doc.setFont(undefined, 'bold');
-    doc.text('Personalien:', 20, y);
+    doc.text('Personalien', 20, y);
     y += lineHeight;
     doc.setFont(undefined, 'normal');
-    doc.text('Name: {{ vorname }} {{ nachname }}', 20, y);
+    doc.text('Name:', 20, y);
+    doc.text('{{ vorname }} {{ nachname }}', 70, y);
     y += lineHeight;
-    doc.text('Nutzer-ID: {{ nid }}', 20, y);
+    doc.text('Nutzer-ID:', 20, y);
+    doc.text('{{ nid }}', 70, y);
     y += lineHeight;
-    doc.text('E-Mail: {{ email }}', 20, y);
-    y += lineHeight * 1.5;
+    doc.text('E-Mail:', 20, y);
+    doc.text('{{ email }}', 70, y);
+    y += lineHeight;
+    {% if geburtsdatum %}
+    doc.text('Geburtsdatum:', 20, y);
+    doc.text('{{ geburtsdatum }}', 70, y);
+    y += lineHeight;
+    {% endif %}
+    y += lineHeight;
     
     // Buchungsdetails
     doc.setFont(undefined, 'bold');
-    doc.text('Buchungsdetails:', 20, y);
+    doc.text('Buchungsdetails', 20, y);
     y += lineHeight;
     doc.setFont(undefined, 'normal');
-    doc.text('Tennisanlage: {{ tennisanlage }}', 20, y);
+    doc.text('Tennisanlage:', 20, y);
+    doc.text('{{ tennisanlage }}', 70, y);
     y += lineHeight;
-    doc.text('Platznummer: {{ platznummer }}', 20, y);
+    doc.text('Platznummer:', 20, y);
+    doc.text('{{ platznummer }} ({{ belag }})', 70, y);
     y += lineHeight;
-    doc.text('Spieldatum: {{ spieldatum }}', 20, y);
+    doc.text('Spieldatum:', 20, y);
+    doc.text('{{ spieldatum_formatiert }}', 70, y);
     y += lineHeight;
-    doc.text('Spielzeit: {{ spielbeginn }} - {{ spielende }}', 20, y);
-    y += lineHeight * 1.5;
+    doc.text('Spielzeit:', 20, y);
+    doc.text('{{ spielbeginn_formatiert }} - {{ spielende_formatiert }} Uhr', 70, y);
+    y += lineHeight * 2;
     
     // Buchungszeitpunkt
     doc.setFont(undefined, 'bold');
-    doc.text('Zeitpunkt der Buchung:', 20, y);
+    doc.text('Zeitpunkt der Buchung', 20, y);
     y += lineHeight;
     doc.setFont(undefined, 'normal');
     doc.text('{{ buchungszeitpunkt }}', 20, y);
     
     // Footer
-    doc.setFontSize(10);
+    doc.setFontSize(9);
     doc.setTextColor(100, 100, 100);
     doc.text('Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt', 105, 280, { align: 'center' });
     
