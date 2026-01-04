@@ -327,9 +327,9 @@
                                 document.getElementById('anlage_edit').value = data.tennisanlage;
                                 document.getElementById('platznummer_edit').value = data.platznummer;
                                 
-                                // Belag Dropdown setzen
+                                // Belag Dropdown setzen - in Kleinbuchstaben umwandeln
                                 var belagSelect = document.getElementById('belag_edit');
-                                belagSelect.value = data.belag;
+                                belagSelect.value = data.belag.toLowerCase();
                                 
                                 document.getElementById('wartung_edit').value = data.wartung;
                             } else {
