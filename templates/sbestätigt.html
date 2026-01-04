@@ -5,127 +5,230 @@
     <title>Stornierung bestätigt</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        header, footer { text-align: center; margin-bottom: 20px; }
-        .container { max-width: 600px; margin: 0 auto; }
-        .success { 
-            color: #2e7d32; 
-            background-color: #e8f5e9;
-            border: 2px solid #4caf50;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 30px;
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px;
             text-align: center;
         }
-        .success h2 { margin-top: 0; color: #2e7d32; }
-        .details { 
-            background-color: #f5f5f5;
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .success-box {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .success-icon {
+            font-size: 48px;
+            color: #4CAF50;
+            margin-bottom: 15px;
+        }
+        h1 {
+            color: #333;
+            font-size: 24px;
+        }
+        .info-box {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 3px;
             padding: 20px;
-            margin-bottom: 20px;
+            margin: 20px 0;
+            text-align: left;
         }
-        .details h3 { margin-top: 0; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
-        .detail-row { 
-            display: flex; 
-            justify-content: space-between; 
-            padding: 8px 0; 
-            border-bottom: 1px solid #e0e0e0; 
+        .info-row {
+            margin: 12px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
         }
-        .detail-row:last-child { border-bottom: none; }
-        .detail-label { font-weight: bold; color: #555; }
-        .detail-value { color: #222; }
-        button, a.button { 
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            font-weight: normal;
+            color: #666;
             display: inline-block;
-            padding: 12px 24px; 
-            margin: 10px 5px;
-            background-color: #1976d2;
-            color: white;
+            width: 140px;
+        }
+        .info-value {
+            color: #333;
+        }
+        .buttons {
+            margin-top: 30px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
             text-decoration: none;
-            border: none;
-            border-radius: 4px;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            color: #333;
             cursor: pointer;
-            font-size: 16px;
         }
-        button:hover, a.button:hover { background-color: #1565c0; }
-        .button-secondary {
-            background-color: #757575;
+        .btn:hover {
+            background-color: #f5f5f5;
         }
-        .button-secondary:hover {
-            background-color: #616161;
-        }
-        .actions { text-align: center; margin-top: 30px; }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
 <header>
     <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="max-width:150px;">
-    <h1>Tennisplatz-Buchungssystem</h1>
+    <h1>cour+</h1>
+    <p style="color: #666; margin-top: -10px;">Tennisplatz-Buchungssystem</p>
 </header>
 
-<div class="container">
-    <div class="success">
-        <h2>✓ Stornierung erfolgreich</h2>
-        <p>Ihre Buchung wurde erfolgreich storniert.</p>
-    </div>
-
-    <div class="details">
-        <h3>Stornierte Buchung</h3>
-        <div class="detail-row">
-            <span class="detail-label">Buchungsnummer:</span>
-            <span class="detail-value">{{ buchungsnummer }}</span>
+<div class="success-box">
+    <div class="success-icon">✓</div>
+    <h1>Stornierung erfolgreich</h1>
+    <p style="color: #666;">Ihre Buchung wurde erfolgreich storniert.</p>
+    
+    <div class="info-box">
+        <div class="info-row">
+            <span class="info-label">Buchungsnummer:</span>
+            <span class="info-value"><strong>{{ buchungsnummer }}</strong></span>
         </div>
-        <div class="detail-row">
-            <span class="detail-label">Stornierungszeitpunkt:</span>
-            <span class="detail-value">{{ stornierungszeitpunkt }}</span>
+        
+        <div class="info-row">
+            <span class="info-label">Name:</span>
+            <span class="info-value">{{ vorname }} {{ nachname }}</span>
         </div>
-    </div>
-
-    <div class="details">
-        <h3>Nutzerdaten</h3>
-        <div class="detail-row">
-            <span class="detail-label">Nutzer-ID:</span>
-            <span class="detail-value">{{ nid }}</span>
+        
+        <div class="info-row">
+            <span class="info-label">Nutzer-ID:</span>
+            <span class="info-value">{{ nid }}</span>
         </div>
-        <div class="detail-row">
-            <span class="detail-label">Name:</span>
-            <span class="detail-value">{{ vorname }} {{ nachname }}</span>
+        
+        <div class="info-row">
+            <span class="info-label">Tennisanlage:</span>
+            <span class="info-value">{{ tennisanlage }}</span>
         </div>
-        <div class="detail-row">
-            <span class="detail-label">E-Mail:</span>
-            <span class="detail-value">{{ email }}</span>
+        
+        <div class="info-row">
+            <span class="info-label">Platznummer:</span>
+            <span class="info-value">Platz {{ platznummer }}</span>
         </div>
-    </div>
-
-    <div class="details">
-        <h3>Buchungsdetails</h3>
-        <div class="detail-row">
-            <span class="detail-label">Tennisanlage:</span>
-            <span class="detail-value">{{ tennisanlage }}</span>
+        
+        <div class="info-row">
+            <span class="info-label">Spieldatum:</span>
+            <span class="info-value">{{ spieldatum_formatiert }}</span>
         </div>
-        <div class="detail-row">
-            <span class="detail-label">Platznummer:</span>
-            <span class="detail-value">{{ platznummer }}</span>
-        </div>
-        <div class="detail-row">
-            <span class="detail-label">Spieldatum:</span>
-            <span class="detail-value">{{ spieldatum_formatiert }}</span>
-        </div>
-        <div class="detail-row">
-            <span class="detail-label">Spielzeit:</span>
-            <span class="detail-value">{{ spielbeginn_formatiert }} - {{ spielende_formatiert }} Uhr</span>
+        
+        <div class="info-row">
+            <span class="info-label">Spielzeit:</span>
+            <span class="info-value">{{ spielbeginn_formatiert }} - {{ spielende_formatiert }} Uhr</span>
         </div>
     </div>
-
-    <div class="actions">
-        <a href="{{ url_for('index') }}" class="button">Zur Startseite</a>
-        <a href="{{ url_for('buchen') }}" class="button button-secondary">Neue Buchung</a>
+    
+    <div class="buttons">
+        <button onclick="generatePDF()" class="btn">📄 PDF herunterladen</button>
+        <a href="{{ url_for('buchen') }}" class="btn">Neue Buchung</a>
+        <a href="{{ url_for('index') }}" class="btn">Zur Startseite</a>
     </div>
 </div>
 
-<footer>
-    <p>
+<script>
+function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // Titel oben
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(20);
+    doc.setFont(undefined, 'bold');
+    doc.text('cour+', 105, 25, { align: 'center' });
+    
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.text('Tennisplatz-Buchungssystem', 105, 32, { align: 'center' });
+    
+    // Linie
+    doc.setDrawColor(200, 200, 200);
+    doc.line(20, 38, 190, 38);
+    
+    // Überschrift
+    doc.setFontSize(16);
+    doc.setFont(undefined, 'bold');
+    doc.text('Stornierungsbestätigung', 20, 50);
+    
+    // Buchungsnummer
+    doc.setFontSize(11);
+    doc.text('Buchungsnummer: ' + '{{ buchungsnummer }}', 20, 58);
+    
+    // Inhalt
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    
+    let y = 73;
+    const lineHeight = 7;
+    
+    // Personalien
+    doc.setFont(undefined, 'bold');
+    doc.text('Personalien', 20, y);
+    y += lineHeight + 2;
+    doc.setFont(undefined, 'normal');
+    
+    doc.text('Name:', 25, y);
+    doc.text('{{ vorname }} {{ nachname }}', 75, y);
+    y += lineHeight;
+    
+    doc.text('Nutzer-ID:', 25, y);
+    doc.text('{{ nid }}', 75, y);
+    y += lineHeight;
+    
+    doc.text('E-Mail:', 25, y);
+    doc.text('{{ email }}', 75, y);
+    y += lineHeight;
+    
+    y += lineHeight;
+    
+    // Stornierte Buchungsdetails
+    doc.setFont(undefined, 'bold');
+    doc.text('Stornierte Buchung', 20, y);
+    y += lineHeight + 2;
+    doc.setFont(undefined, 'normal');
+    
+    doc.text('Tennisanlage:', 25, y);
+    doc.text('{{ tennisanlage }}', 75, y);
+    y += lineHeight;
+    
+    doc.text('Platznummer:', 25, y);
+    doc.text('Platz {{ platznummer }}', 75, y);
+    y += lineHeight;
+    
+    doc.text('Spieldatum:', 25, y);
+    doc.text('{{ spieldatum_formatiert }}', 75, y);
+    y += lineHeight;
+    
+    doc.text('Spielzeit:', 25, y);
+    doc.text('{{ spielbeginn_formatiert }} - {{ spielende_formatiert }} Uhr', 75, y);
+    y += lineHeight + lineHeight;
+    
+    // Stornierungszeitpunkt
+    doc.setFont(undefined, 'bold');
+    doc.text('Zeitpunkt der Stornierung', 20, y);
+    y += lineHeight + 2;
+    doc.setFont(undefined, 'normal');
+    doc.text('{{ stornierungszeitpunkt }}', 25, y);
+    
+    // Footer
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt', 105, 280, { align: 'center' });
+    
+    // PDF speichern
+    doc.save('Stornierungsbestaetigung_{{ buchungsnummer }}.pdf');
+}
+</script>
+
+<footer style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #ddd;">
+    <p style="color: #666; font-size: 12px;">
         Impressum<br>
         Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt
     </p>
