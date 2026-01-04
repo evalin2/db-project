@@ -503,56 +503,6 @@ def get_nutzer(nid):
         return jsonify({"exists": False, "error": str(e)})
 
 
-@app.route("/bbestätigt")
-@login_required
-def bbestätigt():
-    # Daten direkt aus Session holen
-    buchungsnummer = session.get('buchungs_nr', '')
-    nid = session.get('nutzer_nid', '')
-    vorname = session.get('nutzer_vorname', '')
-    nachname = session.get('nutzer_nachname', '')
-    email = session.get('nutzer_email', '')
-    geburtsdatum_raw = session.get('nutzer_geburtsdatum', '')
-    tennisanlage = session.get('buchung_anlage', '')
-    platznummer = session.get('buchung_platz', '')
-    spieldatum_raw = session.get('buchung_datum', '')  # YYYY-MM-DD
-    spielbeginn = session.get('buchung_beginn', '')  # HH:MM
-    spielende = session.get('buchung_ende', '')  # HH:MM
-    buchungszeitpunkt = session.get('buchung_zeitpunkt', '')
-    
-    if not buchungsnummer:
-        return redirect(url_for("buchen"))
-    
-    # Datum formatieren für Anzeige: YYYY-MM-DD -> DD.MM.YYYY
-    spieldatum_formatiert = spieldatum_raw
-    if spieldatum_raw and len(spieldatum_raw) == 10:
-        teile = spieldatum_raw.split('-')
-        if len(teile) == 3:
-            spieldatum_formatiert = f"{teile[2]}.{teile[1]}.{teile[0]}"
-    
-    # Geburtsdatum formatieren
-    geburtsdatum = geburtsdatum_raw
-    if geburtsdatum_raw and len(geburtsdatum_raw) == 10:
-        teile = geburtsdatum_raw.split('-')
-        if len(teile) == 3:
-            geburtsdatum = f"{teile[2]}.{teile[1]}.{teile[0]}"
-    
-    return render_template("bbestätigt.html", 
-        buchungsnummer=buchungsnummer,
-        nid=nid,
-        vorname=vorname,
-        nachname=nachname,
-        email=email,
-        geburtsdatum=geburtsdatum,
-        tennisanlage=tennisanlage,
-        platznummer=platznummer,
-        belag='',
-        spieldatum_formatiert=spieldatum_formatiert,
-        spielbeginn_formatiert=spielbeginn,
-        spielende_formatiert=spielende,
-        buchungszeitpunkt=buchungszeitpunkt
-    )
-
 #stornieren Route
 @app.route("/stornieren", methods=["GET", "POST"])
 @login_required
@@ -635,18 +585,7 @@ def stornieren():
             spieldatum = form_data['spieldatum']
             beginn = form_data['beginn']
 
-            # Validierung
-            if not tennisanlage or not platznummer or not spieldatum or not beginn:
-                fehler = "Bitte geben Sie entweder die Buchungsnummer oder alle erforderlichen Buchungsdetails ein."
-                return render_template(
-                    "stornieren.html",
-                    fehler=fehler,
-                    anlagen=anlagen,
-                    alle_plaetze=alle_plaetze,
-                    form_data=form_data
-                )
-
-            # Nutzer identifizieren
+            # Nutzer identifizieren (ZUERST!)
             nutzer = None
             if nid:
                 nutzer = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True)
@@ -678,6 +617,17 @@ def stornieren():
                     )
             else:
                 fehler = "Bitte geben Sie entweder Ihre Nutzer-ID oder vollständige Personalien (Vorname, Nachname, E-Mail) ein."
+                return render_template(
+                    "stornieren.html",
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
+                )
+
+            # Validierung der Buchungsdetails (NACH Nutzeridentifikation!)
+            if not tennisanlage or not platznummer or not spieldatum or not beginn:
+                fehler = "Bitte alle Buchungsdetails ausfüllen."
                 return render_template(
                     "stornieren.html",
                     fehler=fehler,
