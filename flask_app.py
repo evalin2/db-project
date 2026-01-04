@@ -444,21 +444,48 @@ def buchen():
                     single=True
                 )
                 
-                # Alle Daten in Session speichern für Bestätigungsseite
+                # Datum formatieren für Session
                 from datetime import datetime
+                spieldatum_obj = datetime.strptime(spieldatum, '%Y-%m-%d')
+                spieldatum_formatiert = spieldatum_obj.strftime('%d.%m.%Y')
+                
+                # Geburtsdatum formatieren falls vorhanden
+                geburtsdatum_str = ""
+                if nutzer.get("geburtsdatum"):
+                    try:
+                        if isinstance(nutzer["geburtsdatum"], str):
+                            geburtsdatum_obj = datetime.strptime(nutzer["geburtsdatum"], '%Y-%m-%d')
+                        else:
+                            geburtsdatum_obj = nutzer["geburtsdatum"]
+                        geburtsdatum_str = geburtsdatum_obj.strftime('%d.%m.%Y')
+                    except:
+                        pass
+                
+                # Spielzeiten formatieren (HH:MM ohne Sekunden)
+                spielbeginn_str = str(letzte_buchung['spielbeginn'])
+                spielende_str = str(letzte_buchung['spielende'])
+                
+                # Falls Zeitformat HH:MM:SS ist, nur HH:MM nehmen
+                if len(spielbeginn_str) > 5:
+                    spielbeginn_str = spielbeginn_str[:5]
+                if len(spielende_str) > 5:
+                    spielende_str = spielende_str[:5]
+                
+                # Alle Daten in Session speichern für Bestätigungsseite
                 session['buchung_details'] = {
                     'buchungsnummer': letzte_buchung['buchungsnummer'],
                     'nid': nutzer["nid"],
                     'vorname': nutzer["vorname"],
                     'nachname': nutzer["nachname"],
                     'email': nutzer.get("email", ""),
-                    'geburtsdatum': str(nutzer.get("geburtsdatum", "")) if nutzer.get("geburtsdatum") else "",
+                    'geburtsdatum': geburtsdatum_str,
                     'tennisanlage': tennisanlage,
                     'platznummer': platznummer,
-                    'belag': platz.get("belag", ""),
+                    'belag': platz.get("belag", "unbekannt"),
                     'spieldatum': spieldatum,
-                    'spielbeginn': str(letzte_buchung['spielbeginn']),
-                    'spielende': str(letzte_buchung['spielende']),
+                    'spieldatum_formatiert': spieldatum_formatiert,
+                    'spielbeginn': spielbeginn_str,
+                    'spielende': spielende_str,
                     'buchungszeitpunkt': datetime.now().strftime("%d.%m.%Y um %H:%M Uhr")
                 }
                 
@@ -513,37 +540,19 @@ def bbestätigt():
     if not buchung:
         return redirect(url_for("buchen"))
     
-    # Datum formatieren: TT.MM.JJJJ
-    from datetime import datetime
-    spieldatum_obj = datetime.strptime(buchung.get('spieldatum'), '%Y-%m-%d')
-    spieldatum_formatiert = spieldatum_obj.strftime('%d.%m.%Y')
-    
-    # Geburtsdatum formatieren falls vorhanden
-    geburtsdatum_formatiert = ""
-    if buchung.get('geburtsdatum'):
-        try:
-            geburtsdatum_obj = datetime.strptime(buchung.get('geburtsdatum'), '%Y-%m-%d')
-            geburtsdatum_formatiert = geburtsdatum_obj.strftime('%d.%m.%Y')
-        except:
-            pass
-    
-    # Uhrzeiten formatieren: HH:MM (ohne Sekunden)
-    spielbeginn_formatiert = buchung.get('spielbeginn', '')[:5]
-    spielende_formatiert = buchung.get('spielende', '')[:5]
-    
     return render_template("bbestätigt.html", 
         buchungsnummer=buchung.get('buchungsnummer'),
         nid=buchung.get('nid'),
         vorname=buchung.get('vorname'),
         nachname=buchung.get('nachname'),
         email=buchung.get('email'),
-        geburtsdatum=geburtsdatum_formatiert,
+        geburtsdatum=buchung.get('geburtsdatum'),
         tennisanlage=buchung.get('tennisanlage'),
         platznummer=buchung.get('platznummer'),
         belag=buchung.get('belag'),
-        spieldatum_formatiert=spieldatum_formatiert,
-        spielbeginn_formatiert=spielbeginn_formatiert,
-        spielende_formatiert=spielende_formatiert,
+        spieldatum_formatiert=buchung.get('spieldatum_formatiert'),
+        spielbeginn_formatiert=buchung.get('spielbeginn'),
+        spielende_formatiert=buchung.get('spielende'),
         buchungszeitpunkt=buchung.get('buchungszeitpunkt')
     )
 
