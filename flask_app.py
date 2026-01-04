@@ -489,6 +489,9 @@ def buchen():
                     'buchungszeitpunkt': datetime.now().strftime("%d.%m.%Y um %H:%M Uhr")
                 }
                 
+                # DEBUG: Ausgabe der Session-Daten
+                logging.info(f"Session Buchung Details: {session['buchung_details']}")
+                
                 return redirect(url_for("bbestätigt"))
             except Exception as e:
                 logging.error(f"Fehler beim Speichern der Buchung: {e}")
@@ -537,23 +540,26 @@ def get_nutzer(nid):
 def bbestätigt():
     buchung = session.get('buchung_details', {})
     
+    # DEBUG: Log was in der Session ist
+    logging.info(f"Bestätigungsseite - Buchung Details: {buchung}")
+    
     if not buchung:
         return redirect(url_for("buchen"))
     
     return render_template("bbestätigt.html", 
-        buchungsnummer=buchung.get('buchungsnummer'),
-        nid=buchung.get('nid'),
-        vorname=buchung.get('vorname'),
-        nachname=buchung.get('nachname'),
-        email=buchung.get('email'),
-        geburtsdatum=buchung.get('geburtsdatum'),
-        tennisanlage=buchung.get('tennisanlage'),
-        platznummer=buchung.get('platznummer'),
-        belag=buchung.get('belag'),
-        spieldatum_formatiert=buchung.get('spieldatum_formatiert'),
-        spielbeginn_formatiert=buchung.get('spielbeginn'),
-        spielende_formatiert=buchung.get('spielende'),
-        buchungszeitpunkt=buchung.get('buchungszeitpunkt')
+        buchungsnummer=buchung.get('buchungsnummer', 'FEHLT'),
+        nid=buchung.get('nid', 'FEHLT'),
+        vorname=buchung.get('vorname', 'FEHLT'),
+        nachname=buchung.get('nachname', 'FEHLT'),
+        email=buchung.get('email', 'FEHLT'),
+        geburtsdatum=buchung.get('geburtsdatum', ''),
+        tennisanlage=buchung.get('tennisanlage', 'FEHLT'),
+        platznummer=buchung.get('platznummer', 'FEHLT'),
+        belag=buchung.get('belag', 'FEHLT'),
+        spieldatum_formatiert=buchung.get('spieldatum_formatiert', 'FEHLT'),
+        spielbeginn_formatiert=buchung.get('spielbeginn', 'FEHLT'),
+        spielende_formatiert=buchung.get('spielende', 'FEHLT'),
+        buchungszeitpunkt=buchung.get('buchungszeitpunkt', 'FEHLT')
     )
 
 @app.route("/stornieren")
