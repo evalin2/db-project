@@ -103,6 +103,27 @@
 // Plätze für JavaScript verfügbar machen
 const allePlaetze = {{ alle_plaetze | tojson | safe }};
 
+// Dynamische Platznummern
+document.getElementById("tennisanlage").addEventListener("change", function() {
+    const gewaehlteAnlage = this.value;
+    const platznummerSelect = document.getElementById("platznummer");
+    
+    platznummerSelect.innerHTML = '<option value="">-- bitte wählen --</option>';
+    
+    if (!gewaehlteAnlage) {
+        return;
+    }
+    
+    const verfuegbarePlaetze = allePlaetze.filter(p => p.tennisanlage === gewaehlteAnlage);
+    
+    verfuegbarePlaetze.forEach(platz => {
+        const option = document.createElement("option");
+        option.value = platz.platznummer;
+        option.textContent = `Platz ${platz.platznummer} (${platz.belag})`;
+        platznummerSelect.appendChild(option);
+    });
+});
+
 // Nutzer-ID Validierung
 document.getElementById("nid").addEventListener("blur", function() {
     let nid = this.value;
@@ -143,27 +164,6 @@ document.getElementById("nid").addEventListener("blur", function() {
         jsFehlerDiv.textContent = "Fehler beim Abrufen der Nutzerdaten";
         jsFehlerDiv.style.display = 'block';
         window.scrollTo(0, 0);
-    });
-});
-
-// Dynamische Platznummern
-document.getElementById("tennisanlage").addEventListener("change", function() {
-    const gewaehlteAnlage = this.value;
-    const platznummerSelect = document.getElementById("platznummer");
-    
-    platznummerSelect.innerHTML = '<option value="">-- bitte wählen --</option>';
-    
-    if (!gewaehlteAnlage) {
-        return;
-    }
-    
-    const verfuegbarePlaetze = allePlaetze.filter(p => p.tennisanlage === gewaehlteAnlage);
-    
-    verfuegbarePlaetze.forEach(platz => {
-        const option = document.createElement("option");
-        option.value = platz.platznummer;
-        option.textContent = `Platz ${platz.platznummer} (${platz.belag})`;
-        platznummerSelect.appendChild(option);
     });
 });
 
