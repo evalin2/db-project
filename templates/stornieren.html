@@ -46,19 +46,21 @@
     <h2>Tennisplatz stornieren</h2>
 
     <h3>Buchung identifizieren</h3>
-    <p style="color: #666; font-size: 14px;">Geben Sie entweder Ihre Buchungsnummer + E-Mail ODER Ihre vollständigen Personalien + Buchungsdetails ein.</p>
+    <p style="color: #666; font-size: 14px;"><strong>Wichtig:</strong> Die E-Mail-Adresse muss in beiden Fällen angegeben werden!</p>
 
     <div class="form-group">
         <label>Buchungsnummer (falls bekannt)</label>
         <input type="number" name="buchungsnummer" id="buchungsnummer" placeholder="z.B. 12345" value="{{ form_data.buchungsnummer if form_data else '' }}">
+        <small style="color: #666;">Wenn Sie die Buchungsnummer haben, reicht diese + E-Mail aus.</small>
     </div>
 
     <hr style="margin: 20px 0;">
 
     <h3>Personalien</h3>
     <div class="form-group">
-        <label>E-Mail *</label>
-        <input type="email" name="email" id="email" placeholder="Ihre E-Mail-Adresse" value="{{ form_data.email if form_data else '' }}">
+        <label>E-Mail * (PFLICHTFELD)</label>
+        <input type="email" name="email" id="email" placeholder="Ihre E-Mail-Adresse" value="{{ form_data.email if form_data else '' }}" required>
+        <small style="color: #d32f2f; font-weight: bold;">⚠ Diese Angabe ist zur Sicherheit immer erforderlich!</small>
     </div>
     <div class="form-group">
         <label>Vorname</label>
