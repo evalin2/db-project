@@ -62,6 +62,7 @@
     <div class="form-group">
         <label>Nutzer-ID (optional)</label>
         <input type="number" name="nid" id="nid" placeholder="Ihre Nutzer-ID" value="{{ form_data.nid if form_data else '' }}">
+        <div id="nid-error" class="error" style="display:none;"></div>
     </div>
     <div class="form-group">
         <label>Vorname</label>
