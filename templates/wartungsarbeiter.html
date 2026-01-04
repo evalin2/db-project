@@ -2,77 +2,305 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Tennisplatz-Buchungssystem</title>
+    <title>Wartungsarbeiter-Verwaltung - Court+</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #9fcc3b;
+        }
+        
+        header a {
+            text-decoration: none;
+            color: inherit;
+            display: inline-block;
+        }
+        
+        header img {
+            max-width: 150px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        header img:hover {
+            transform: scale(1.05);
+        }
+        
+        header h1 {
+            margin: 10px 0 0 0;
+            color: #333;
+        }
+        
+        .subheading {
+            text-align: center;
+            margin: 30px 0;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        section {
+            background: white;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h3 {
+            color: #9fcc3b;
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #9fcc3b;
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        input[type="text"],
+        input[type="date"] {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #9fcc3b;
+            box-shadow: 0 0 0 2px rgba(159, 204, 59, 0.2);
+        }
+        
+        input[readonly] {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
+        }
+        
+        button {
+            margin-top: 20px;
+            padding: 12px;
+            background-color: #9fcc3b;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background-color: #8ab835;
+        }
+        
+        .fehler {
+            background-color: #fee;
+            color: #c33;
+            padding: 15px;
+            margin: 20px auto;
+            max-width: 900px;
+            border-radius: 4px;
+            border-left: 4px solid #c33;
+        }
+        
+        .erfolg {
+            background-color: #efe;
+            color: #3a3;
+            padding: 15px;
+            margin: 20px auto;
+            max-width: 900px;
+            border-radius: 4px;
+            border-left: 4px solid #3a3;
+        }
+        
+        .arbeiter-liste {
+            margin-top: 30px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .arbeiter-liste h4 {
+            color: #333;
+            margin-top: 0;
+        }
+        
+        .arbeiter-item {
+            background: white;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 4px;
+            border-left: 3px solid #9fcc3b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .arbeiter-info {
+            flex: 1;
+        }
+        
+        .arbeiter-id {
+            color: #9fcc3b;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            background-color: #333;
+            color: white;
+            margin-top: 50px;
+        }
+        
+        footer p {
+            margin: 0;
+            line-height: 1.6;
+        }
+
+
+    </style>
 </head>
 <body>
+    <header>
+        <a href="{{ url_for('index') }}">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Court+ Logo">
+            <h1>Tennisplatz-Buchungssystem</h1>
+        </a>
+    </header>
 
-<header>
-    <img src="logo.png" alt="Logo">
-    <h1>Tennisplatz-Buchungssystem</h1>
-</header>
+    <h2 class="subheading">Wartungsarbeiter verwalten</h2>
 
-<h2 class="subheading">Wartungsarbeiter</h2>
+    {% if fehler %}
+    <div class="fehler">{{ fehler }}</div>
+    {% endif %}
 
-<main class="container">
+    {% if erfolg %}
+    <div class="erfolg">{{ erfolg }}</div>
+    {% endif %}
 
-    <!-- Wartungsarbeiter hinzufügen -->
-    <section>
-        <h3>Wartungsarbeiter hinzufügen</h3>
-        <form>
-            <label for="vorname_add">Vorname</label>
-            <input type="text" id="vorname_add" name="vorname">
+    <main class="container">
+        <!-- Wartungsarbeiter hinzufügen -->
+        <section>
+            <h3>Wartungsarbeiter hinzufügen</h3>
+            <form method="POST">
+                <input type="hidden" name="aktion" value="hinzufuegen">
+                
+                <label for="vorname_add">Vorname *</label>
+                <input type="text" id="vorname_add" name="vorname" required placeholder="z.B. Max">
 
-            <label for="nachname_add">Nachname</label>
-            <input type="text" id="nachname_add" name="nachname">
+                <label for="nachname_add">Nachname *</label>
+                <input type="text" id="nachname_add" name="nachname" required placeholder="z.B. Mustermann">
 
-            <label for="geburtsdatum_add">Geburtsdatum</label>
-            <input type="date" id="geburtsdatum_add" name="geburtsdatum">
+                <label for="geburtsdatum_add">Geburtsdatum *</label>
+                <input type="date" id="geburtsdatum_add" name="geburtsdatum" required>
 
-            <button type="submit">Hinzufügen</button>
-        </form>
-    </section>
+                <button type="submit">Wartungsarbeiter hinzufügen</button>
+            </form>
+        </section>
 
-    <!-- Wartungsarbeiter-Daten ändern -->
-    <section>
-        <h3>Wartungsarbeiter-Daten ändern</h3>
-        <form>
-            <label for="arbeiter_id_edit">Wartungsarbeiter-ID</label>
-            <input type="text" id="arbeiter_id_edit" name="wartungsarbeiter_id" required>
+        <!-- Wartungsarbeiter löschen -->
+        <section>
+            <h3>Wartungsarbeiter löschen</h3>
+            <form method="POST">
+                <input type="hidden" name="aktion" value="loeschen">
+                
+                <label for="arbeiter_id_delete">Wartungsarbeiter-ID *</label>
+                <input type="text" id="arbeiter_id_delete" name="arbeiter_id" required placeholder="ID aus der Liste unten">
 
-            <label for="vorname_edit">Vorname</label>
-            <input type="text" id="vorname_edit" name="vorname">
+                <label for="vorname_delete">Vorname</label>
+                <input type="text" id="vorname_delete" name="vorname" readonly style="background-color: #f0f0f0;">
 
-            <label for="nachname_edit">Nachname</label>
-            <input type="text" id="nachname_edit" name="nachname">
+                <label for="nachname_delete">Nachname</label>
+                <input type="text" id="nachname_delete" name="nachname" readonly style="background-color: #f0f0f0;">
 
-            <label for="geburtsdatum_edit">Geburtsdatum</label>
-            <input type="date" id="geburtsdatum_edit" name="geburtsdatum">
+                <label for="geburtsdatum_delete">Geburtsdatum</label>
+                <input type="date" id="geburtsdatum_delete" name="geburtsdatum" readonly style="background-color: #f0f0f0;">
 
-            <button type="submit">Ändern</button>
-        </form>
-    </section>
+                <button type="submit" style="background-color: #c33;">Wartungsarbeiter löschen</button>
+            </form>
+        </section>
 
-    <!-- Wartungsarbeiter löschen -->
-    <section>
-        <h3>Wartungsarbeiter löschen</h3>
-        <form>
-            <label for="arbeiter_id_delete">Wartungsarbeiter-ID</label>
-            <input type="text" id="arbeiter_id_delete" name="wartungsarbeiter_id">
+        <!-- Liste aller Wartungsarbeiter -->
+        {% if alle_arbeiter %}
+        <div class="arbeiter-liste">
+            <h4>Alle Wartungsarbeiter ({{ alle_arbeiter|length }})</h4>
+            {% for arbeiter in alle_arbeiter %}
+            <div class="arbeiter-item">
+                <div class="arbeiter-info">
+                    <span class="arbeiter-id">ID: {{ arbeiter.wid }}</span>
+                    <strong>{{ arbeiter.vorname }} {{ arbeiter.nachname }}</strong>
+                    {% if arbeiter.geburtsdatum %}
+                    <br><small style="color: #666;">Geburtsdatum: {{ arbeiter.geburtsdatum }}</small>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </main>
 
-            <button type="submit">Löschen</button>
-        </form>
-    </section>
+    <footer>
+        <p>
+            <strong>Impressum</strong><br>
+            Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt
+        </p>
+    </footer>
 
-</main>
-
-<footer>
-    <p>
-        Impressum<br>
-        Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt
-    </p>
-</footer>
-
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var widInput = document.getElementById('arbeiter_id_delete');
+            
+            if (widInput) {
+                widInput.addEventListener('input', function() {
+                    var wid = this.value.trim();
+                    
+                    if (!wid) {
+                        document.getElementById('vorname_delete').value = '';
+                        document.getElementById('nachname_delete').value = '';
+                        document.getElementById('geburtsdatum_delete').value = '';
+                        return;
+                    }
+                    
+                    fetch('/get_wartungsarbeiter/' + wid)
+                        .then(function(response) {
+                            return response.json();
+                        })
+                        .then(function(data) {
+                            if (data.exists) {
+                                document.getElementById('vorname_delete').value = data.vorname;
+                                document.getElementById('nachname_delete').value = data.nachname;
+                                document.getElementById('geburtsdatum_delete').value = data.geburtsdatum;
+                            } else {
+                                document.getElementById('vorname_delete').value = '';
+                                document.getElementById('nachname_delete').value = '';
+                                document.getElementById('geburtsdatum_delete').value = '';
+                            }
+                        })
+                        .catch(function(error) {
+                            console.error('Fehler beim Laden:', error);
+                        });
+                });
+            }
+        });
+    </script>
 </body>
 </html>
