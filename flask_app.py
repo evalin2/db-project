@@ -999,7 +999,7 @@ def get_wartungsarbeiter(wid):
         return jsonify({"exists": False, "error": str(e)})
 
 
-# wartungsarbeiter route - KOMPLETTE VERSION ZUM ERSETZEN
+# wartungsarbeiter route 
 @app.route("/wartungsarbeiter", methods=["GET", "POST"])
 @login_required
 def wartungsarbeiter():
@@ -1055,12 +1055,20 @@ def wartungsarbeiter():
                     if not arbeiter:
                         fehler = f"Wartungsarbeiter mit ID {wid} existiert nicht."
                     else:
-                        # Tennisplätze, die diesem Arbeiter zugeordnet sind, auf NULL setzen
+                        # WICHTIG: Erst Foreign Key Constraint entfernen, dann löschen
+                        # Schritt 1: Alle Tennisplätze auf NULL setzen
+                        plaetze_anzahl = db_read("SELECT COUNT(*) as anzahl FROM tennisplatz WHERE wid=%s", (wid,), single=True)
+                        anzahl = plaetze_anzahl['anzahl'] if plaetze_anzahl else 0
+                        
                         db_write("UPDATE tennisplatz SET wid=NULL WHERE wid=%s", (wid,))
                         
-                        # Wartungsarbeiter löschen
+                        # Schritt 2: Wartungsarbeiter löschen
                         db_write("DELETE FROM wartungsarbeiter WHERE wid=%s", (wid,))
-                        erfolg = f"Wartungsarbeiter '{arbeiter['vorname']} {arbeiter['nachname']}' (ID: {wid}) wurde erfolgreich gelöscht. Alle zugeordneten Tennisplätze wurden aktualisiert."
+                        
+                        if anzahl > 0:
+                            erfolg = f"Wartungsarbeiter '{arbeiter['vorname']} {arbeiter['nachname']}' (ID: {wid}) wurde erfolgreich gelöscht. {anzahl} Tennisplatz/Tennisplätze wurde(n) aktualisiert."
+                        else:
+                            erfolg = f"Wartungsarbeiter '{arbeiter['vorname']} {arbeiter['nachname']}' (ID: {wid}) wurde erfolgreich gelöscht."
                             
                 except ValueError:
                     fehler = "Wartungsarbeiter-ID muss eine Zahl sein."
