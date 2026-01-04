@@ -444,10 +444,14 @@ def buchen():
                     single=True
                 )
                 
+                logging.info(f"Letzte Buchung: {letzte_buchung}")
+                
                 # Datum formatieren für Session
                 from datetime import datetime
                 spieldatum_obj = datetime.strptime(spieldatum, '%Y-%m-%d')
                 spieldatum_formatiert = spieldatum_obj.strftime('%d.%m.%Y')
+                
+                logging.info(f"Spieldatum formatiert: {spieldatum_formatiert}")
                 
                 # Geburtsdatum formatieren falls vorhanden
                 geburtsdatum_str = ""
@@ -458,18 +462,29 @@ def buchen():
                         else:
                             geburtsdatum_obj = nutzer["geburtsdatum"]
                         geburtsdatum_str = geburtsdatum_obj.strftime('%d.%m.%Y')
-                    except:
-                        pass
+                    except Exception as e:
+                        logging.error(f"Fehler bei Geburtsdatum: {e}")
                 
                 # Spielzeiten formatieren (HH:MM ohne Sekunden)
-                spielbeginn_str = str(letzte_buchung['spielbeginn'])
-                spielende_str = str(letzte_buchung['spielende'])
+                spielbeginn_raw = letzte_buchung.get('spielbeginn')
+                spielende_raw = letzte_buchung.get('spielende')
                 
-                # Falls Zeitformat HH:MM:SS ist, nur HH:MM nehmen
-                if len(spielbeginn_str) > 5:
-                    spielbeginn_str = spielbeginn_str[:5]
-                if len(spielende_str) > 5:
-                    spielende_str = spielende_str[:5]
+                logging.info(f"Spielbeginn raw: {spielbeginn_raw}, Typ: {type(spielbeginn_raw)}")
+                logging.info(f"Spielende raw: {spielende_raw}, Typ: {type(spielende_raw)}")
+                
+                # Konvertiere zu String und formatiere
+                if hasattr(spielbeginn_raw, 'strftime'):
+                    # Es ist ein datetime/time Objekt
+                    spielbeginn_str = spielbeginn_raw.strftime('%H:%M')
+                    spielende_str = spielende_raw.strftime('%H:%M')
+                else:
+                    # Es ist bereits ein String
+                    spielbeginn_str = str(spielbeginn_raw)[:5]
+                    spielende_str = str(spielende_raw)[:5]
+                
+                logging.info(f"Spielbeginn formatiert: {spielbeginn_str}")
+                logging.info(f"Spielende formatiert: {spielende_str}")
+                logging.info(f"Belag: {platz.get('belag', 'unbekannt')}")
                 
                 # Alle Daten in Session speichern für Bestätigungsseite
                 session['buchung_details'] = {
@@ -490,7 +505,7 @@ def buchen():
                 }
                 
                 # DEBUG: Ausgabe der Session-Daten
-                logging.info(f"Session Buchung Details: {session['buchung_details']}")
+                logging.info(f"Session Buchung Details gespeichert: {session['buchung_details']}")
                 
                 return redirect(url_for("bbestätigt"))
             except Exception as e:
