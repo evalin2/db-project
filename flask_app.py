@@ -887,37 +887,29 @@ def tennisplätze():
             belag = request.form.get("belag", "").strip()
             wartung = request.form.get("wartung", "").strip()
             
-            if not platz_id:
-                fehler = "Bitte Tennisplatz-ID eingeben."
+            if not platz_id or not anlage or not platznummer or not belag or not wartung:
+                fehler = "Bitte alle Pflichtfelder ausfüllen (Tennisplatz-ID, Tennisanlage, Platznummer, Belag, Wartungsdatum)."
             else:
                 try:
                     tid = int(platz_id)
+                    platznummer_int = int(platznummer)
                     
                     # Prüfen ob Platz existiert
                     platz = db_read("SELECT * FROM tennisplatz WHERE tid=%s", (tid,), single=True)
                     
                     if not platz:
                         fehler = f"Tennisplatz mit ID {tid} existiert nicht."
- tid=%s", (anlage, tid))
-                        if platznummer:
-                            try:
-                                platznummer_int = int(platznummer)
-                                db_write("UPDATE tennisplatz SET platznummer=%s WHERE tid=%s", (platznummer_int, tid))
-                            except ValueError:
-                                fehler = "Platznummer muss eine Zahl sein."
-                                return render_template("tennisplätze.html", fehler=fehler, erfolg=erfolg)
-                        if belag:
-                            db_write("UPDATE tennisplatz SET belag=%s WHERE tid=%s", (belag, tid))
+                    else:
+                        # Alle Felder aktualisieren
+                        db_write(
+                            "UPDATE tennisplatz SET tennisanlage=%s, platznummer=%s, belag=%s, wartung=%s WHERE tid=%s",
+                            (anlage, platznummer_int, belag, wartung, tid)
+                        )
                         
-                        # Wartungsdatum immer aktualisieren (auch wenn leer - auf NULL setzen)
-                        from datetime import date
-                        wartung_datum = wartung if wartung else date.today()
-                        db_write("UPDATE tennisplatz SET wartung=%s WHERE tid=%s", (wartung_datum, tid))
-                        
-                        erfolg = f"Tennisplatz mit ID {tid} wurde erfolgreich aktualisiert. Wartungsdatum gesetzt auf {wartung_datum}."
+                        erfolg = f"Tennisplatz mit ID {tid} wurde erfolgreich aktualisiert."
                         
                 except ValueError:
-                    fehler = "Tennisplatz-ID muss eine Zahl sein."
+                    fehler = "Tennisplatz-ID und Platznummer müssen Zahlen sein."
                 except Exception as e:
                     logging.error(f"Fehler beim Ändern des Tennisplatzes: {e}")
                     fehler = "Fehler beim Ändern des Tennisplatzes."
