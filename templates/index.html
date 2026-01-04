@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>cour+ | Tennisplatz-Buchung Schweiz</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="static/index.html">
 </head>
 <body>
     <!-- Tennis Court Lines Background -->
@@ -14,9 +14,9 @@
     <nav class="nav">
         <div class="nav-content">
             <div class="nav-links">
-                <a href="#buchen" class="nav-link">Buchen</a>
-                <a href="#stornieren" class="nav-link">Stornieren</a>
-                <a href="#verwaltung" class="nav-link">Verwaltung</a>
+                <a href="{{ url_for('buchen') }}" class="nav-link">Buchen</a>
+                <a href="{{ url_for('stornieren') }}" class="nav-link">Stornieren</a>
+                <a href="{{ url_for('verwaltung') }}" class="nav-link">Verwaltung</a>
             </div>
             <div class="nav-badge">
                 <span class="swiss-flag">🇨🇭</span>
@@ -29,7 +29,7 @@
     <section class="hero">
         <div class="hero-container">
             <div class="hero-logo-container">
-                <img src="cour+_logo.png" alt="cour+" class="hero-logo">
+                <img src="logo.png" alt="cour+" class="hero-logo">
                 <div class="logo-glow"></div>
             </div>
 
@@ -49,7 +49,7 @@
         <div class="cta-container">
             <h2 class="cta-title">Jetzt deinen Platz sichern</h2>
             <p class="cta-text">Einfach buchen. Flexibel stornieren. Alles an einem Ort.</p>
-            <a href="#buchen" class="cta-button">Platz buchen</a>
+            <a href="{{ url_for('buchen') }}" class="cta-button">Platz buchen</a>
         </div>
     </section>
 
@@ -112,7 +112,7 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-logo">
-                <img src="cour+_logo.png" alt="cour+" class="footer-logo-img">
+                <img src="logo.png" alt="cour+" class="footer-logo-img">
             </div>
             <div class="footer-info">
                 <h4 class="footer-heading">Kontakt</h4>
