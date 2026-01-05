@@ -230,6 +230,7 @@ def buchen():
             if bestehender_nutzer:
                 # Email existiert bereits - Nutzer hat seine NID vergessen
                 nutzer = bestehender_nutzer
+                logging.info(f"Bestehender Nutzer gefunden mit Email: {email}, NID: {nutzer['nid']}")
             else:
                 # Neuen Nutzer erstellen
                 # Leeres Geburtsdatum auf None setzen
@@ -244,6 +245,7 @@ def buchen():
                     )
                     # Neu erstellten Nutzer abrufen
                     nutzer = db_read("SELECT * FROM nutzer WHERE email=%s", (email,), single=True)
+                    logging.info(f"Neuer Nutzer erstellt: {vorname} {nachname}, NID: {nutzer['nid']}")
                 except Exception as e:
                     logging.error(f"Fehler beim Erstellen des Nutzers: {e}")
                     fehler = "Fehler beim Erstellen des Nutzers."
@@ -401,23 +403,35 @@ def buchen():
                     form_data=form_data
                 )
 
-            # Prüfen ob der Platz zur gewählten Zeit bereits gebucht ist
+            # FIXED: Prüfen ob der Platz zur gewählten Zeit bereits gebucht ist
             # Zwei Zeiträume überschneiden sich, wenn: Start1 < Ende2 UND Start2 < Ende1
             konflikt = db_read(
-                """SELECT * FROM buchung 
-                   WHERE tid = %s 
-                   AND spieldatum = %s 
-                   AND NOT (spielende <= %s OR spielbeginn >= %s)""",
+                """SELECT b.*, n.vorname, n.nachname 
+                   FROM buchung b
+                   JOIN nutzer n ON b.nid = n.nid
+                   WHERE b.tid = %s 
+                   AND b.spieldatum = %s 
+                   AND NOT (b.spielende <= %s OR b.spielbeginn >= %s)""",
                 (platz["tid"], spieldatum, beginn, ende),
                 single=True
             )
 
             if konflikt:
+                # Formatiere die Konfliktzeiten für bessere Fehlermeldung
+                konflikt_beginn = str(konflikt["spielbeginn"])[:5]  # HH:MM Format
+                konflikt_ende = str(konflikt["spielende"])[:5]
+                
                 # Prüfen ob es der gleiche Nutzer ist
                 if konflikt["nid"] == nutzer["nid"]:
-                    fehler = "Sie haben für diesen Platz am gewählten Datum bereits eine Buchung."
+                    fehler = f"Sie haben für diesen Platz am {spieldatum} bereits eine Buchung von {konflikt_beginn} bis {konflikt_ende} Uhr. Bitte wählen Sie eine andere Zeit."
                 else:
-                    fehler = "Dieser Platz ist zum gewählten Zeitpunkt nicht mehr verfügbar. Bitte wählen Sie einen anderen Zeitraum."
+                    fehler = f"Dieser Platz ist zum gewählten Zeitpunkt nicht verfügbar (bereits gebucht von {konflikt_beginn} bis {konflikt_ende} Uhr). Bitte wählen Sie einen anderen Zeitraum."
+                
+                # Log für Debugging
+                logging.info(f"Buchungskonflikt: Platz {platz['tid']}, Datum {spieldatum}, "
+                             f"Gewünscht: {beginn}-{ende}, Konflikt: {konflikt_beginn}-{konflikt_ende}, "
+                             f"Nutzer: {nutzer['nid']}, Konflikt-Nutzer: {konflikt['nid']}")
+                
                 # Zeitfelder löschen bei Konflikt
                 form_data['beginn'] = ''
                 form_data['ende'] = ''
@@ -460,6 +474,9 @@ def buchen():
                 from datetime import datetime
                 session['buchung_zeitpunkt'] = datetime.now().strftime("%d.%m.%Y um %H:%M Uhr")
                 
+                logging.info(f"Buchung erfolgreich: Nutzer {nutzer['nid']}, Platz {platz['tid']}, "
+                           f"Datum {spieldatum}, Zeit {beginn}-{ende}")
+                
                 return redirect(url_for("bbestätigt"))
             except Exception as e:
                 logging.error(f"Fehler beim Speichern der Buchung: {e}")
@@ -481,6 +498,26 @@ def buchen():
         alle_plaetze=alle_plaetze,
         form_data=form_data
     )
+
+
+# Route für JavaScript - Nutzer-Daten abrufen
+@app.route("/get_nutzer/<int:nid>")
+@login_required
+def get_nutzer(nid):
+    try:
+        user = db_read("SELECT * FROM nutzer WHERE nid=%s", (nid,), single=True)
+        if not user:
+            return jsonify({"exists": False})
+        return jsonify({
+            "exists": True,
+            "vorname": user["vorname"] or "",
+            "nachname": user["nachname"] or "",
+            "geburtsdatum": str(user["geburtsdatum"]) if user.get("geburtsdatum") else "",
+            "email": user["email"] or ""
+        })
+    except Exception as e:
+        logging.error(f"Fehler bei get_nutzer: {e}")
+        return jsonify({"exists": False, "error": str(e)})
 
 
 # Route für JavaScript - Nutzer-Daten abrufen
