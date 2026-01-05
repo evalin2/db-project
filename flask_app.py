@@ -482,7 +482,56 @@ def buchen():
         form_data=form_data
     )
 
+# bbestätigt Route (nach der buchen Route einfügen)
+@app.route("/bbestätigt")
+@login_required
+def bbestätigt():
+    # Daten aus Session holen
+    buchungsnummer = session.get('buchungs_nr', '')
+    nid = session.get('nutzer_nid', '')
+    vorname = session.get('nutzer_vorname', '')
+    nachname = session.get('nutzer_nachname', '')
+    email = session.get('nutzer_email', '')
+    geburtsdatum_raw = session.get('nutzer_geburtsdatum', '')
+    tennisanlage = session.get('buchung_anlage', '')
+    platznummer = session.get('buchung_platz', '')
+    spieldatum_raw = session.get('buchung_datum', '')
+    spielbeginn = session.get('buchung_beginn', '')
+    spielende = session.get('buchung_ende', '')
+    buchungszeitpunkt = session.get('buchung_zeitpunkt', '')
 
+    if not buchungsnummer:
+        return redirect(url_for("buchen"))
+
+    # Datum formatieren (YYYY-MM-DD -> DD.MM.YYYY)
+    spieldatum_formatiert = spieldatum_raw
+    if spieldatum_raw and len(spieldatum_raw) == 10:
+        teile = spieldatum_raw.split('-')
+        if len(teile) == 3:
+            spieldatum_formatiert = f"{teile[2]}.{teile[1]}.{teile[0]}"
+
+    # Geburtsdatum formatieren
+    geburtsdatum_formatiert = geburtsdatum_raw
+    if geburtsdatum_raw and len(geburtsdatum_raw) == 10:
+        teile = geburtsdatum_raw.split('-')
+        if len(teile) == 3:
+            geburtsdatum_formatiert = f"{teile[2]}.{teile[1]}.{teile[0]}"
+
+    return render_template("bbestätigt.html",
+        buchungsnummer=buchungsnummer,
+        nid=nid,
+        vorname=vorname,
+        nachname=nachname,
+        email=email,
+        geburtsdatum_formatiert=geburtsdatum_formatiert,
+        tennisanlage=tennisanlage,
+        platznummer=platznummer,
+        spieldatum_formatiert=spieldatum_formatiert,
+        spielbeginn_formatiert=spielbeginn,
+        spielende_formatiert=spielende,
+        buchungszeitpunkt=buchungszeitpunkt
+    )
+    
 # Route für JavaScript - Nutzer-Daten abrufen
 @app.route("/get_nutzer/<int:nid>")
 @login_required
