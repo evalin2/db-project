@@ -1122,4 +1122,4 @@ def wartungsarbeiter():
         logging.error(f"Fehler beim Laden der Wartungsarbeiter: {e}")
         alle_arbeiter = []
     
-    return render_template("wartungsarbeiter.html", fehler=fehler, erfolg=erfolg, alle_arbeiter=alle_arbeiter)
+    return render_template("wartungsarbeiter.html", fehler=fehler, erfolg=erfolg, alle_arbeiter=alle_arbeiter) 
