@@ -32,7 +32,9 @@
 <body>
 
 <header>
-    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="max-width:150px;">
+    <a href="{{ url_for('index') }}">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="max-width:150px; cursor: pointer;">
+    </a>
     <h1>Tennisplatz-Buchungssystem</h1>
 </header>
 
@@ -58,17 +60,17 @@
 
     <h3>Personalien</h3>
     <div class="form-group">
-        <label>E-Mail</label>
-        <input type="email" name="email" id="email" placeholder="Ihre E-Mail-Adresse" value="{{ form_data.email if form_data else '' }}" required>
-        <small style="color: #d32f2f; font-weight: bold;">⚠ Diese Angabe ist zur Sicherheit immer erforderlich!</small>
-    </div>
-    <div class="form-group">
         <label>Vorname</label>
         <input type="text" name="vorname" id="vorname" value="{{ form_data.vorname if form_data else '' }}">
     </div>
     <div class="form-group">
         <label>Nachname</label>
         <input type="text" name="nachname" id="nachname" value="{{ form_data.nachname if form_data else '' }}">
+    </div>
+    <div class="form-group">
+        <label>E-Mail</label>
+        <input type="email" name="email" id="email" placeholder="Ihre E-Mail-Adresse" value="{{ form_data.email if form_data else '' }}" required>
+        <small style="color: #d32f2f; font-weight: bold;">⚠ Diese Angabe ist zur Sicherheit immer erforderlich!</small>
     </div>
 
     <h3>Buchungsdetails</h3>
