@@ -79,7 +79,9 @@
 <body>
 
 <header>
-    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="max-width:150px;">
+    <a href="{{ url_for('index') }}" style="text-decoration: none;">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="max-width:150px; cursor: pointer;">
+    </a>
     <h1>cour+</h1>
     <p style="color: #666; margin-top: -10px;">Tennisplatz-Buchungssystem</p>
 </header>
