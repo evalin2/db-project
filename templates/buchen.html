@@ -30,28 +30,23 @@
     </style>
 </head>
 <body>
-
 <header>
-    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="max-width:150px;">
+    <a href="{{ url_for('index') }}">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="max-width:150px; cursor: pointer;">
+    </a>
     <h1>Tennisplatz-Buchungssystem</h1>
 </header>
-
 <form method="POST" action="{{ url_for('buchen') }}" id="buchungsform">
     {% if fehler %}
         <p class="error">{{ fehler }}</p>
     {% endif %}
     
     <div id="js-fehler" class="error" style="display:none;"></div>
-
     <h2>Personalien</h2>
     <div class="form-group">
         <label>Nutzer-ID (optional, nur bestehende IDs)</label>
         <input type="number" name="nid" id="nid" placeholder="Bestehende Nutzer-ID eingeben" value="{{ form_data.nid if form_data else (nutzer.nid if nutzer else '') }}">
         <small style="color: #666;">Falls vorhanden, geben Sie zusätzlich Ihre E-Mail zur Verifizierung ein.</small>
-    </div>
-    <div class="form-group">
-        <label>E-Mail *</label>
-        <input type="email" name="email" id="email" value="{{ form_data.email if form_data else (nutzer.email if nutzer else '') }}" required>
     </div>
     <div class="form-group">
         <label>Vorname *</label>
@@ -65,7 +60,10 @@
         <label>Geburtsdatum</label>
         <input type="date" name="geburtsdatum" id="geburtsdatum" value="{{ form_data.geburtsdatum if form_data else (nutzer.geburtsdatum if nutzer else '') }}">
     </div>
-
+    <div class="form-group">
+        <label>E-Mail *</label>
+        <input type="email" name="email" id="email" value="{{ form_data.email if form_data else (nutzer.email if nutzer else '') }}" required>
+    </div>
     <h2>Buchungsdetails</h2>
     <div class="form-group">
         <label>Tennisanlage *</label>
@@ -94,14 +92,11 @@
         <label>Spielende * (nur :00 oder :30)</label>
         <input type="time" name="ende" id="ende" value="{{ form_data.ende if form_data else '' }}" min="07:00" max="20:00" required>
     </div>
-
     <button type="submit">Buchung bestätigen</button>
 </form>
-
 <script>
 // Plätze für JavaScript verfügbar machen
 const allePlaetze = {{ alle_plaetze | tojson | safe }};
-
 // Mindestdatum auf heute setzen
 document.addEventListener("DOMContentLoaded", function() {
     const heute = new Date().toISOString().split('T')[0];
@@ -151,13 +146,11 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
-
 // Nutzer-ID + E-Mail Validierung (BEIDE müssen angegeben werden)
 function checkNidAndEmail() {
     let nid = document.getElementById("nid").value;
     let email = document.getElementById("email").value;
     const jsFehlerDiv = document.getElementById('js-fehler');
-
     // Wenn BEIDE Felder leer sind, andere Felder leeren
     if (!nid && !email) {
         jsFehlerDiv.style.display = 'none';
@@ -166,7 +159,6 @@ function checkNidAndEmail() {
         document.getElementById("geburtsdatum").value = "";
         return;
     }
-
     // Wenn NID angegeben, aber E-Mail fehlt
     if (nid && !email) {
         jsFehlerDiv.textContent = 'Bitte geben Sie auch Ihre E-Mail-Adresse zur Verifizierung ein.';
@@ -174,13 +166,11 @@ function checkNidAndEmail() {
         window.scrollTo(0, 0);
         return;
     }
-
     // Wenn E-Mail angegeben, aber NID fehlt -> nichts tun (neuer Nutzer)
     if (!nid && email) {
         jsFehlerDiv.style.display = 'none';
         return;
     }
-
     // BEIDE sind angegeben -> Nutzer abrufen
     if (nid && email) {
         fetch(`/get_nutzer/${nid}`)
@@ -220,11 +210,9 @@ function checkNidAndEmail() {
         });
     }
 }
-
 // Event Listener für NID und E-Mail
 document.getElementById("nid").addEventListener("blur", checkNidAndEmail);
 document.getElementById("email").addEventListener("blur", checkNidAndEmail);
-
 // Dynamische Platznummern
 document.getElementById("tennisanlage").addEventListener("change", function() {
     const gewaehlteAnlage = this.value;
@@ -245,7 +233,6 @@ document.getElementById("tennisanlage").addEventListener("change", function() {
         platznummerSelect.appendChild(option);
     });
 });
-
 // Beim Laden: Wenn Tennisanlage vorausgewählt ist, Platznummern laden
 document.addEventListener("DOMContentLoaded", function() {
     const tennisanlageSelect = document.getElementById("tennisanlage");
@@ -270,13 +257,11 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 </script>
-
 <footer>
     <p>
         Impressum<br>
         Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt
     </p>
 </footer>
-
 </body>
 </html>
