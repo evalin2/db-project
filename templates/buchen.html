@@ -1,5 +1,3 @@
-Buchen
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -87,12 +85,14 @@ Buchen
         <input type="date" name="spieldatum" id="spieldatum" value="{{ form_data.spieldatum if form_data else '' }}" required>
     </div>
     <div class="form-group">
-        <label>Spielbeginn * (nur :00 oder :30)</label>
+        <label>Spielbeginn *</label>
         <input type="time" name="beginn" id="beginn" value="{{ form_data.beginn if form_data else '' }}" min="07:00" max="20:00" required>
+        <small style="color: #666;">Nur :00 oder :30 erlaubt (z.B. 14:00 oder 14:30)</small>
     </div>
     <div class="form-group">
-        <label>Spielende * (nur :00 oder :30)</label>
+        <label>Spielende *</label>
         <input type="time" name="ende" id="ende" value="{{ form_data.ende if form_data else '' }}" min="07:00" max="20:00" required>
+        <small style="color: #666;">Nur :00 oder :30 erlaubt (z.B. 15:00 oder 15:30)</small>
     </div>
     <button type="submit">Buchung bestätigen</button>
 </form>
@@ -165,6 +165,7 @@ function checkNidAndEmail() {
     if (nid && !email) {
         jsFehlerDiv.textContent = 'Bitte geben Sie auch Ihre E-Mail-Adresse zur Verifizierung ein.';
         jsFehlerDiv.style.display = 'block';
+        document.getElementById("email").focus();
         window.scrollTo(0, 0);
         return;
     }
@@ -183,6 +184,7 @@ function checkNidAndEmail() {
                 jsFehlerDiv.textContent = 'Diese Nutzer-ID existiert nicht in der Datenbank.';
                 jsFehlerDiv.style.display = 'block';
                 document.getElementById("nid").value = "";
+                document.getElementById("nid").focus();
                 document.getElementById("vorname").value = "";
                 document.getElementById("nachname").value = "";
                 document.getElementById("geburtsdatum").value = "";
@@ -191,6 +193,8 @@ function checkNidAndEmail() {
                 // E-Mail stimmt nicht überein
                 jsFehlerDiv.textContent = 'Die E-Mail-Adresse stimmt nicht mit der Nutzer-ID überein.';
                 jsFehlerDiv.style.display = 'block';
+                document.getElementById("email").value = "";
+                document.getElementById("email").focus();
                 document.getElementById("nid").value = "";
                 document.getElementById("vorname").value = "";
                 document.getElementById("nachname").value = "";
