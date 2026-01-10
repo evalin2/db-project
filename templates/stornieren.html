@@ -114,9 +114,11 @@ function checkNidAndEmail() {
     let email = document.getElementById("email").value;
     const jsFehlerDiv = document.getElementById('js-fehler');
     
-    // Wenn BEIDE Felder leer sind, Fehler ausblenden
+    // Wenn BEIDE Felder leer sind, andere Felder leeren
     if (!nid && !email) {
         jsFehlerDiv.style.display = 'none';
+        document.getElementById("vorname").value = "";
+        document.getElementById("nachname").value = "";
         return;
     }
     
@@ -146,6 +148,8 @@ function checkNidAndEmail() {
                 jsFehlerDiv.style.display = 'block';
                 document.getElementById("nid").value = "";
                 document.getElementById("nid").focus();
+                document.getElementById("vorname").value = "";
+                document.getElementById("nachname").value = "";
                 window.scrollTo(0, 0);
             } else if (data.email !== email) {
                 // E-Mail stimmt nicht überein
@@ -154,6 +158,8 @@ function checkNidAndEmail() {
                 document.getElementById("email").value = "";
                 document.getElementById("email").focus();
                 document.getElementById("nid").value = "";
+                document.getElementById("vorname").value = "";
+                document.getElementById("nachname").value = "";
                 window.scrollTo(0, 0);
             } else {
                 // Alles korrekt - Felder automatisch ausfüllen
