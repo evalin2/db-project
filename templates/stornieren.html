@@ -60,6 +60,11 @@
 
     <h3>Personalien</h3>
     <div class="form-group">
+        <label>Nutzer-ID (optional)</label>
+        <input type="number" name="nid" id="nid" placeholder="Falls bekannt" value="{{ form_data.nid if form_data else '' }}">
+        <small style="color: #666;">Falls vorhanden, geben Sie zusätzlich Ihre E-Mail zur Verifizierung ein.</small>
+    </div>
+    <div class="form-group">
         <label>Vorname</label>
         <input type="text" name="vorname" id="vorname" value="{{ form_data.vorname if form_data else '' }}">
     </div>
@@ -108,6 +113,73 @@
 <script>
 // Plätze für JavaScript verfügbar machen
 const allePlaetze = {{ alle_plaetze | tojson | safe }};
+
+// Nutzer-ID + E-Mail Validierung
+function checkNidAndEmail() {
+    let nid = document.getElementById("nid").value;
+    let email = document.getElementById("email").value;
+    const jsFehlerDiv = document.getElementById('js-fehler');
+    
+    // Wenn BEIDE Felder leer sind, Fehler ausblenden
+    if (!nid && !email) {
+        jsFehlerDiv.style.display = 'none';
+        return;
+    }
+    
+    // Wenn NID angegeben, aber E-Mail fehlt
+    if (nid && !email) {
+        jsFehlerDiv.textContent = 'Bitte geben Sie auch Ihre E-Mail-Adresse zur Verifizierung ein.';
+        jsFehlerDiv.style.display = 'block';
+        document.getElementById("email").focus();
+        window.scrollTo(0, 0);
+        return;
+    }
+    
+    // Wenn E-Mail angegeben, aber NID fehlt -> OK (kann über andere Felder suchen)
+    if (!nid && email) {
+        jsFehlerDiv.style.display = 'none';
+        return;
+    }
+    
+    // BEIDE sind angegeben -> Nutzer abrufen zur Verifizierung
+    if (nid && email) {
+        fetch(`/get_nutzer/${nid}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.exists === false || !data.vorname) {
+                // Nutzer existiert nicht
+                jsFehlerDiv.textContent = 'Diese Nutzer-ID existiert nicht in der Datenbank.';
+                jsFehlerDiv.style.display = 'block';
+                document.getElementById("nid").value = "";
+                document.getElementById("nid").focus();
+                window.scrollTo(0, 0);
+            } else if (data.email !== email) {
+                // E-Mail stimmt nicht überein
+                jsFehlerDiv.textContent = 'Die E-Mail-Adresse stimmt nicht mit der Nutzer-ID überein.';
+                jsFehlerDiv.style.display = 'block';
+                document.getElementById("email").value = "";
+                document.getElementById("email").focus();
+                document.getElementById("nid").value = "";
+                window.scrollTo(0, 0);
+            } else {
+                // Alles korrekt - Felder automatisch ausfüllen
+                jsFehlerDiv.style.display = 'none';
+                document.getElementById("vorname").value = data.vorname || "";
+                document.getElementById("nachname").value = data.nachname || "";
+            }
+        })
+        .catch(error => {
+            console.error("Fehler beim Abrufen der Nutzerdaten:", error);
+            jsFehlerDiv.textContent = "Fehler beim Abrufen der Nutzerdaten";
+            jsFehlerDiv.style.display = 'block';
+            window.scrollTo(0, 0);
+        });
+    }
+}
+
+// Event Listener für NID und E-Mail
+document.getElementById("nid").addEventListener("blur", checkNidAndEmail);
+document.getElementById("email").addEventListener("blur", checkNidAndEmail);
 
 // Dynamische Platznummern
 document.getElementById("tennisanlage").addEventListener("change", function() {
