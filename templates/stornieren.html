@@ -47,15 +47,16 @@
 
     <h2>Stornieren</h2>
 
+    <div class="form-group">
+        <label>Buchungsnummer</label>
+        <input type="number" name="buchungsnummer" id="buchungsnummer" placeholder="z.B. 12345" value="{{ form_data.buchungsnummer if form_data else '' }}">
+        <small style="color: #666;">Falls vorhanden, geben Sie zusätzlich Ihre E-Mail zur Verifizierung ein.</small>
+    </div>
+
     <h3>Personalien</h3>
     <div class="form-group">
         <label>Nutzer-ID</label>
         <input type="number" name="nid" id="nid" value="{{ form_data.nid if form_data else '' }}">
-        <small style="color: #666;">Falls vorhanden, geben Sie zusätzlich Ihre E-Mail zur Verifizierung ein.</small>
-    </div>
-    <div class="form-group">
-        <label>Buchungsnummer</label>
-        <input type="number" name="buchungsnummer" id="buchungsnummer" placeholder="z.B. 12345" value="{{ form_data.buchungsnummer if form_data else '' }}">
         <small style="color: #666;">Falls vorhanden, geben Sie zusätzlich Ihre E-Mail zur Verifizierung ein.</small>
     </div>
     <div class="form-group">
