@@ -552,9 +552,6 @@ def get_nutzer(nid):
         return jsonify({"exists": False, "error": str(e)})
 
 
-# Ersetze die /stornieren Route in app.py mit dieser korrigierten Version:
-# Ersetze die /stornieren Route in app.py mit dieser korrigierten Version:
-
 @app.route("/stornieren", methods=["GET", "POST"])
 @login_required
 def stornieren():
@@ -589,6 +586,7 @@ def stornieren():
         }
 
         buchungsnummer = form_data['buchungsnummer'].strip()
+        nid = form_data['nid'].strip()
         
         buchung = None
 
@@ -640,7 +638,129 @@ def stornieren():
                     form_data=form_data
                 )
 
-        # Fall 2: Suche über Personalien + Buchungsdetails
+        # Fall 2: Suche über NID + E-Mail + Buchungsdetails
+        elif nid:
+            email = form_data['email'].strip()
+            
+            # E-Mail Validierung
+            if not email:
+                fehler = "Bitte geben Sie Ihre E-Mail-Adresse zur Bestätigung ein."
+                return render_template(
+                    "stornieren.html",
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
+                )
+            
+            # Nutzer über NID + Email finden
+            try:
+                nutzer = db_read(
+                    "SELECT * FROM nutzer WHERE nid=%s AND email=%s",
+                    (nid, email),
+                    single=True
+                )
+                
+                if not nutzer:
+                    fehler = "Kein Nutzer mit dieser Nutzer-ID und E-Mail-Adresse gefunden."
+                    form_data['nid'] = ''
+                    form_data['email'] = ''
+                    return render_template(
+                        "stornieren.html",
+                        fehler=fehler,
+                        anlagen=anlagen,
+                        alle_plaetze=alle_plaetze,
+                        form_data=form_data
+                    )
+            except Exception as e:
+                logging.error(f"Fehler bei Nutzersuche: {e}")
+                fehler = "Fehler bei der Suche nach dem Nutzer."
+                return render_template(
+                    "stornieren.html",
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
+                )
+
+            # Buchungsdetails validieren
+            tennisanlage = form_data['tennisanlage'].strip()
+            platznummer = form_data['platznummer'].strip()
+            spieldatum = form_data['spieldatum']
+            beginn = form_data['beginn']
+
+            if not tennisanlage or not platznummer or not spieldatum or not beginn:
+                fehler = "Bitte alle Buchungsdetails ausfüllen."
+                return render_template(
+                    "stornieren.html",
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
+                )
+
+            # Tennisplatz finden
+            try:
+                platznummer_int = int(platznummer)
+            except ValueError:
+                fehler = "Ungültige Platznummer."
+                return render_template(
+                    "stornieren.html",
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
+                )
+
+            platz = db_read(
+                "SELECT * FROM tennisplatz WHERE tennisanlage=%s AND platznummer=%s",
+                (tennisanlage, platznummer_int),
+                single=True
+            )
+
+            if not platz:
+                fehler = f"Tennisplatz '{tennisanlage}' mit Platznummer {platznummer_int} existiert nicht."
+                return render_template(
+                    "stornieren.html",
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
+                )
+
+            # Buchung finden
+            try:
+                buchung = db_read(
+                    """SELECT b.*, n.vorname, n.nachname, n.email, t.tennisanlage, t.platznummer
+                       FROM buchung b
+                       JOIN nutzer n ON b.nid = n.nid
+                       JOIN tennisplatz t ON b.tid = t.tid
+                       WHERE b.nid = %s AND b.tid = %s AND b.spieldatum = %s AND b.spielbeginn = %s""",
+                    (nutzer["nid"], platz["tid"], spieldatum, beginn),
+                    single=True
+                )
+
+                if not buchung:
+                    fehler = "Keine Buchung mit diesen Angaben gefunden."
+                    return render_template(
+                        "stornieren.html",
+                        fehler=fehler,
+                        anlagen=anlagen,
+                        alle_plaetze=alle_plaetze,
+                        form_data=form_data
+                    )
+            except Exception as e:
+                logging.error(f"Fehler bei Buchungssuche: {e}")
+                fehler = "Fehler bei der Suche nach der Buchung."
+                return render_template(
+                    "stornieren.html",
+                    fehler=fehler,
+                    anlagen=anlagen,
+                    alle_plaetze=alle_plaetze,
+                    form_data=form_data
+                )
+
+        # Fall 3: Suche über Personalien + Buchungsdetails
         else:
             vorname = form_data['vorname'].strip()
             nachname = form_data['nachname'].strip()
