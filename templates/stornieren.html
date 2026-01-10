@@ -45,23 +45,17 @@
     
     <div id="js-fehler" class="error" style="display:none;"></div>
 
-    <h2>Tennisplatz stornieren</h2>
-
-    <h3>Buchung identifizieren</h3>
-    <p style="color: #666; font-size: 14px;"><strong>Wichtig:</strong> Die E-Mail-Adresse muss in beiden Fällen angegeben werden!</p>
-
-    <div class="form-group">
-        <label>Buchungsnummer (falls bekannt)</label>
-        <input type="number" name="buchungsnummer" id="buchungsnummer" placeholder="z.B. 12345" value="{{ form_data.buchungsnummer if form_data else '' }}">
-        <small style="color: #666;">Wenn Sie die Buchungsnummer haben, reicht diese + E-Mail aus.</small>
-    </div>
-
-    <hr style="margin: 20px 0;">
+    <h2>Stornieren</h2>
 
     <h3>Personalien</h3>
     <div class="form-group">
-        <label>Nutzer-ID (optional)</label>
-        <input type="number" name="nid" id="nid" placeholder="Falls bekannt" value="{{ form_data.nid if form_data else '' }}">
+        <label>Nutzer-ID</label>
+        <input type="number" name="nid" id="nid" value="{{ form_data.nid if form_data else '' }}">
+        <small style="color: #666;">Falls vorhanden, geben Sie zusätzlich Ihre E-Mail zur Verifizierung ein.</small>
+    </div>
+    <div class="form-group">
+        <label>Buchungsnummer</label>
+        <input type="number" name="buchungsnummer" id="buchungsnummer" placeholder="z.B. 12345" value="{{ form_data.buchungsnummer if form_data else '' }}">
         <small style="color: #666;">Falls vorhanden, geben Sie zusätzlich Ihre E-Mail zur Verifizierung ein.</small>
     </div>
     <div class="form-group">
@@ -73,9 +67,8 @@
         <input type="text" name="nachname" id="nachname" value="{{ form_data.nachname if form_data else '' }}">
     </div>
     <div class="form-group">
-        <label>E-Mail</label>
+        <label>E-Mail *</label>
         <input type="email" name="email" id="email" placeholder="Ihre E-Mail-Adresse" value="{{ form_data.email if form_data else '' }}" required>
-        <small style="color: #d32f2f; font-weight: bold;">⚠ Diese Angabe ist zur Sicherheit immer erforderlich!</small>
     </div>
 
     <h3>Buchungsdetails</h3>
