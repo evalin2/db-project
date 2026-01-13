@@ -223,7 +223,7 @@
                 <select id="wid_add" name="wid" required>
                     <option value="">Bitte wählen...</option>
                     {% for arbeiter in alle_arbeiter %}
-                    <option value="{{ arbeiter.wid }}">{{ arbeiter.vorname }} {{ arbeiter.nachname }} (ID: {{ arbeiter.wid }})</option>
+                    <option value="{{ arbeiter.wid }}">{{ arbeiter.vorname }} {{ arbeiter.nachname }}</option>
                     {% endfor %}
                 </select>
 
