@@ -643,15 +643,14 @@ nav a:hover {
     z-index: 2;
 }
 
-/* Improved glow: larger, smoother, no hard edges */
 .logo-glow {
     position: absolute;
-    top: 48%; /* lifted slightly to avoid bottom bulge */
+    top: 48%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 800px;
     height: 800px;
-    background: radial-gradient(circle,rgba(57, 88, 9, 0.25) 0%,transparent 50%);
+    background: radial-gradient(circle,rgba(57, 88, 9, 0.25) 0%,transparent 30%);
     filter: blur(40px);
     z-index: 1;
     border-radius: 50%;
@@ -954,4 +953,3 @@ nav a:hover {
         text-align: center;
         padding: 1.5rem 1.5rem;
     }
-    
