@@ -998,9 +998,7 @@ def verwaltung():
     return render_template("verwaltung.html")
 
 
-# Ersetze die kompletten tennisplätze und get_tennisplatz Routen in deiner app.py:
-
-# API Route für AJAX - Tennisplatz-Daten abrufen
+# Aktualisierte get_tennisplatz Route (ersetzen in app.py)
 @app.route("/get_tennisplatz/<int:tid>")
 @login_required
 def get_tennisplatz(tid):
@@ -1014,6 +1012,7 @@ def get_tennisplatz(tid):
             "tennisanlage": platz["tennisanlage"] or "",
             "platznummer": platz["platznummer"] or "",
             "belag": platz["belag"] or "",
+            "wid": platz["wid"] or "",
             "wartung": str(platz["datum_der_wartung"]) if platz.get("datum_der_wartung") else ""
         })
     except Exception as e:
@@ -1021,12 +1020,21 @@ def get_tennisplatz(tid):
         return jsonify({"exists": False, "error": str(e)})
 
 
-# tennisplätze route
+# Aktualisierte tennisplätze route (ersetzen in app.py)
 @app.route("/tennisplätze", methods=["GET", "POST"])
 @login_required
 def tennisplätze():
     fehler = None
     erfolg = None
+    
+    # Alle Wartungsarbeiter laden (für Dropdown)
+    try:
+        alle_arbeiter = db_read("SELECT wid, vorname, nachname FROM wartungsarbeiter ORDER BY nachname, vorname")
+        if not alle_arbeiter:
+            alle_arbeiter = []
+    except Exception as e:
+        logging.error(f"Fehler beim Laden der Wartungsarbeiter: {e}")
+        alle_arbeiter = []
     
     if request.method == "POST":
         aktion = request.form.get("aktion")
@@ -1036,34 +1044,44 @@ def tennisplätze():
             anlage = request.form.get("anlage", "").strip()
             platznummer = request.form.get("platznummer", "").strip()
             belag = request.form.get("belag", "").strip()
+            wid = request.form.get("wid", "").strip()
             wartung = request.form.get("wartung", "").strip()
             
-            if not anlage or not platznummer or not belag or not wartung:
-                fehler = "Bitte alle Pflichtfelder ausfüllen (Tennisanlage, Platznummer, Belag, Wartungsdatum)."
+            if not anlage or not platznummer or not belag or not wid or not wartung:
+                fehler = "Bitte alle Pflichtfelder ausfüllen (Tennisanlage, Platznummer, Belag, Wartungsarbeiter, Wartungsdatum)."
             else:
                 try:
                     platznummer_int = int(platznummer)
+                    wid_int = int(wid)
                     
-                    # Prüfen ob Platz bereits existiert
-                    existiert = db_read(
-                        "SELECT * FROM tennisplatz WHERE tennisanlage=%s AND platznummer=%s",
-                        (anlage, platznummer_int),
+                    # Prüfen ob Wartungsarbeiter existiert
+                    arbeiter_existiert = db_read(
+                        "SELECT * FROM wartungsarbeiter WHERE wid=%s",
+                        (wid_int,),
                         single=True
                     )
                     
-                    if existiert:
-                        fehler = f"Tennisplatz '{anlage}' mit Platznummer {platznummer_int} existiert bereits."
+                    if not arbeiter_existiert:
+                        fehler = f"Wartungsarbeiter mit ID {wid_int} existiert nicht."
                     else:
-                        # Default Wartungsarbeiter-ID = 1 (falls du keinen bestimmten hast)
-                        # Du kannst das später anpassen, um einen echten Wartungsarbeiter auszuwählen
-                        db_write(
-                            "INSERT INTO tennisplatz (tennisanlage, platznummer, belag, datum_der_wartung, wid) VALUES (%s,%s,%s,%s,%s)",
-                            (anlage, platznummer_int, belag, wartung, 1)
+                        # Prüfen ob Platz bereits existiert
+                        existiert = db_read(
+                            "SELECT * FROM tennisplatz WHERE tennisanlage=%s AND platznummer=%s",
+                            (anlage, platznummer_int),
+                            single=True
                         )
-                        erfolg = f"Tennisplatz '{anlage}' - Platz {platznummer_int} wurde erfolgreich hinzugefügt."
+                        
+                        if existiert:
+                            fehler = f"Tennisplatz '{anlage}' mit Platznummer {platznummer_int} existiert bereits."
+                        else:
+                            db_write(
+                                "INSERT INTO tennisplatz (tennisanlage, platznummer, belag, datum_der_wartung, wid) VALUES (%s,%s,%s,%s,%s)",
+                                (anlage, platznummer_int, belag, wartung, wid_int)
+                            )
+                            erfolg = f"Tennisplatz '{anlage}' - Platz {platznummer_int} wurde erfolgreich hinzugefügt."
                         
                 except ValueError:
-                    fehler = "Platznummer muss eine Zahl sein."
+                    fehler = "Platznummer und Wartungsarbeiter-ID müssen Zahlen sein."
                 except Exception as e:
                     logging.error(f"Fehler beim Hinzufügen des Tennisplatzes: {e}")
                     fehler = f"Fehler beim Hinzufügen des Tennisplatzes: {str(e)}"
@@ -1074,14 +1092,16 @@ def tennisplätze():
             anlage = request.form.get("anlage", "").strip()
             platznummer = request.form.get("platznummer", "").strip()
             belag = request.form.get("belag", "").strip()
+            wid = request.form.get("wid", "").strip()
             wartung = request.form.get("wartung", "").strip()
             
-            if not platz_id or not anlage or not platznummer or not belag or not wartung:
-                fehler = "Bitte alle Pflichtfelder ausfüllen (Tennisplatz-ID, Tennisanlage, Platznummer, Belag, Wartungsdatum)."
+            if not platz_id or not anlage or not platznummer or not belag or not wid or not wartung:
+                fehler = "Bitte alle Pflichtfelder ausfüllen (Tennisplatz-ID, Tennisanlage, Platznummer, Belag, Wartungsarbeiter, Wartungsdatum)."
             else:
                 try:
                     tid = int(platz_id)
                     platznummer_int = int(platznummer)
+                    wid_int = int(wid)
                     
                     # Prüfen ob Platz existiert
                     platz = db_read("SELECT * FROM tennisplatz WHERE tid=%s", (tid,), single=True)
@@ -1089,16 +1109,26 @@ def tennisplätze():
                     if not platz:
                         fehler = f"Tennisplatz mit ID {tid} existiert nicht."
                     else:
-                        # Alle Felder aktualisieren
-                        db_write(
-                            "UPDATE tennisplatz SET tennisanlage=%s, platznummer=%s, belag=%s, datum_der_wartung=%s WHERE tid=%s",
-                            (anlage, platznummer_int, belag, wartung, tid)
+                        # Prüfen ob Wartungsarbeiter existiert
+                        arbeiter_existiert = db_read(
+                            "SELECT * FROM wartungsarbeiter WHERE wid=%s",
+                            (wid_int,),
+                            single=True
                         )
                         
-                        erfolg = f"Tennisplatz mit ID {tid} wurde erfolgreich aktualisiert."
+                        if not arbeiter_existiert:
+                            fehler = f"Wartungsarbeiter mit ID {wid_int} existiert nicht."
+                        else:
+                            # Alle Felder aktualisieren
+                            db_write(
+                                "UPDATE tennisplatz SET tennisanlage=%s, platznummer=%s, belag=%s, datum_der_wartung=%s, wid=%s WHERE tid=%s",
+                                (anlage, platznummer_int, belag, wartung, wid_int, tid)
+                            )
+                            
+                            erfolg = f"Tennisplatz mit ID {tid} wurde erfolgreich aktualisiert."
                         
                 except ValueError:
-                    fehler = "Tennisplatz-ID und Platznummer müssen Zahlen sein."
+                    fehler = "Tennisplatz-ID, Platznummer und Wartungsarbeiter-ID müssen Zahlen sein."
                 except Exception as e:
                     logging.error(f"Fehler beim Ändern des Tennisplatzes: {e}")
                     fehler = f"Fehler beim Ändern des Tennisplatzes: {str(e)}"
@@ -1135,19 +1165,33 @@ def tennisplätze():
                     fehler = f"Fehler beim Löschen des Tennisplatzes: {str(e)}"
     
     # Alle Tennisplätze für die Übersicht laden - sortiert nach ID
-    # datum_der_wartung wird als "wartung" umbenannt für das Template
+    # Mit JOIN um Wartungsarbeiter-Namen anzuzeigen
     try:
-        alle_plaetze = db_read("SELECT tid, tennisanlage, platznummer, belag, datum_der_wartung, wid FROM tennisplatz ORDER BY tid")
-        # Umbenennen für Template-Kompatibilität
-        if alle_plaetze:
-            for platz in alle_plaetze:
-                platz['wartung'] = platz.get('datum_der_wartung')
+        alle_plaetze = db_read("""
+            SELECT 
+                t.tid, 
+                t.tennisanlage, 
+                t.platznummer, 
+                t.belag, 
+                t.datum_der_wartung as wartung, 
+                t.wid,
+                CONCAT(w.vorname, ' ', w.nachname) as wartungsarbeiter_name
+            FROM tennisplatz t
+            LEFT JOIN wartungsarbeiter w ON t.wid = w.wid
+            ORDER BY t.tid
+        """)
+        if not alle_plaetze:
+            alle_plaetze = []
     except Exception as e:
         logging.error(f"Fehler beim Laden der Tennisplätze: {e}")
         alle_plaetze = []
     
-    return render_template("tennisplätze.html", fehler=fehler, erfolg=erfolg, alle_plaetze=alle_plaetze)
-
+    return render_template("tennisplätze.html", 
+                         fehler=fehler, 
+                         erfolg=erfolg, 
+                         alle_plaetze=alle_plaetze,
+                         alle_arbeiter=alle_arbeiter)
+                         
 # API Route für AJAX - Wartungsarbeiter-Daten abrufen
 @app.route("/get_wartungsarbeiter/<int:wid>")
 @login_required
