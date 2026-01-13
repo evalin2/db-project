@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+      href="style.css">
 
     <title>Organizer</title>
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
@@ -15,31 +15,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
     <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
 
-    <style>
-      body { background-color: #f9f9f9; }
-      .todo-list { margin-top: 30px; list-style: none; padding: 0; }
-      .todo-item {
-        position: relative; background: #fff;
-        padding: 16px 20px 12px 20px; margin-bottom: 16px; border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.06); line-height: 1.5;
-      }
-      .todo-content { font-weight: 600; }
-      .todo-date { display: block; color: #999; font-size: 0.9em; margin-top: 6px; }
-      .todo-form { margin-top: 28px; background: #fff; padding: 16px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-      .todo-item { display: block; }
-      .todo-complete-form {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        margin: 0; padding: 0; border: 0; background: transparent;
-      }
-      .todo-checkbox {
-        width: 20px; height: 20px; margin: 0;
-        accent-color: #5cb85c;
-      }
-      .todo-content { font-weight: 600; flex: 1; }
-      .navbar-brand { font-weight: 600; }
-    </style>
+  
   </head>
 
 <body>  
