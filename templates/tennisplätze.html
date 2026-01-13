@@ -201,7 +201,7 @@
         <!-- Tennisplatz hinzufügen -->
         <section>
             <h3>Tennisplatz hinzufügen</h3>
-            <form method="POST">
+            <form method="POST" onsubmit="return validateWartungsdatum('wartung_add')">
                 <input type="hidden" name="aktion" value="hinzufuegen">
                 
                 <label for="anlage_add">Tennisanlage *</label>
@@ -237,7 +237,7 @@
         <!-- Tennisplatz-Daten ändern -->
         <section>
             <h3>Tennisplatz-Daten ändern</h3>
-            <form method="POST">
+            <form method="POST" onsubmit="return validateWartungsdatum('wartung_edit')">
                 <input type="hidden" name="aktion" value="aendern">
                 
                 <label for="platz_id_edit">Tennisplatz-ID *</label>
@@ -311,6 +311,21 @@
     </footer>
 
     <script>
+        // Validierungsfunktion für Wartungsdatum
+        function validateWartungsdatum(fieldId) {
+            var wartungInput = document.getElementById(fieldId);
+            var wartungsdatum = new Date(wartungInput.value);
+            var heute = new Date();
+            heute.setHours(0, 0, 0, 0); // Nur Datum vergleichen, ohne Uhrzeit
+            
+            if (wartungsdatum > heute) {
+                alert('Das Datum der letzten Wartung muss in der Vergangenheit oder heute liegen.');
+                wartungInput.focus();
+                return false;
+            }
+            return true;
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             var tidInput = document.getElementById('platz_id_edit');
             

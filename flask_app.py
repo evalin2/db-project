@@ -1053,31 +1053,39 @@ def tennisplätze():
                     platznummer_int = int(platznummer)
                     wid_int = int(wid)
                     
-                    # Prüfen ob Wartungsarbeiter existiert
-                    arbeiter_existiert = db_read(
-                        "SELECT * FROM wartungsarbeiter WHERE wid=%s",
-                        (wid_int,),
-                        single=True
-                    )
+                    # NEUE VALIDIERUNG: Wartungsdatum muss in der Vergangenheit oder heute liegen
+                    from datetime import date
+                    wartungsdatum = date.fromisoformat(wartung)
+                    heute = date.today()
                     
-                    if not arbeiter_existiert:
-                        fehler = f"Wartungsarbeiter mit ID {wid_int} existiert nicht."
+                    if wartungsdatum > heute:
+                        fehler = "Das Datum der letzten Wartung muss in der Vergangenheit oder heute liegen."
                     else:
-                        # Prüfen ob Platz bereits existiert
-                        existiert = db_read(
-                            "SELECT * FROM tennisplatz WHERE tennisanlage=%s AND platznummer=%s",
-                            (anlage, platznummer_int),
+                        # Prüfen ob Wartungsarbeiter existiert
+                        arbeiter_existiert = db_read(
+                            "SELECT * FROM wartungsarbeiter WHERE wid=%s",
+                            (wid_int,),
                             single=True
                         )
                         
-                        if existiert:
-                            fehler = f"Tennisplatz '{anlage}' mit Platznummer {platznummer_int} existiert bereits."
+                        if not arbeiter_existiert:
+                            fehler = f"Wartungsarbeiter mit ID {wid_int} existiert nicht."
                         else:
-                            db_write(
-                                "INSERT INTO tennisplatz (tennisanlage, platznummer, belag, datum_der_wartung, wid) VALUES (%s,%s,%s,%s,%s)",
-                                (anlage, platznummer_int, belag, wartung, wid_int)
+                            # Prüfen ob Platz bereits existiert
+                            existiert = db_read(
+                                "SELECT * FROM tennisplatz WHERE tennisanlage=%s AND platznummer=%s",
+                                (anlage, platznummer_int),
+                                single=True
                             )
-                            erfolg = f"Tennisplatz '{anlage}' - Platz {platznummer_int} wurde erfolgreich hinzugefügt."
+                            
+                            if existiert:
+                                fehler = f"Tennisplatz '{anlage}' mit Platznummer {platznummer_int} existiert bereits."
+                            else:
+                                db_write(
+                                    "INSERT INTO tennisplatz (tennisanlage, platznummer, belag, datum_der_wartung, wid) VALUES (%s,%s,%s,%s,%s)",
+                                    (anlage, platznummer_int, belag, wartung, wid_int)
+                                )
+                                erfolg = f"Tennisplatz '{anlage}' - Platz {platznummer_int} wurde erfolgreich hinzugefügt."
                         
                 except ValueError:
                     fehler = "Platznummer und Wartungsarbeiter-ID müssen Zahlen sein."
@@ -1102,29 +1110,37 @@ def tennisplätze():
                     platznummer_int = int(platznummer)
                     wid_int = int(wid)
                     
-                    # Prüfen ob Platz existiert
-                    platz = db_read("SELECT * FROM tennisplatz WHERE tid=%s", (tid,), single=True)
+                    # NEUE VALIDIERUNG: Wartungsdatum muss in der Vergangenheit oder heute liegen
+                    from datetime import date
+                    wartungsdatum = date.fromisoformat(wartung)
+                    heute = date.today()
                     
-                    if not platz:
-                        fehler = f"Tennisplatz mit ID {tid} existiert nicht."
+                    if wartungsdatum > heute:
+                        fehler = "Das Datum der letzten Wartung muss in der Vergangenheit oder heute liegen."
                     else:
-                        # Prüfen ob Wartungsarbeiter existiert
-                        arbeiter_existiert = db_read(
-                            "SELECT * FROM wartungsarbeiter WHERE wid=%s",
-                            (wid_int,),
-                            single=True
-                        )
+                        # Prüfen ob Platz existiert
+                        platz = db_read("SELECT * FROM tennisplatz WHERE tid=%s", (tid,), single=True)
                         
-                        if not arbeiter_existiert:
-                            fehler = f"Wartungsarbeiter mit ID {wid_int} existiert nicht."
+                        if not platz:
+                            fehler = f"Tennisplatz mit ID {tid} existiert nicht."
                         else:
-                            # Alle Felder aktualisieren
-                            db_write(
-                                "UPDATE tennisplatz SET tennisanlage=%s, platznummer=%s, belag=%s, datum_der_wartung=%s, wid=%s WHERE tid=%s",
-                                (anlage, platznummer_int, belag, wartung, wid_int, tid)
+                            # Prüfen ob Wartungsarbeiter existiert
+                            arbeiter_existiert = db_read(
+                                "SELECT * FROM wartungsarbeiter WHERE wid=%s",
+                                (wid_int,),
+                                single=True
                             )
                             
-                            erfolg = f"Tennisplatz mit ID {tid} wurde erfolgreich aktualisiert."
+                            if not arbeiter_existiert:
+                                fehler = f"Wartungsarbeiter mit ID {wid_int} existiert nicht."
+                            else:
+                                # Alle Felder aktualisieren
+                                db_write(
+                                    "UPDATE tennisplatz SET tennisanlage=%s, platznummer=%s, belag=%s, datum_der_wartung=%s, wid=%s WHERE tid=%s",
+                                    (anlage, platznummer_int, belag, wartung, wid_int, tid)
+                                )
+                                
+                                erfolg = f"Tennisplatz mit ID {tid} wurde erfolgreich aktualisiert."
                         
                 except ValueError:
                     fehler = "Tennisplatz-ID, Platznummer und Wartungsarbeiter-ID müssen Zahlen sein."
@@ -1132,64 +1148,6 @@ def tennisplätze():
                     logging.error(f"Fehler beim Ändern des Tennisplatzes: {e}")
                     fehler = f"Fehler beim Ändern des Tennisplatzes: {str(e)}"
         
-        # Tennisplatz löschen
-        elif aktion == "loeschen":
-            platz_id = request.form.get("platz_id", "").strip()
-            
-            if not platz_id:
-                fehler = "Bitte Tennisplatz-ID eingeben."
-            else:
-                try:
-                    tid = int(platz_id)
-                    
-                    # Prüfen ob Platz existiert
-                    platz = db_read("SELECT * FROM tennisplatz WHERE tid=%s", (tid,), single=True)
-                    
-                    if not platz:
-                        fehler = f"Tennisplatz mit ID {tid} existiert nicht."
-                    else:
-                        # Prüfen ob noch Buchungen für diesen Platz existieren
-                        buchungen = db_read("SELECT * FROM buchung WHERE tid=%s", (tid,))
-                        
-                        if buchungen and len(buchungen) > 0:
-                            fehler = f"Tennisplatz mit ID {tid} kann nicht gelöscht werden, da noch {len(buchungen)} Buchung(en) vorhanden sind. Bitte erst alle Buchungen stornieren."
-                        else:
-                            db_write("DELETE FROM tennisplatz WHERE tid=%s", (tid,))
-                            erfolg = f"Tennisplatz '{platz['tennisanlage']}' - Platz {platz['platznummer']} (ID: {tid}) wurde erfolgreich gelöscht."
-                            
-                except ValueError:
-                    fehler = "Tennisplatz-ID muss eine Zahl sein."
-                except Exception as e:
-                    logging.error(f"Fehler beim Löschen des Tennisplatzes: {e}")
-                    fehler = f"Fehler beim Löschen des Tennisplatzes: {str(e)}"
-    
-    # Alle Tennisplätze für die Übersicht laden - sortiert nach ID
-    # Mit JOIN um Wartungsarbeiter-Namen anzuzeigen
-    try:
-        alle_plaetze = db_read("""
-            SELECT 
-                t.tid, 
-                t.tennisanlage, 
-                t.platznummer, 
-                t.belag, 
-                t.datum_der_wartung as wartung, 
-                t.wid,
-                CONCAT(w.vorname, ' ', w.nachname) as wartungsarbeiter_name
-            FROM tennisplatz t
-            LEFT JOIN wartungsarbeiter w ON t.wid = w.wid
-            ORDER BY t.tid
-        """)
-        if not alle_plaetze:
-            alle_plaetze = []
-    except Exception as e:
-        logging.error(f"Fehler beim Laden der Tennisplätze: {e}")
-        alle_plaetze = []
-    
-    return render_template("tennisplätze.html", 
-                         fehler=fehler, 
-                         erfolg=erfolg, 
-                         alle_plaetze=alle_plaetze,
-                         alle_arbeiter=alle_arbeiter)
 
 # API Route für AJAX - Wartungsarbeiter-Daten abrufen
 @app.route("/get_wartungsarbeiter/<int:wid>")
