@@ -1050,16 +1050,14 @@ def tennisplätze():
                 fehler = "Bitte alle Pflichtfelder ausfüllen (Tennisanlage, Platznummer, Belag, Wartungsarbeiter, Wartungsdatum)."
             else:
                 try:
+                    from datetime import date
                     platznummer_int = int(platznummer)
                     wid_int = int(wid)
-                    
-                    # NEUE VALIDIERUNG: Wartungsdatum muss in der Vergangenheit oder heute liegen
-                    from datetime import date
                     wartungsdatum = date.fromisoformat(wartung)
-                    heute = date.today()
                     
-                    if wartungsdatum > heute:
-                        fehler = "Das Datum der letzten Wartung muss in der Vergangenheit oder heute liegen."
+                    # Wartungsdatum muss heute oder in der Vergangenheit liegen
+                    if wartungsdatum > date.today():
+                        fehler = "Das Datum der letzten Wartung darf nicht in der Zukunft liegen."
                     else:
                         # Prüfen ob Wartungsarbeiter existiert
                         arbeiter_existiert = db_read(
@@ -1106,17 +1104,15 @@ def tennisplätze():
                 fehler = "Bitte alle Pflichtfelder ausfüllen (Tennisplatz-ID, Tennisanlage, Platznummer, Belag, Wartungsarbeiter, Wartungsdatum)."
             else:
                 try:
+                    from datetime import date
                     tid = int(platz_id)
                     platznummer_int = int(platznummer)
                     wid_int = int(wid)
-                    
-                    # NEUE VALIDIERUNG: Wartungsdatum muss in der Vergangenheit oder heute liegen
-                    from datetime import date
                     wartungsdatum = date.fromisoformat(wartung)
-                    heute = date.today()
                     
-                    if wartungsdatum > heute:
-                        fehler = "Das Datum der letzten Wartung muss in der Vergangenheit oder heute liegen."
+                    # Wartungsdatum muss heute oder in der Vergangenheit liegen
+                    if wartungsdatum > date.today():
+                        fehler = "Das Datum der letzten Wartung darf nicht in der Zukunft liegen."
                     else:
                         # Prüfen ob Platz existiert
                         platz = db_read("SELECT * FROM tennisplatz WHERE tid=%s", (tid,), single=True)
@@ -1148,6 +1144,64 @@ def tennisplätze():
                     logging.error(f"Fehler beim Ändern des Tennisplatzes: {e}")
                     fehler = f"Fehler beim Ändern des Tennisplatzes: {str(e)}"
         
+        # Tennisplatz löschen
+        elif aktion == "loeschen":
+            platz_id = request.form.get("platz_id", "").strip()
+            
+            if not platz_id:
+                fehler = "Bitte Tennisplatz-ID eingeben."
+            else:
+                try:
+                    tid = int(platz_id)
+                    
+                    # Prüfen ob Platz existiert
+                    platz = db_read("SELECT * FROM tennisplatz WHERE tid=%s", (tid,), single=True)
+                    
+                    if not platz:
+                        fehler = f"Tennisplatz mit ID {tid} existiert nicht."
+                    else:
+                        # Prüfen ob noch Buchungen für diesen Platz existieren
+                        buchungen = db_read("SELECT * FROM buchung WHERE tid=%s", (tid,))
+                        
+                        if buchungen and len(buchungen) > 0:
+                            fehler = f"Tennisplatz mit ID {tid} kann nicht gelöscht werden, da noch {len(buchungen)} Buchung(en) vorhanden sind. Bitte erst alle Buchungen stornieren."
+                        else:
+                            db_write("DELETE FROM tennisplatz WHERE tid=%s", (tid,))
+                            erfolg = f"Tennisplatz '{platz['tennisanlage']}' - Platz {platz['platznummer']} (ID: {tid}) wurde erfolgreich gelöscht."
+                            
+                except ValueError:
+                    fehler = "Tennisplatz-ID muss eine Zahl sein."
+                except Exception as e:
+                    logging.error(f"Fehler beim Löschen des Tennisplatzes: {e}")
+                    fehler = f"Fehler beim Löschen des Tennisplatzes: {str(e)}"
+    
+    # Alle Tennisplätze für die Übersicht laden - sortiert nach ID
+    # Mit JOIN um Wartungsarbeiter-Namen anzuzeigen
+    try:
+        alle_plaetze = db_read("""
+            SELECT 
+                t.tid, 
+                t.tennisanlage, 
+                t.platznummer, 
+                t.belag, 
+                t.datum_der_wartung as wartung, 
+                t.wid,
+                CONCAT(w.vorname, ' ', w.nachname) as wartungsarbeiter_name
+            FROM tennisplatz t
+            LEFT JOIN wartungsarbeiter w ON t.wid = w.wid
+            ORDER BY t.tid
+        """)
+        if not alle_plaetze:
+            alle_plaetze = []
+    except Exception as e:
+        logging.error(f"Fehler beim Laden der Tennisplätze: {e}")
+        alle_plaetze = []
+    
+    return render_template("tennisplätze.html", 
+                         fehler=fehler, 
+                         erfolg=erfolg, 
+                         alle_plaetze=alle_plaetze,
+                         alle_arbeiter=alle_arbeiter)   
 
 # API Route für AJAX - Wartungsarbeiter-Daten abrufen
 @app.route("/get_wartungsarbeiter/<int:wid>")
