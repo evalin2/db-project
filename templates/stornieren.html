@@ -1,39 +1,16 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
+    <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <title>Tennisplatz stornieren</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        header, footer { text-align: center; margin-bottom: 20px; }
-        form { max-width: 500px; margin: 0 auto; }
-        .form-group { margin-top: 15px; }
-        label { display: block; margin-bottom: 5px; }
-        input, select { width: 100%; padding: 5px; box-sizing: border-box; }
-        button { margin-top: 15px; padding: 10px 15px; }
-        .error { 
-            color: #d32f2f; 
-            background-color: #ffebee;
-            border: 1px solid #ef5350;
-            border-radius: 4px;
-            padding: 12px;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-        #nid-error {
-            background: none;
-            border: none;
-            padding: 5px 0;
-            margin: 5px 0;
-        }
-    </style>
 </head>
 <body>
 
 <header>
     <a href="{{ url_for('index') }}">
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="max-width:150px; cursor: pointer;">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
     </a>
     <h1>Tennisplatz-Buchungssystem</h1>
 </header>
@@ -43,21 +20,21 @@
         <p class="error">{{ fehler }}</p>
     {% endif %}
     
-    <div id="js-fehler" class="error" style="display:none;"></div>
+    <div id="js-fehler" class="error"></div>
 
     <h2>Stornieren</h2>
 
     <div class="form-group">
         <label>Buchungsnummer</label>
         <input type="number" name="buchungsnummer" id="buchungsnummer" placeholder="z.B. 12345" value="{{ form_data.buchungsnummer if form_data else '' }}">
-        <small style="color: #666;">Falls vorhanden, geben Sie zusätzlich Ihre E-Mail zur Verifizierung ein.</small>
+        <small>Falls vorhanden, geben Sie zusätzlich Ihre E-Mail zur Verifizierung ein.</small>
     </div>
 
     <h3>Personalien</h3>
     <div class="form-group">
         <label>Nutzer-ID</label>
         <input type="number" name="nid" id="nid" value="{{ form_data.nid if form_data else '' }}">
-        <small style="color: #666;">Falls vorhanden, geben Sie zusätzlich Ihre E-Mail zur Verifizierung ein.</small>
+        <small>Falls vorhanden, geben Sie zusätzlich Ihre E-Mail zur Verifizierung ein.</small>
     </div>
     <div class="form-group">
         <label>Vorname</label>
@@ -105,56 +82,43 @@
 </form>
 
 <script>
-// Plätze für JavaScript verfügbar machen
 const allePlaetze = {{ alle_plaetze | tojson | safe }};
 
-// Nutzer-ID + E-Mail Validierung
 function checkNidAndEmail() {
     let nid = document.getElementById("nid").value;
     let email = document.getElementById("email").value;
     const jsFehlerDiv = document.getElementById('js-fehler');
     
-    // Wenn BEIDE Felder leer sind, andere Felder leeren
     if (!nid && !email) {
-        jsFehlerDiv.style.display = 'none';
         document.getElementById("vorname").value = "";
         document.getElementById("nachname").value = "";
         return;
     }
     
-    // Wenn NID angegeben, aber E-Mail fehlt
     if (nid && !email) {
         jsFehlerDiv.textContent = 'Bitte geben Sie auch Ihre E-Mail-Adresse zur Verifizierung ein.';
-        jsFehlerDiv.style.display = 'block';
         document.getElementById("email").focus();
         window.scrollTo(0, 0);
         return;
     }
     
-    // Wenn E-Mail angegeben, aber NID fehlt -> OK (kann über andere Felder suchen)
     if (!nid && email) {
-        jsFehlerDiv.style.display = 'none';
         return;
     }
     
-    // BEIDE sind angegeben -> Nutzer abrufen zur Verifizierung
     if (nid && email) {
         fetch(`/get_nutzer/${nid}`)
         .then(response => response.json())
         .then(data => {
             if (data.exists === false || !data.vorname) {
-                // Nutzer existiert nicht
                 jsFehlerDiv.textContent = 'Diese Nutzer-ID existiert nicht in der Datenbank.';
-                jsFehlerDiv.style.display = 'block';
                 document.getElementById("nid").value = "";
                 document.getElementById("nid").focus();
                 document.getElementById("vorname").value = "";
                 document.getElementById("nachname").value = "";
                 window.scrollTo(0, 0);
             } else if (data.email !== email) {
-                // E-Mail stimmt nicht überein
                 jsFehlerDiv.textContent = 'Die E-Mail-Adresse stimmt nicht mit der Nutzer-ID überein.';
-                jsFehlerDiv.style.display = 'block';
                 document.getElementById("email").value = "";
                 document.getElementById("email").focus();
                 document.getElementById("nid").value = "";
@@ -162,8 +126,6 @@ function checkNidAndEmail() {
                 document.getElementById("nachname").value = "";
                 window.scrollTo(0, 0);
             } else {
-                // Alles korrekt - Felder automatisch ausfüllen
-                jsFehlerDiv.style.display = 'none';
                 document.getElementById("vorname").value = data.vorname || "";
                 document.getElementById("nachname").value = data.nachname || "";
             }
@@ -171,17 +133,14 @@ function checkNidAndEmail() {
         .catch(error => {
             console.error("Fehler beim Abrufen der Nutzerdaten:", error);
             jsFehlerDiv.textContent = "Fehler beim Abrufen der Nutzerdaten";
-            jsFehlerDiv.style.display = 'block';
             window.scrollTo(0, 0);
         });
     }
 }
 
-// Event Listener für NID und E-Mail
 document.getElementById("nid").addEventListener("blur", checkNidAndEmail);
 document.getElementById("email").addEventListener("blur", checkNidAndEmail);
 
-// Dynamische Platznummern
 document.getElementById("tennisanlage").addEventListener("change", function() {
     const gewaehlteAnlage = this.value;
     const platznummerSelect = document.getElementById("platznummer");
@@ -202,14 +161,12 @@ document.getElementById("tennisanlage").addEventListener("change", function() {
     });
 });
 
-// Beim Laden: Wenn Tennisanlage vorausgewählt ist, Platznummern laden
 document.addEventListener("DOMContentLoaded", function() {
     const tennisanlageSelect = document.getElementById("tennisanlage");
     const platznummerSelect = document.getElementById("platznummer");
     const gespeichertePlatznummer = "{{ form_data.platznummer if form_data else '' }}";
     
     if (tennisanlageSelect.value) {
-        // Platznummern für vorgewählte Anlage laden
         const gewaehlteAnlage = tennisanlageSelect.value;
         const verfuegbarePlaetze = allePlaetze.filter(p => p.tennisanlage === gewaehlteAnlage);
         
