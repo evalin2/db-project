@@ -644,9 +644,9 @@ nav a:hover {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 500;
-    height: 500;
-    background: radial-gradient(circle, rgb(46, 75, 0) 0%, transparent 20%);
+    width: 700;
+    height: 700;
+    background: radial-gradient(circle, rgb(19, 31, 0) 0%, transparent 50%);
     z-index: 1;
     border-radius: 50%;
 }
