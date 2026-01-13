@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <title>Tennisplatz-Verwaltung - Court+</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <header>
@@ -26,9 +24,10 @@
     {% endif %}
 
     <main class="container">
+        <!-- Tennisplatz hinzufügen -->
         <section>
             <h3>Tennisplatz hinzufügen</h3>
-            <form method="POST">
+            <form method="POST" onsubmit="return validateWartungsdatum('wartung_add')">
                 <input type="hidden" name="aktion" value="hinzufuegen">
                 
                 <label for="anlage_add">Tennisanlage *</label>
@@ -46,6 +45,14 @@
                     <option value="teppich">Teppich (Halle)</option>
                 </select>
 
+                <label for="wid_add">Wartungsarbeiter *</label>
+                <select id="wid_add" name="wid" required>
+                    <option value="">Bitte wählen...</option>
+                    {% for arbeiter in alle_arbeiter %}
+                    <option value="{{ arbeiter.wid }}">{{ arbeiter.vorname }} {{ arbeiter.nachname }}</option>
+                    {% endfor %}
+                </select>
+
                 <label for="wartung_add">Datum der letzten Wartung *</label>
                 <input type="date" id="wartung_add" name="wartung" required>
 
@@ -53,9 +60,10 @@
             </form>
         </section>
 
+        <!-- Tennisplatz-Daten ändern -->
         <section>
             <h3>Tennisplatz-Daten ändern</h3>
-            <form method="POST">
+            <form method="POST" onsubmit="return validateWartungsdatum('wartung_edit')">
                 <input type="hidden" name="aktion" value="aendern">
                 
                 <label for="platz_id_edit">Tennisplatz-ID *</label>
@@ -70,6 +78,14 @@
                 <label for="belag_edit">Belag *</label>
                 <input type="text" id="belag_edit" name="belag" required readonly>
 
+                <label for="wid_edit">Wartungsarbeiter *</label>
+                <select id="wid_edit" name="wid" required>
+                    <option value="">Bitte wählen...</option>
+                    {% for arbeiter in alle_arbeiter %}
+                    <option value="{{ arbeiter.wid }}">{{ arbeiter.vorname }} {{ arbeiter.nachname }} (ID: {{ arbeiter.wid }})</option>
+                    {% endfor %}
+                </select>
+
                 <label for="wartung_edit">Wartungsdatum *</label>
                 <input type="date" id="wartung_edit" name="wartung" required>
 
@@ -77,6 +93,7 @@
             </form>
         </section>
 
+        <!-- Tennisplatz löschen -->
         <section>
             <h3>Tennisplatz löschen</h3>
             <form method="POST">
@@ -89,6 +106,7 @@
             </form>
         </section>
 
+        <!-- Liste aller Tennisplätze -->
         {% if alle_plaetze %}
         <div class="platz-liste">
             <h4>Alle Tennisplätze ({{ alle_plaetze|length }})</h4>
@@ -100,6 +118,9 @@
                     ({{ platz.belag }})
                     {% if platz.wartung %}
                     <br><small>Letzte Wartung: {{ platz.wartung }}</small>
+                    {% endif %}
+                    {% if platz.wartungsarbeiter_name %}
+                    <br><small>Wartungsarbeiter: {{ platz.wartungsarbeiter_name }} (WID: {{ platz.wid }})</small>
                     {% endif %}
                 </div>
             </div>
@@ -116,6 +137,21 @@
     </footer>
 
     <script>
+        // Validierungsfunktion für Wartungsdatum
+        function validateWartungsdatum(fieldId) {
+            var wartungInput = document.getElementById(fieldId);
+            var wartungsdatum = new Date(wartungInput.value);
+            var heute = new Date();
+            heute.setHours(0, 0, 0, 0); // Nur Datum vergleichen, ohne Uhrzeit
+            
+            if (wartungsdatum > heute) {
+                alert('Das Datum der letzten Wartung muss in der Vergangenheit oder heute liegen.');
+                wartungInput.focus();
+                return false;
+            }
+            return true;
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             var tidInput = document.getElementById('platz_id_edit');
             
@@ -127,6 +163,7 @@
                         document.getElementById('anlage_edit').value = '';
                         document.getElementById('platznummer_edit').value = '';
                         document.getElementById('belag_edit').value = '';
+                        document.getElementById('wid_edit').value = '';
                         document.getElementById('wartung_edit').value = '';
                         return;
                     }
@@ -140,11 +177,13 @@
                                 document.getElementById('anlage_edit').value = data.tennisanlage;
                                 document.getElementById('platznummer_edit').value = data.platznummer;
                                 document.getElementById('belag_edit').value = data.belag;
+                                document.getElementById('wid_edit').value = data.wid;
                                 document.getElementById('wartung_edit').value = data.wartung;
                             } else {
                                 document.getElementById('anlage_edit').value = '';
                                 document.getElementById('platznummer_edit').value = '';
                                 document.getElementById('belag_edit').value = '';
+                                document.getElementById('wid_edit').value = '';
                                 document.getElementById('wartung_edit').value = '';
                             }
                         })
