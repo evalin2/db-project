@@ -1,190 +1,11 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
+    <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <title>Tennisplatz-Verwaltung - Court+</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <style>
-        header {
-            text-align: center;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-bottom: 2px solid #9fcc3b;
-        }
-        
-        header a {
-            text-decoration: none;
-            color: inherit;
-            display: inline-block;
-        }
-        
-        header img {
-            max-width: 150px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        
-        header img:hover {
-            transform: scale(1.05);
-        }
-        
-        header h1 {
-            margin: 10px 0 0 0;
-            color: #333;
-        }
-        
-        .subheading {
-            text-align: center;
-            margin: 30px 0;
-            color: #333;
-        }
-        
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        section {
-            background: white;
-            padding: 25px;
-            margin-bottom: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        h3 {
-            color: #9fcc3b;
-            margin-top: 0;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #9fcc3b;
-        }
-        
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        label {
-            margin-top: 15px;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-        
-        input[type="text"],
-        input[type="date"],
-        select {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: #9fcc3b;
-            box-shadow: 0 0 0 2px rgba(159, 204, 59, 0.2);
-        }
-        
-        input[readonly] {
-            background-color: #f0f0f0;
-            cursor: not-allowed;
-        }
-        
-        button {
-            margin-top: 20px;
-            padding: 12px;
-            background-color: #9fcc3b;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        
-        button:hover {
-            background-color: #8ab835;
-        }
-        
-        /* VERBESSERTE ROTE FEHLERBOX */
-        .fehler {
-            background-color: #ffebee;
-            color: #c62828;
-            padding: 15px 20px;
-            margin: 20px auto;
-            max-width: 900px;
-            border-radius: 6px;
-            border: 2px solid #ef5350;
-            border-left: 6px solid #c62828;
-            font-weight: 500;
-            box-shadow: 0 2px 8px rgba(198, 40, 40, 0.15);
-        }
-        
-        .erfolg {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-            padding: 15px 20px;
-            margin: 20px auto;
-            max-width: 900px;
-            border-radius: 6px;
-            border: 2px solid #66bb6a;
-            border-left: 6px solid #2e7d32;
-            font-weight: 500;
-            box-shadow: 0 2px 8px rgba(46, 125, 50, 0.15);
-        }
-        
-        .platz-liste {
-            margin-top: 30px;
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-        }
-        
-        .platz-liste h4 {
-            color: #333;
-            margin-top: 0;
-        }
-        
-        .platz-item {
-            background: white;
-            padding: 12px;
-            margin: 8px 0;
-            border-radius: 4px;
-            border-left: 3px solid #9fcc3b;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .platz-info {
-            flex: 1;
-        }
-        
-        .platz-id {
-            color: #9fcc3b;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        
-        footer {
-            text-align: center;
-            padding: 30px;
-            background-color: #333;
-            color: white;
-            margin-top: 50px;
-        }
-        
-        footer p {
-            margin: 0;
-            line-height: 1.6;
-        }
-    </style>
 </head>
 <body>
     <header>
@@ -205,10 +26,9 @@
     {% endif %}
 
     <main class="container">
-        <!-- Tennisplatz hinzufügen -->
         <section>
             <h3>Tennisplatz hinzufügen</h3>
-            <form method="POST" onsubmit="return validateWartungsdatum('wartung_add')">
+            <form method="POST">
                 <input type="hidden" name="aktion" value="hinzufuegen">
                 
                 <label for="anlage_add">Tennisanlage *</label>
@@ -226,14 +46,6 @@
                     <option value="teppich">Teppich (Halle)</option>
                 </select>
 
-                <label for="wid_add">Wartungsarbeiter *</label>
-                <select id="wid_add" name="wid" required>
-                    <option value="">Bitte wählen...</option>
-                    {% for arbeiter in alle_arbeiter %}
-                    <option value="{{ arbeiter.wid }}">{{ arbeiter.vorname }} {{ arbeiter.nachname }}</option>
-                    {% endfor %}
-                </select>
-
                 <label for="wartung_add">Datum der letzten Wartung *</label>
                 <input type="date" id="wartung_add" name="wartung" required>
 
@@ -241,31 +53,22 @@
             </form>
         </section>
 
-        <!-- Tennisplatz-Daten ändern -->
         <section>
             <h3>Tennisplatz-Daten ändern</h3>
-            <form method="POST" onsubmit="return validateWartungsdatum('wartung_edit')">
+            <form method="POST">
                 <input type="hidden" name="aktion" value="aendern">
                 
                 <label for="platz_id_edit">Tennisplatz-ID *</label>
                 <input type="text" id="platz_id_edit" name="platz_id" required placeholder="ID aus der Liste unten">
 
                 <label for="anlage_edit">Tennisanlage *</label>
-                <input type="text" id="anlage_edit" name="anlage" required readonly style="background-color: #f0f0f0;">
+                <input type="text" id="anlage_edit" name="anlage" required readonly>
 
                 <label for="platznummer_edit">Platznummer *</label>
-                <input type="text" id="platznummer_edit" name="platznummer" required readonly style="background-color: #f0f0f0;">
+                <input type="text" id="platznummer_edit" name="platznummer" required readonly>
 
                 <label for="belag_edit">Belag *</label>
-                <input type="text" id="belag_edit" name="belag" required readonly style="background-color: #f0f0f0;">
-
-                <label for="wid_edit">Wartungsarbeiter *</label>
-                <select id="wid_edit" name="wid" required>
-                    <option value="">Bitte wählen...</option>
-                    {% for arbeiter in alle_arbeiter %}
-                    <option value="{{ arbeiter.wid }}">{{ arbeiter.vorname }} {{ arbeiter.nachname }} (ID: {{ arbeiter.wid }})</option>
-                    {% endfor %}
-                </select>
+                <input type="text" id="belag_edit" name="belag" required readonly>
 
                 <label for="wartung_edit">Wartungsdatum *</label>
                 <input type="date" id="wartung_edit" name="wartung" required>
@@ -274,7 +77,6 @@
             </form>
         </section>
 
-        <!-- Tennisplatz löschen -->
         <section>
             <h3>Tennisplatz löschen</h3>
             <form method="POST">
@@ -283,11 +85,10 @@
                 <label for="platz_id_delete">Tennisplatz-ID *</label>
                 <input type="text" id="platz_id_delete" name="platz_id" required placeholder="ID aus der Liste unten">
 
-                <button type="submit" style="background-color: #c33;">Tennisplatz löschen</button>
+                <button type="submit">Tennisplatz löschen</button>
             </form>
         </section>
 
-        <!-- Liste aller Tennisplätze -->
         {% if alle_plaetze %}
         <div class="platz-liste">
             <h4>Alle Tennisplätze ({{ alle_plaetze|length }})</h4>
@@ -298,10 +99,7 @@
                     <strong>{{ platz.tennisanlage }}</strong> - Platz {{ platz.platznummer }} 
                     ({{ platz.belag }})
                     {% if platz.wartung %}
-                    <br><small style="color: #666;">Letzte Wartung: {{ platz.wartung }}</small>
-                    {% endif %}
-                    {% if platz.wartungsarbeiter_name %}
-                    <br><small style="color: #666;">Wartungsarbeiter: {{ platz.wartungsarbeiter_name }} (WID: {{ platz.wid }})</small>
+                    <br><small>Letzte Wartung: {{ platz.wartung }}</small>
                     {% endif %}
                 </div>
             </div>
@@ -318,21 +116,6 @@
     </footer>
 
     <script>
-        // Validierungsfunktion für Wartungsdatum
-        function validateWartungsdatum(fieldId) {
-            var wartungInput = document.getElementById(fieldId);
-            var wartungsdatum = new Date(wartungInput.value);
-            var heute = new Date();
-            heute.setHours(0, 0, 0, 0); // Nur Datum vergleichen, ohne Uhrzeit
-            
-            if (wartungsdatum > heute) {
-                alert('Das Datum der letzten Wartung muss in der Vergangenheit oder heute liegen.');
-                wartungInput.focus();
-                return false;
-            }
-            return true;
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
             var tidInput = document.getElementById('platz_id_edit');
             
@@ -344,7 +127,6 @@
                         document.getElementById('anlage_edit').value = '';
                         document.getElementById('platznummer_edit').value = '';
                         document.getElementById('belag_edit').value = '';
-                        document.getElementById('wid_edit').value = '';
                         document.getElementById('wartung_edit').value = '';
                         return;
                     }
@@ -358,13 +140,11 @@
                                 document.getElementById('anlage_edit').value = data.tennisanlage;
                                 document.getElementById('platznummer_edit').value = data.platznummer;
                                 document.getElementById('belag_edit').value = data.belag;
-                                document.getElementById('wid_edit').value = data.wid;
                                 document.getElementById('wartung_edit').value = data.wartung;
                             } else {
                                 document.getElementById('anlage_edit').value = '';
                                 document.getElementById('platznummer_edit').value = '';
                                 document.getElementById('belag_edit').value = '';
-                                document.getElementById('wid_edit').value = '';
                                 document.getElementById('wartung_edit').value = '';
                             }
                         })
