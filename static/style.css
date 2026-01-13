@@ -615,7 +615,7 @@ nav a:hover {
     align-items: center;
     justify-content: center;
     position: relative;
-    padding: 8rem 2.5rem 5rem;
+    padding: 8rem 2.5rem 3rem;
     background: linear-gradient(160deg, var(--sand-light) 0%, var(--sand-base) 100%);
 }
 
@@ -646,7 +646,7 @@ nav a:hover {
     transform: translate(-50%, -50%);
     width: 700;
     height: 700;
-    background: radial-gradient(circle, rgb(19, 31, 0) 0%, transparent 50%);
+    background: radial-gradient(circle, rgb(26, 43, 0) 0%, transparent 70%);
     z-index: 1;
     border-radius: 50%;
 }
