@@ -7,13 +7,11 @@
     <title>cour+ | Tennisplatz-Buchung</title>
 </head>
 <body>
-    <a href="{{ url_for('index') }}">
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
-    </a>
     <div class="court-lines"></div>
     
     <nav class="nav">
         <div class="nav-content">
+            <a href="{{ url_for('index') }}" class="nav-logo"> <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo"> </a>
             <div class="nav-links">
                 <a href="{{ url_for('buchen') }}" class="nav-link">Buchen</a>
                 <a href="{{ url_for('stornieren') }}" class="nav-link">Stornieren</a>
