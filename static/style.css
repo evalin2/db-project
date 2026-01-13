@@ -1,589 +1,498 @@
-/* ===========================================
-   COURT+ — Finales, komplettes Stylesheet
-   Ziel: professionell • sportlich • minimalistisch
-   Klar kommentiert und kompatibel mit vorhandenen Klassen
-   Kein Grid, nur Flexbox / einfache Layouts
-   =========================================== */
+/* ===================================
+   COURT+ PROFESSIONAL BRAND STYLES
+   Vision: professionell, sportlich, minimalistisch, modern, energetisch, exklusiv
+   Prinzip: Weniger ist mehr
+   =================================== */
 
-/* -------------------------------------------
-   Google Fonts
-   (einmal importieren, falls noch nicht im HTML)
-   ------------------------------------------- */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+/* --- GOOGLE FONTS IMPORT --- */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@700;600;500&family=Inter:wght@400;500&display=swap');
 
-/* -------------------------------------------
-   Brand-Variablen (einfach anpassbar)
-   ------------------------------------------- */
+/* --- BRAND COLOR SYSTEM --- */
 :root {
-  /* Primär / Akzent */
-  --court-green: #9FD447;        /* Logo-Akzent */
-  --court-green-dark: #83B63A;   /* Hover / aktiv */
-
-  /* Sekundärer, sehr sparsamer Akzent */
-  --deep-forest: #1F2A1E;        /* nur kleine Flächen / Icons / Footer-Text */
-
-  /* Warme Neutrale Basis */
-  --sand-light: #F7F4EF;         /* Seitenhintergrund */
-  --sand-base: #EFECE6;          /* Panels / Karten-Hintergrund */
-  --sand-medium: #D8D3CC;        /* Linien / Rahmen */
-
-  /* Textfarben */
-  --text-primary: #2A2A2A;
-  --text-secondary: #5A5552;
-  --text-muted: #8A8682;
-
-  /* Status */
-  --success: #2E7D32;
-  --error: #C62828;
-
-  /* Radius & Schatten (dezent) */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --shadow-soft: 0 6px 18px rgba(0,0,0,0.06);
-  --shadow-subtle: 0 4px 12px rgba(0,0,0,0.04);
-
-  /* Übergänge */
-  --transition-fast: all 0.18s ease;
-  --transition-normal: all 0.28s cubic-bezier(.2,.8,.2,1);
+    /* Primary Accent - Sparsam verwendet */
+    --court-green: #9FD447;
+    --court-green-hover: #8BC63A;
+    
+    /* Neutral Base - Warme Sandtöne */
+    --sand-offwhite: #F7F4EF;
+    --sand-base: #EFECE6;
+    --sand-medium: #D8D3CC;
+    
+    /* Text Colors */
+    --text-dark: #2A2A2A;
+    --text-secondary: #5A5552;
+    --text-light: #FFFFFF;
+    
+    /* Secondary Accent - Sehr sparsam */
+    --deep-forest: #1F2A1E;
+    
+    /* Functional */
+    --border-light: rgba(42, 42, 42, 0.08);
+    --shadow-subtle: 0 2px 8px rgba(42, 42, 42, 0.04);
+    --shadow-elevated: 0 4px 24px rgba(42, 42, 42, 0.08);
+    
+    /* Layout */
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-smooth: 0.3s ease;
 }
 
-/* ===========================================
-   Reset & Basis
-   =========================================== */
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+/* --- RESET & BASE STYLES --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 body {
-  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  color: var(--text-primary);
-  background: var(--sand-light);
-  line-height: 1.6;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-dark);
+    background-color: var(--sand-base);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Utility-Klassen (kurz und verständlich) */
+/* --- TYPOGRAPHY HIERARCHY --- */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 1rem;
+}
+
+h1 {
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 2.25rem;
+    font-weight: 600;
+}
+
+h3 {
+    font-size: 1.75rem;
+    font-weight: 600;
+}
+
+h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+p {
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+/* --- LAYOUT CONTAINERS --- */
 .container {
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  width: 100%;
-}
-.text-center { text-align: center; }
-.hidden { display: none !important; }
-.mt-1 { margin-top: .5rem; } .mt-2 { margin-top: 1rem; } .mt-3 { margin-top: 1.5rem; }
-.mb-1 { margin-bottom: .5rem; } .mb-2 { margin-bottom: 1rem; } .mb-3 { margin-bottom: 1.5rem; }
-
-/* ===========================================
-   HEADER / NAVIGATION
-   Regeln: Logo links, Navigation rechts, konstante Logo-Größe
-   =========================================== */
-header {
-  background: var(--sand-light);
-  border-bottom: 1px solid var(--sand-medium);
-  position: sticky;
-  top: 0;
-  z-index: 120;
-  box-shadow: var(--shadow-subtle);
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
 }
 
-/* Innerer Header-Container: links Logo, rechts Navigation */
-.header-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.9rem 0;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+/* --- HEADER - Minimalistisch, Logo links, Navigation rechts --- */
+.main-header {
+    background-color: var(--sand-offwhite);
+    border-bottom: 1px solid var(--border-light);
+    padding: 1.25rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+    background-color: rgba(247, 244, 239, 0.95);
 }
 
-/* Brand / Logo */
-.header-brand {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  text-decoration: none;
-  color: var(--text-primary);
-}
-.header-brand img {
-  width: 72px;               /* konstante Logo-Größe */
-  height: auto;
-  display: block;
-  object-fit: contain;
-}
-.header-brand .brand-title {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 600;
-  font-size: 1.05rem;
-  letter-spacing: -0.01em;
-  color: var(--text-primary);
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* Navigation rechts */
-.header-nav {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-.nav-list {
-  list-style: none;
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  margin: 0;
-  padding: 0;
-}
-.nav-list li { list-style: none; }
-.nav-list a {
-  text-decoration: none;
-  color: var(--text-primary);
-  padding: 0.45rem 0.75rem;
-  border-radius: var(--radius-sm);
-  font-weight: 500;
-  transition: var(--transition-normal);
-  font-family: 'Outfit', sans-serif;
-}
-.nav-list a:hover {
-  color: var(--court-green-dark);
-  transform: translateY(-2px);
+/* Logo - Konstante Größe, kein Glow */
+.logo {
+    height: 40px;
+    width: auto;
+    display: flex;
+    align-items: center;
 }
 
-/* Header-CTA (z. B. Buchung) */
-.header-cta {
-  margin-left: 0.5rem;
-  padding: 0.5rem 0.9rem;
-  background: linear-gradient(180deg, var(--court-green) 0%, var(--court-green-dark) 100%);
-  color: #fff;
-  border-radius: var(--radius-sm);
-  font-weight: 700;
-  text-decoration: none;
-  box-shadow: var(--shadow-soft);
-  transition: var(--transition-normal);
-}
-.header-cta:hover { transform: translateY(-2px); }
-
-/* Mobile: einfache Hamburger-Logik (nur Styling, JS nötig für Toggle) */
-.header-toggle {
-  display: none;
-  background: transparent;
-  border: none;
-  font-size: 1.1rem;
-  cursor: pointer;
+.logo img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
 }
 
-/* ===========================================
-   HERO
-   Ruhig, groß, Logo prominent, kein animierter Hintergrund
-   =========================================== */
-.hero {
-  padding: 4.5rem 0 3rem;
-  background: linear-gradient(180deg, var(--sand-light) 0%, rgba(255,255,255,0) 100%);
+/* Navigation - Rechtsbündig */
+.main-nav {
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
 }
-.hero-inner {
-  max-width: 980px;
-  margin: 0 auto;
-  text-align: center;
-  padding-left: 1rem;
-  padding-right: 1rem;
+
+.nav-link {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    position: relative;
+    padding: 0.5rem 0;
 }
-.hero-logo {
-  width: 140px;
-  height: auto;
-  display: block;
-  margin: 0 auto 0.75rem;
-  /* sehr dezente, optionale Float-Animation */
-  animation: floatSlow 6s ease-in-out infinite;
+
+.nav-link:hover {
+    color: var(--text-dark);
 }
-@keyframes floatSlow {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+
+.nav-link.active {
+    color: var(--text-dark);
+    font-weight: 600;
 }
+
+/* Optional: Sehr dezente Unterstreichung für aktiven Link */
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--court-green);
+    border-radius: 1px;
+}
+
+/* --- HERO SECTION - Groß und ruhig --- */
+.hero-section {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    padding: 4rem 0;
+    background: linear-gradient(
+        135deg,
+        var(--sand-offwhite) 0%,
+        var(--sand-base) 100%
+    );
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-content {
+    max-width: 800px;
+    position: relative;
+    z-index: 2;
+}
+
 .hero-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 2.6rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  line-height: 1.08;
-  margin-bottom: 0.6rem;
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-dark);
 }
-.hero-sub {
-  color: var(--text-secondary);
-  font-size: 1.05rem;
-  max-width: 720px;
-  margin: 0 auto;
-}
-.highlight { color: var(--court-green); font-weight: 700; }
 
-/* ===========================================
-   SERVICES / KARTEN / LISTEN
-   Klar, viel Weißraum, dezente Linien
-   (keine Grid-Layouts, nur Flexbox / Stacks)
-   =========================================== */
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: 2.5rem;
+    max-width: 600px;
+    line-height: 1.6;
+}
 
-/* Services-Container: flexible Reihen, wrap */
-.services {
-  padding: 3rem 0;
+/* Sehr dezente Textur für Hero (optional) */
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d8d3cc' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+    opacity: 0.3;
+    z-index: 1;
 }
-.services-inner {
-  display: flex;
-  flex-wrap: wrap;            /* mehrere Spalten bei großen Bildschirmen */
-  gap: 1.25rem;
-  justify-content: center;
-}
-.service-card {
-  flex: 1 1 300px;            /* wächst, schrumpft, Basis 300px */
-  max-width: 360px;
-  background: var(--sand-base);
-  border: 1px solid var(--sand-medium);
-  border-radius: var(--radius-lg);
-  padding: 1.25rem;
-  box-shadow: var(--shadow-subtle);
-  transition: var(--transition-normal);
-}
-.service-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-soft);
-}
-.card-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
-}
-.card-icon {
-  width: 56px;
-  height: 56px;
-  background: #fff;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-subtle);
-}
-.card-title { font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 600; color: var(--text-primary); }
-.card-description { color: var(--text-secondary); line-height: 1.6; margin-top: .5rem; }
 
-/* Platz- / Arbeiter-Listen (Buchungslisten) */
-.platz-liste, .arbeiter-liste {
-  background: var(--sand-base);
-  padding: 1.25rem;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--sand-medium);
-  box-shadow: var(--shadow-subtle);
-  margin-top: 1.25rem;
-}
-.platz-item, .arbeiter-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.9rem;
-  background: transparent;
-  border-radius: var(--radius-md);
-  border: 1px solid transparent;
-  transition: var(--transition-normal);
-}
-.platz-item + .platz-item, .arbeiter-item + .arbeiter-item { margin-top: 0.9rem; }
-.platz-item:hover, .arbeiter-item:hover {
-  border-color: var(--court-green);
-  transform: translateX(6px);
-  box-shadow: var(--shadow-subtle);
-}
-.platz-id, .arbeiter-id {
-  display: inline-block;
-  background: var(--court-green);
-  color: #fff;
-  padding: 0.35rem 0.8rem;
-  border-radius: var(--radius-sm);
-  font-weight: 700;
-  font-family: 'Outfit', sans-serif;
-  font-size: 0.85rem;
-}
-.platz-info strong, .arbeiter-info strong { display: block; color: var(--text-primary); font-weight: 600; }
-.platz-info small, .arbeiter-info small { display: block; color: var(--text-secondary); margin-top: 0.25rem; }
-
-/* ===========================================
-   FORMULARE
-   Lesbar, klare Felder, Fokuszustand mit Akzent
-   =========================================== */
-form {
-  max-width: 720px;
-  margin: 2rem auto;
-  padding: 1.75rem;
-  background: var(--sand-base);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--sand-medium);
-  box-shadow: var(--shadow-subtle);
-}
-.form-group { margin-bottom: 1rem; }
-.form-group label {
-  display: block;
-  margin-bottom: 0.45rem;
-  color: var(--text-secondary);
-  font-weight: 600;
-  font-size: 0.95rem;
-  font-family: 'Outfit', sans-serif;
-}
-.form-group input,
-.form-group select,
-.form-control,
-textarea {
-  width: 100%;
-  padding: 0.75rem 0.9rem;
-  border: 1.5px solid var(--sand-medium);
-  border-radius: var(--radius-sm);
-  background: #fff;
-  font-size: 1rem;
-  color: var(--text-primary);
-  transition: var(--transition-fast);
-}
-.form-group input:focus,
-.form-group select:focus,
-.form-control:focus,
-textarea:focus {
-  outline: none;
-  border-color: var(--court-green);
-  box-shadow: 0 0 0 6px rgba(159,212,71,0.06);
-}
-input[readonly] { background: var(--sand-base); color: var(--text-muted); cursor: not-allowed; }
-
-/* Buttons */
+/* --- BUTTONS - Klare Hierarchie --- */
 .btn {
-  display: inline-block;
-  padding: 0.85rem 1.1rem;
-  border-radius: var(--radius-sm);
-  font-weight: 700;
-  text-decoration: none;
-  cursor: pointer;
-  transition: var(--transition-normal);
-  border: none;
-  font-family: 'Outfit', sans-serif;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.875rem 2rem;
+    border-radius: var(--radius-md);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-smooth);
+    border: none;
+    outline: none;
+    position: relative;
+    overflow: hidden;
 }
+
 .btn-primary {
-  background: linear-gradient(180deg, var(--court-green) 0%, var(--court-green-dark) 100%);
-  color: #fff;
-  box-shadow: var(--shadow-soft);
+    background-color: var(--court-green);
+    color: var(--text-dark);
 }
-.btn-primary:hover { transform: translateY(-3px); }
+
+.btn-primary:hover {
+    background-color: var(--court-green-hover);
+    transform: translateY(-1px);
+}
+
 .btn-secondary {
-  background: transparent;
-  color: var(--text-primary);
-  border: 1.5px solid var(--sand-medium);
+    background-color: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-light);
 }
+
 .btn-secondary:hover {
-  border-color: var(--court-green);
-  color: var(--court-green-dark);
-}
-.btn-block { width: 100%; display: inline-block; }
-
-/* ===========================================
-   MESSAGES (Error / Success)
-   =========================================== */
-.error, #js-fehler, .fehler {
-  background: #fff5f5;
-  color: var(--error);
-  padding: 1rem;
-  border-radius: var(--radius-sm);
-  margin-bottom: 1rem;
-  border-left: 4px solid var(--error);
-  font-weight: 500;
-}
-.erfolg {
-  background: #f3fbf3;
-  color: var(--success);
-  padding: 1rem;
-  border-radius: var(--radius-sm);
-  margin-bottom: 1rem;
-  border-left: 4px solid var(--success);
-  font-weight: 500;
+    border-color: var(--text-secondary);
+    color: var(--text-dark);
 }
 
-/* ===========================================
-   SUCCESS BOX (Bestätigungsseiten)
-   =========================================== */
-.success-box {
-  max-width: 650px;
-  margin: 3rem auto;
-  padding: 2.5rem;
-  background: var(--sand-base);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-soft);
-  text-align: center;
-  border: 1px solid var(--sand-medium);
-}
-.success-icon {
-  width: 80px;
-  height: 80px;
-  background: var(--court-green);
-  color: #fff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2.5rem;
-  margin: 0 auto 1rem;
+/* --- CARDS & BOOKING LISTS - Warme Panels, viel Weißraum --- */
+.card {
+    background-color: var(--sand-offwhite);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    transition: box-shadow var(--transition-smooth);
 }
 
-/* ===========================================
-   NAV (Verwaltung) — einfache Buttons / Links
-   =========================================== */
-nav {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1.25rem;
-  flex-wrap: wrap;
-}
-nav a {
-  padding: 0.6rem 1rem;
-  background: transparent;
-  color: var(--text-primary);
-  text-decoration: none;
-  border-radius: var(--radius-sm);
-  border: 1.5px solid var(--sand-medium);
-  font-weight: 500;
-  transition: var(--transition-normal);
-}
-nav a:hover {
-  background: var(--court-green);
-  color: #fff;
-  border-color: var(--court-green);
-  transform: translateY(-2px);
+.card:hover {
+    box-shadow: var(--shadow-elevated);
 }
 
-/* ===========================================
-   FOOTER — kompakt, dezent, warm
-   =========================================== */
-footer, .site-footer {
-  background: transparent;
-  border-top: 1px solid rgba(42,42,42,0.04);
-  padding: 0.9rem 0;
-  margin-top: auto;
-}
-.site-footer .footer-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-}
-.footer-links { display: flex; gap: 0.75rem; align-items: center; }
-.footer-links a {
-  color: var(--text-secondary);
-  text-decoration: none;
-  font-weight: 500;
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--radius-sm);
-  transition: var(--transition-fast);
-}
-.footer-links a:hover { color: var(--court-green-dark); }
-
-/* Footer auf kleinen Bildschirmen: zentriert und gestapelt */
-@media (max-width: 640px) {
-  .site-footer .footer-inner { flex-direction: column; gap: 0.5rem; text-align: center; }
+.booking-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
-/* ===========================================
-   AUTH / LOGIN / REGISTER (einfach, klar)
-   =========================================== */
-.auth-wrapper {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--sand-light) 0%, #fff 100%);
-  padding: 2rem;
-}
-.auth-card {
-  background: #fff;
-  padding: 2.5rem;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-soft);
-  max-width: 480px;
-  width: 100%;
-  border: 1px solid var(--sand-medium);
-}
-.auth-title { text-align: center; color: var(--text-primary); margin-bottom: 1.25rem; font-size: 1.6rem; font-family: 'Outfit', sans-serif; }
-
-/* ===========================================
-   NAVBAR (base.html) — einfache, kompatible Regeln
-   =========================================== */
-.navbar {
-  background: var(--text-primary);
-  padding: 0.9rem 0;
-  color: #fff;
-}
-.navbar-brand {
-  color: #fff !important;
-  font-size: 1.25rem;
-  font-weight: 600;
-  text-decoration: none;
-  font-family: 'Outfit', sans-serif;
-}
-.navbar-nav { list-style: none; display: flex; gap: 1rem; margin: 0; padding: 0; }
-.navbar-nav li a { color: rgba(255,255,255,0.9); text-decoration: none; transition: var(--transition-fast); }
-.navbar-nav li a:hover { color: var(--court-green); }
-
-/* ===========================================
-   RESPONSIVE — einfache Regeln, keine Grid-Technik
-   =========================================== */
-@media (max-width: 900px) {
-  .hero-title { font-size: 2rem; }
-  .hero-logo { width: 120px; }
-  .header-brand img { width: 60px; }
-  .header-nav { gap: 0.5rem; }
-  .nav-list { gap: 0.5rem; }
-  .service-card { max-width: 100%; flex-basis: 100%; }
+.booking-item {
+    background-color: var(--sand-offwhite);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color var(--transition-fast);
 }
 
-@media (max-width: 640px) {
-  /* Header: Logo links, Navigation wird kompakter / Toggle nötig */
-  .header-inner { padding: 0.6rem 0; }
-  .header-toggle { display: inline-block; }
-  .nav-list { display: none; } /* JS: toggle sichtbar machen */
-  .hero { padding: 3rem 0 2rem; }
-  .hero-title { font-size: 1.6rem; }
-  form { padding: 1rem; margin: 1rem; }
-  .list-item { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
-  .service-card { padding: 1rem; }
+.booking-item:hover {
+    border-color: var(--court-green);
 }
 
-/* ===========================================
-   Kleine Hilfsklassen / Accessibility
-   - Fokuszustände sichtbar, Kontrast beachten
-   =========================================== */
-a:focus, button:focus, input:focus, select:focus, textarea:focus {
-  outline: 3px solid rgba(159,212,71,0.12);
-  outline-offset: 2px;
+/* ID Badges - Kleine grüne Akzente */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
 }
 
-/* Kontrast-Hinweis: Buttons und wichtige Texte sollten geprüft werden */
-.visually-hidden {
-  position: absolute !important;
-  height: 1px; width: 1px;
-  overflow: hidden;
-  clip: rect(1px, 1px, 1px, 1px);
-  white-space: nowrap;
+.badge-id {
+    background-color: var(--court-green);
+    color: var(--text-dark);
 }
 
-/* ===========================================
-   Hinweise zum Einsatz
-   - Dieses Stylesheet ersetzt die bisherigen CSS-Dateien.
-   - Ich habe vorhandene Klassen aus deinen beiden Stylesheets übernommen:
-     header, .header-inner, .header-brand, .header-nav, .nav-list, .hero, .services,
-     .service-card, .platz-liste, .platz-item, .form-group, .btn, .success-box,
-     .auth-wrapper, .navbar, .container, footer / .site-footer.
-   - Keine Grid-Layouts verwendet, nur Flexbox und einfache Wrap-Regeln.
-   - Deep Forest (--deep-forest) bewusst sehr sparsam einsetzen (Icons, Footer-Text).
-   - Wenn du das mobile Menü sichtbar machen willst, brauchst du ein kleines JS Toggle,
-     das .nav-list ein/ausblendet (absichtlich nicht enthalten, damit CSS einfach bleibt).
-   =========================================== */
+/* --- FORMS - Klare Struktur --- */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+    color: var(--text-dark);
+    font-size: 0.9rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    background-color: var(--sand-offwhite);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    color: var(--text-dark);
+    transition: border-color var(--transition-fast);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--court-green);
+}
+
+.form-control::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+/* --- FOOTER - Kompakt, eine Zeile --- */
+.main-footer {
+    margin-top: auto;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--border-light);
+    background-color: var(--sand-offwhite);
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.copyright {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.footer-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.footer-link {
+    font-size: 0.875rem;
+    color: var(--deep-forest); /* Sparsamer Einsatz von Deep Forest */
+    transition: color var(--transition-fast);
+}
+
+.footer-link:hover {
+    color: var(--text-dark);
+}
+
+/* --- UTILITY CLASSES --- */
+.text-center { text-align: center; }
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mt-4 { margin-top: 2rem; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 2rem; }
+.py-2 { padding-top: 1rem; padding-bottom: 1rem; }
+.py-3 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+.py-4 { padding-top: 2rem; padding-bottom: 2rem; }
+
+/* --- RESPONSIVE DESIGN - Einfache Stacks --- */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1.5rem;
+    }
+    
+    h1 {
+        font-size: 2.5rem;
+    }
+    
+    h2 {
+        font-size: 2rem;
+    }
+    
+    .hero-title {
+        font-size: 2.75rem;
+    }
+    
+    .main-nav {
+        gap: 1.5rem;
+    }
+    
+    .footer-content {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .booking-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2.25rem;
+    }
+    
+    .main-nav {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.75rem;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* --- ACCESSIBILITY & MICRO-INTERACTIONS --- */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+:focus-visible {
+    outline: 2px solid var(--court-green);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
+/* Sehr dezente Hover-Effekte für Links */
+a:not(.btn):hover {
+    color: var(--court-green);
+}
+
+/* --- DEEP FOREST AKZENTE - Sehr sparsam --- */
+/* Nur für spezifische, wichtige Elemente */
+.important-accent {
+    color: var(--deep-forest);
+    border-color: var(--deep-forest);
+}
+
+/* Status-Badges (optional) */
+.badge-success {
+    background-color: rgba(159, 212, 71, 0.1);
+    color: var(--court-green);
+    border: 1px solid rgba(159, 212, 71, 0.3);
+}
+
+.badge-error {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #EF4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
