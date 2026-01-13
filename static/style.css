@@ -663,8 +663,8 @@ nav a:hover {
     font-size: 4rem;
     font-weight: 700;
     color: var(--text-primary);
-    margin-top: 0.25rem; 
-    margin-bottom: 1rem;
+    margin-top: 0rem; 
+    margin-bottom: 0rem;
     line-height: 1.2;
     letter-spacing: -0.03em;
 }
