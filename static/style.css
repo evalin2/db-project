@@ -632,7 +632,7 @@ nav a:hover {
 }
 
 .hero-logo {
-    width: 240px;
+    width: 400px;
     height: auto;
     filter: drop-shadow(0 12px 48px rgba(159, 212, 71, 0.4));
     position: relative;
