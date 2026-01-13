@@ -632,7 +632,7 @@ nav a:hover {
 .hero-logo-container {
     position: relative;
     display: inline-block;
-    margin-bottom: 0.5rem;
+    margin-top: 0;
 }
 
 .hero-logo {
