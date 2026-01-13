@@ -997,7 +997,22 @@ def sbestätigt():
 def verwaltung():
     return render_template("verwaltung.html")
 
-
+@app.route("/debug_arbeiter")
+@login_required
+def debug_arbeiter():
+    try:
+        alle_arbeiter = db_read("SELECT wid, vorname, nachname FROM wartungsarbeiter ORDER BY nachname, vorname")
+        return jsonify({
+            "erfolg": True,
+            "anzahl": len(alle_arbeiter) if alle_arbeiter else 0,
+            "arbeiter": alle_arbeiter
+        })
+    except Exception as e:
+        return jsonify({
+            "erfolg": False,
+            "fehler": str(e)
+        })
+        k
 # Aktualisierte get_tennisplatz Route (ersetzen in app.py)
 @app.route("/get_tennisplatz/<int:tid>")
 @login_required
@@ -1191,7 +1206,7 @@ def tennisplätze():
                          erfolg=erfolg, 
                          alle_plaetze=alle_plaetze,
                          alle_arbeiter=alle_arbeiter)
-                         
+
 # API Route für AJAX - Wartungsarbeiter-Daten abrufen
 @app.route("/get_wartungsarbeiter/<int:wid>")
 @login_required
