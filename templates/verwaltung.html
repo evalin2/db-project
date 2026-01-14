@@ -9,9 +9,21 @@
 </head>
 <body>
 
-<header>
-    <img src="static/logo.png" alt="Logo">
-    <h1>Tennisplatz-Buchungssystem</h1>
+<header class="global-header">
+    <div class="header-left">
+        <a href="{{ url_for('index') }}" class="logo-link">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="header-logo">
+        </a>
+        <h1 class="header-title">Tennisplatz‑Buchungssystem</h1>
+    </div>
+
+    <nav class="header-nav">
+        <div class="nav-links">
+            <a href="{{ url_for('buchen') }}" class="nav-link">Buchen</a>
+            <a href="{{ url_for('stornieren') }}" class="nav-link">Stornieren</a>
+            <a href="{{ url_for('verwaltung') }}" class="nav-link">Verwaltung</a>
+        </div>
+    </nav>
 </header>
 
 <h2 class="subheading">Verwaltung</h2>
