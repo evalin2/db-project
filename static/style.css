@@ -522,93 +522,51 @@ main.container section h3::after {
 }
 
 /* --- NAVIGATION (Management) --- */
-nav {
+.global-header {
     display: flex;
-    gap: 1.25rem;
-    margin-bottom: 2.5rem;
-    flex-wrap: wrap;
-}
-
-nav a {
-    padding: 0.9rem 1.8rem;
-    background: var(--white);
-    color: var(--text-primary);
-    text-decoration: none;
-    border-radius: var(--radius-md);
-    border: 2px solid var(--sand-medium);
-    font-weight: 500;
-    transition: var(--transition-smooth);
-    font-family: 'Outfit', sans-serif;
-}
-
-nav a:hover {
-    background: var(--brand-terracotta);
-    color: var(--white);
-    border-color: var(--brand-terracotta);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-soft);
-}
-
-/* ===================================
-   LANDING PAGE (INDEX.HTML)
-   =================================== */
-
-/* --- TOP NAVIGATION --- */
-.nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 3rem;
     background: rgba(255, 255, 255, 0.97);
     backdrop-filter: blur(12px);
-    box-shadow: var(--shadow-soft);
-    z-index: 1000;
     border-bottom: 1px solid var(--sand-medium);
+    box-shadow: var(--shadow-soft);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
-.nav-content {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 1.25rem 3rem;
+.header-left {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    gap: 1.5rem;
 }
 
-.nav-links {
+.header-logo {
+    height: 64px;
+    width: auto;
+    filter: drop-shadow(0 4px 12px rgba(159, 212, 71, 0.25));
+}
+
+.header-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -0.02em;
+}
+
+.header-nav {
+    display: flex;
+    align-items: center;
+}
+
+.header-nav .nav-links {
     display: flex;
     gap: 2.5rem;
     align-items: center;
 }
 
-.nav-link {
-    color: var(--text-primary);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 1rem;
-    font-family: 'Outfit', sans-serif;
-    transition: var(--transition-quick);
-    position: relative;
-    letter-spacing: 0.01em;
-}
-
-.nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: -6px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--brand-terracotta);
-    transition: width 0.3s ease;
-}
-
-.nav-link:hover {
-    color: var(--brand-terracotta);
-}
-
-.nav-link:hover::after {
-    width: 100%;
-}
 
 /* --- HERO SECTION --- */
 .hero {
@@ -665,7 +623,7 @@ nav a:hover {
     color: var(--text-primary);
     margin-top: 0rem; 
     margin-bottom: 0rem;
-    line-height: 0,2;
+    line-height: 0.7;
     letter-spacing: -0.03em;
 }
 
