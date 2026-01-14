@@ -584,8 +584,6 @@ main.container section h3::after {
 }
 
 /* --- HERO SECTION --- */
-/* --- HERO SECTION (KOMPAKT) --- */
-/* --- HERO SECTION --- */
 .hero-heading a {
     text-decoration: none;
     color: inherit;
@@ -610,7 +608,7 @@ main.container section h3::after {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 0rem;   
+    margin-bottom: 2rem;   
 }
 
 .hero-logo {
@@ -638,8 +636,8 @@ main.container section h3::after {
     font-size: 2.5rem;
     font-weight: 700;
     color: var(--text-primary);
-    margin-top: 0rem;      /* Standard-Margin oben killen */
-    margin-bottom: 0rem;  /* etwas näher an die Beschreibung */
+    margin-top: 2rem;     
+    margin-bottom: 2rem;  
     line-height: 1.2;
     letter-spacing: -0.02em;
     text-align: center;
@@ -649,7 +647,7 @@ main.container section h3::after {
     font-size: 1.2rem;
     color: var(--text-secondary);
     max-width: 660px;
-    margin: 0 auto;
+    margin: 2 auto;
     line-height: 1.6;
     text-align: center;
 }
