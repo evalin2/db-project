@@ -768,60 +768,112 @@ main.container section h3::after {
     color: var(--brand-terracotta);
 }
 
-/* --- NAVBAR (base.html) --- */
-.navbar {
-    background: var(--text-primary);
-    padding: 1.25rem 0;
-    box-shadow: var(--shadow-soft);
-}
+/* ===================================
+   MODERN FORM STYLE (Elegant + Unified)
+   =================================== */
 
-.navbar-inverse {
-    background: var(--text-primary);
-}
-
-.navbar-brand {
-    color: var(--sand-light) !important;
-    font-size: 1.6rem;
-    font-weight: 600;
-    text-decoration: none;
-    font-family: 'Outfit', sans-serif;
-}
-
-.navbar-nav {
-    list-style: none;
-    display: flex;
-    gap: 2rem;
-}
-
-.navbar-nav li a {
-    color: rgba(245, 243, 240, 0.9);
-    text-decoration: none;
-    transition: var(--transition-quick);
-    font-family: 'Outfit', sans-serif;
-    font-weight: 500;
-}
-
-.navbar-nav li a:hover {
-    color: var(--brand-green);
-}
-
-.navbar-right {
-    margin-left: auto;
-}
-
-.user-list {
-    list-style: none;
-    max-width: 700px;
-    margin: 2.5rem auto;
-}
-
-.user-name {
-    padding: 1.25rem;
+form {
+    max-width: 720px;
+    margin: 3rem auto;
+    padding: 3rem;
     background: var(--white);
-    border-radius: var(--radius-md);
-    margin-bottom: 0.75rem;
-    box-shadow: var(--shadow-subtle);
-    border: 1px solid var(--sand-medium);
+    border-radius: 24px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Titel */
+form h2, form h3 {
+    color: var(--text-primary);
+    margin-bottom: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    position: relative;
+    padding-bottom: 0.75rem;
+}
+
+/* Purple‑Green Signature Underline */
+form h2::after, form h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(
+        90deg,
+        var(--brand-green) 0%,
+        var(--brand-terracotta) 100%
+    );
+    border-radius: 3px;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 1.75rem;
+}
+
+/* Labels */
+.form-group label {
+    display: block;
+    margin-bottom: 0.6rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+}
+
+/* Inputs + Selects */
+.form-group input,
+.form-group select,
+.form-control {
+    width: 100%;
+    padding: 1rem 1.2rem;
+    border-radius: 14px;
+    border: 1px solid rgba(0,0,0,0.12);
+    background: #fafafa;
+    font-size: 1rem;
+    transition: all 0.25s ease;
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-primary);
+}
+
+/* Hover */
+.form-group input:hover,
+.form-group select:hover {
+    background: #ffffff;
+    border-color: rgba(0,0,0,0.18);
+}
+
+/* Focus (Purple Glow) */
+.form-group input:focus,
+.form-group select:focus,
+.form-control:focus {
+    outline: none;
+    background: #ffffff;
+    border-color: var(--brand-terracotta);
+    box-shadow:
+        0 0 0 4px rgba(140, 97, 133, 0.12),
+        0 4px 12px rgba(0,0,0,0.06);
+}
+
+/* Read-only fields */
+.form-group input:read-only {
+    background: #f0f0f0;
+    color: var(--text-tertiary);
+    cursor: not-allowed;
+    border-color: rgba(0,0,0,0.08);
+}
+
+/* Fehlerbox */
+#js-fehler {
+    background: rgba(217, 95, 78, 0.12); /* uses --error tone */
+    color: var(--error);
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(217, 95, 78, 0.25);
+    font-weight: 500;
 }
 
 /* ===================================
