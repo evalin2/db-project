@@ -351,6 +351,41 @@ main.container section h3::after {
     border-radius: 3px;
 }
 
+/* ===================================
+   VERWALTUNG – NAVIGATION LINKS
+   =================================== */
+
+.container nav {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.container nav a {
+    display: block;
+    padding: 1.2rem 2rem;
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    text-decoration: none;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    transition: all 0.25s ease;
+}
+
+/* Hover – wie deine Service-Cards */
+.container nav a:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    background: rgba(140, 97, 133, 0.08); /* leichter Purple-Tint */
+    border-color: var(--brand-terracotta);
+}
+
+
 /* --- LISTS (Tennis Courts & Maintenance) --- */
 .platz-liste,
 .arbeiter-liste {
