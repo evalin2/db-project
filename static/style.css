@@ -637,7 +637,7 @@ main.container section h3::after {
     font-weight: 700;
     color: var(--text-primary);
     margin-top: 4rem;     
-    margin-bottom: 4rem;  
+    margin-bottom: 1rem;  
     line-height: 1.2;
     letter-spacing: -0.02em;
     text-align: center;
