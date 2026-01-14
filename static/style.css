@@ -602,7 +602,7 @@ main.container section h3::after {
     justify-content: center;
     position: relative;
     min-height: auto; 
-    padding: 1.5rem 2rem
+    padding: 1rem 1,5rem;
     background: linear-gradient(
         160deg,
         var(--sand-light) 0%,
@@ -615,7 +615,7 @@ main.container section h3::after {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 1rem;
+    margin-bottom: 0,5rem;
 }
 
 .hero-logo {
