@@ -668,8 +668,8 @@ main.container section h3::after {
     top: 48%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 800px;
-    height: 800px;
+    width: 400px;
+    height: 400px;
     background: radial-gradient(circle,rgba(57, 88, 9, 0.25) 0%,transparent 30%);
     filter: blur(40px);
     z-index: 1;
