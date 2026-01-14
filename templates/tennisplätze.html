@@ -36,23 +36,19 @@
 <div class="erfolg">{{ erfolg }}</div>
 {% endif %}
 
-<!-- Tennisplatz hinzufügen -->
-<form method="POST" onsubmit="return validateWartungsdatum('wartung_add')">
-    <input type="hidden" name="aktion" value="hinzufuegen">
+<main>
 
+    <!-- Tennisplatz hinzufügen -->
     <h3>Tennisplatz hinzufügen</h3>
+    <form method="POST" onsubmit="return validateWartungsdatum('wartung_add')">
+        <input type="hidden" name="aktion" value="hinzufuegen">
 
-    <div class="form-group">
         <label for="anlage_add">Tennisanlage *</label>
         <input type="text" id="anlage_add" name="anlage" required>
-    </div>
 
-    <div class="form-group">
         <label for="platznummer_add">Platznummer *</label>
         <input type="text" id="platznummer_add" name="platznummer" required placeholder="z.B. 1, 2, 3">
-    </div>
 
-    <div class="form-group">
         <label for="belag_add">Belag *</label>
         <select id="belag_add" name="belag" required>
             <option value="">Bitte wählen...</option>
@@ -61,9 +57,7 @@
             <option value="rasen">Rasen</option>
             <option value="teppich">Teppich (Halle)</option>
         </select>
-    </div>
 
-    <div class="form-group">
         <label for="wid_add">Wartungsarbeiter *</label>
         <select id="wid_add" name="wid" required>
             <option value="">Bitte wählen...</option>
@@ -71,44 +65,31 @@
             <option value="{{ arbeiter.wid }}">{{ arbeiter.vorname }} {{ arbeiter.nachname }}</option>
             {% endfor %}
         </select>
-    </div>
 
-    <div class="form-group">
         <label for="wartung_add">Datum der letzten Wartung *</label>
         <input type="date" id="wartung_add" name="wartung" required>
-    </div>
 
-    <button type="submit">Tennisplatz hinzufügen</button>
-</form>
+        <button type="submit">Tennisplatz hinzufügen</button>
+    </form>
 
 
-<!-- Tennisplatz-Daten ändern -->
-<form method="POST" onsubmit="return validateWartungsdatum('wartung_edit')">
-    <input type="hidden" name="aktion" value="aendern">
-
+    <!-- Tennisplatz-Daten ändern -->
     <h3>Tennisplatz-Daten ändern</h3>
+    <form method="POST" onsubmit="return validateWartungsdatum('wartung_edit')">
+        <input type="hidden" name="aktion" value="aendern">
 
-    <div class="form-group">
         <label for="platz_id_edit">Tennisplatz-ID *</label>
         <input type="text" id="platz_id_edit" name="platz_id" required placeholder="ID aus der Liste unten">
-    </div>
 
-    <div class="form-group">
         <label for="anlage_edit">Tennisanlage *</label>
         <input type="text" id="anlage_edit" name="anlage" required readonly>
-    </div>
 
-    <div class="form-group">
         <label for="platznummer_edit">Platznummer *</label>
         <input type="text" id="platznummer_edit" name="platznummer" required readonly>
-    </div>
 
-    <div class="form-group">
         <label for="belag_edit">Belag *</label>
         <input type="text" id="belag_edit" name="belag" required readonly>
-    </div>
 
-    <div class="form-group">
         <label for="wid_edit">Wartungsarbeiter *</label>
         <select id="wid_edit" name="wid" required>
             <option value="">Bitte wählen...</option>
@@ -116,55 +97,51 @@
             <option value="{{ arbeiter.wid }}">{{ arbeiter.vorname }} {{ arbeiter.nachname }} (ID: {{ arbeiter.wid }})</option>
             {% endfor %}
         </select>
-    </div>
 
-    <div class="form-group">
         <label for="wartung_edit">Wartungsdatum *</label>
         <input type="date" id="wartung_edit" name="wartung" required>
-    </div>
 
-    <button type="submit">Tennisplatz ändern</button>
-</form>
+        <button type="submit">Tennisplatz ändern</button>
+    </form>
 
 
-<!-- Tennisplatz löschen -->
-<form method="POST">
-    <input type="hidden" name="aktion" value="loeschen">
-
+    <!-- Tennisplatz löschen -->
     <h3>Tennisplatz löschen</h3>
+    <form method="POST">
+        <input type="hidden" name="aktion" value="loeschen">
 
-    <div class="form-group">
         <label for="platz_id_delete">Tennisplatz-ID *</label>
         <input type="text" id="platz_id_delete" name="platz_id" required placeholder="ID aus der Liste unten">
-    </div>
 
-    <button type="submit">Tennisplatz löschen</button>
-</form>
+        <button type="submit">Tennisplatz löschen</button>
+    </form>
 
 
-<!-- Liste aller Tennisplätze -->
-{% if alle_plaetze %}
-<div class="platz-liste">
-    <h4>Alle Tennisplätze ({{ alle_plaetze|length }})</h4>
+    <!-- Liste aller Tennisplätze -->
+    {% if alle_plaetze %}
+    <div class="platz-liste">
+        <h4>Alle Tennisplätze ({{ alle_plaetze|length }})</h4>
 
-    {% for platz in alle_plaetze %}
-    <div class="platz-item">
-        <div class="platz-info">
-            <span class="platz-id">ID: {{ platz.tid }}</span>
-            <strong>{{ platz.tennisanlage }}</strong> – Platz {{ platz.platznummer }} ({{ platz.belag }})
+        {% for platz in alle_plaetze %}
+        <div class="platz-item">
+            <div class="platz-info">
+                <span class="platz-id">ID: {{ platz.tid }}</span>
+                <strong>{{ platz.tennisanlage }}</strong> – Platz {{ platz.platznummer }} ({{ platz.belag }})
 
-            {% if platz.wartung %}
-            <br><small>Letzte Wartung: {{ platz.wartung }}</small>
-            {% endif %}
+                {% if platz.wartung %}
+                <br><small>Letzte Wartung: {{ platz.wartung }}</small>
+                {% endif %}
 
-            {% if platz.wartungsarbeiter_name %}
-            <br><small>Wartungsarbeiter: {{ platz.wartungsarbeiter_name }} (WID: {{ platz.wid }})</small>
-            {% endif %}
+                {% if platz.wartungsarbeiter_name %}
+                <br><small>Wartungsarbeiter: {{ platz.wartungsarbeiter_name }} (WID: {{ platz.wid }})</small>
+                {% endif %}
+            </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
-{% endif %}
+    {% endif %}
+
+</main>
 
 <footer>
     <p>
