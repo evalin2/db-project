@@ -600,18 +600,43 @@ main.container section h3::after {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 2rem 2rem 3rem;
-    background: linear-gradient(160deg, var(--sand-light) 0%, var(--sand-base) 100%);
+    position: relative;
+    min-height: 100vh;
+    padding: 3rem 2rem;
+    background: linear-gradient(
+        160deg,
+        var(--sand-light) 0%,
+        var(--sand-base) 100%
+    );
 }
 
 .hero-logo-container {
-    margin-bottom: 1.5rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
 }
 
 .hero-logo {
-    width: 220px;
+    width: 400px;
     height: auto;
-    filter: none; /* Glow entfernt */
+    filter: drop-shadow(0 12px 48px rgba(159, 212, 71, 0.4));
+    z-index: 2;
+    position: relative;
+}
+
+.logo-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(57, 88, 9, 0.25) 0%, transparent 30%);
+    filter: blur(40px);
+    z-index: 1;
+    border-radius: 50%;
 }
 
 .hero-heading {
