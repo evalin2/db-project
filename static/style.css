@@ -573,28 +573,16 @@ main.container section h3::after {
     font-size: 1rem;
     padding: 0.5rem 1rem;
     border-radius: var(--radius-md);
-    transition: var(--transition-quick);
-    border: 2px solid transparent;
-}
-
-.nav-link {
-    color: var(--text-primary);
-    text-decoration: none;
-    font-weight: 500;
-    font-family: 'Outfit', sans-serif;
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius-md);
     transition: all 0.25s ease;
 }
 
 .nav-link:hover {
-    background: rgba(140, 97, 133, 0.10); /* leichter Purple-Tint */
-    color: var(--text-primary);
+    background: rgba(140, 97, 133, 0.10); /* subtiler Purple-Tint */
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-    border-color: transparent;
+    color: var(--text-primary);
 }
+
 
 
 /* --- HERO SECTION --- */
