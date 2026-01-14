@@ -585,6 +585,16 @@ main.container section h3::after {
 
 
 /* --- HERO SECTION --- */
+.hero-heading a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition-quick);
+}
+
+.hero-heading a:hover {
+    opacity: 0.9;
+}
+
 .hero {
     display: flex;
     flex-direction: column;
@@ -621,6 +631,28 @@ main.container section h3::after {
     margin: 0 auto;
     line-height: 1.6;
     text-align: center;
+}
+
+.hero-logo {
+    width: 400px;
+    height: auto;
+    filter: drop-shadow(0 12px 48px rgba(159, 212, 71, 0.4));
+    position: relative;
+    z-index: 2;
+    margin-bottom: 0rem;
+}
+
+.logo-glow {
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle,rgba(57, 88, 9, 0.25) 0%,transparent 30%);
+    filter: blur(40px);
+    z-index: 1;
+    border-radius: 50%;
 }
 
 /* --- SERVICES SECTION --- */
