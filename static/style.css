@@ -653,108 +653,16 @@ main.container section h3::after {
     text-align: center;
 }
 
-/* --- SERVICES SECTION --- */
-.services {
-    padding: 5rem 2.5rem;
-    background: var(--white);
-}
-
-.services-container {
-    max-width: 1280px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    gap: 2.5rem;
-}
-
-.service-card {
-    background: var(--sand-light);
-    padding: 3rem 2.5rem;
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-soft);
-    transition: var(--transition-smooth);
-    border: 2px solid var(--sand-medium);
-    position: relative;
-    overflow: hidden;
-}
-
 .service-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: transparent;
-    transition: var(--transition-smooth);
-}
-
-.service-card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-elevated);
-    background: var(--white);
-}
-
-.card-primary::before {
-    background: var(--brand-green);
-}
-
-.card-secondary::before {
-    background: var(--brand-terracotta);
-}
-
-.card-tertiary::before {
-    background: linear-gradient(90deg, var(--brand-green) 0%, var(--brand-terracotta) 100%);
-}
-
-.card-header {
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    margin-bottom: 1.25rem;
+    background: var(--brand-green) !important;
 }
 
 .card-icon {
-    width: 56px;
-    height: 56px;
-    background: var(--white);
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    box-shadow: var(--shadow-subtle);
-}
-
-.card-primary .card-icon {
-    background: linear-gradient(135deg, rgba(159, 212, 71, 0.15) 0%, rgba(159, 212, 71, 0.05) 100%);
-}
-
-.card-secondary .card-icon {
-    background: linear-gradient(135deg, rgba(217, 119, 87, 0.15) 0%, rgba(217, 119, 87, 0.05) 100%);
-}
-
-.card-tertiary .card-icon {
-    background: linear-gradient(135deg, rgba(159, 212, 71, 0.1) 0%, rgba(217, 119, 87, 0.1) 100%);
-}
-
-.card-icon svg {
-    width: 28px;
-    height: 28px;
-    color: var(--text-primary);
-}
-
-.card-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    letter-spacing: -0.01em;
-}
-
-.card-description {
-    color: var(--text-secondary);
-    line-height: 1.7;
-    font-size: 1rem;
+    background: linear-gradient(
+        135deg,
+        rgba(159, 212, 71, 0.15) 0%,
+        rgba(159, 212, 71, 0.05) 100%
+    ) !important;
 }
 
 /* --- INDEX FOOTER --- */
