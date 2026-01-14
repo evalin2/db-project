@@ -596,19 +596,13 @@ main.container section h3::after {
     opacity: 0.9;
 }
 
-.hero {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;   /* nicht mehr vertikal zentrieren */
-    position: relative;
-    min-height: auto;
-    padding: 2rem 1.5rem 2.5rem;   /* oben/unten kompakt */
-    background: linear-gradient(
-        160deg,
-        var(--sand-light) 0%,
-        var(--sand-base) 100%
-    );
+.hero { display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: flex-start; /* WICHTIG – das löst dein Problem */ 
+    position: relative; min-height: auto; 
+    padding: 1rem 1.5rem; 
+    background: linear-gradient( 160deg, var(--sand-light) 0%, var(--sand-base) 100% ); 
 }
 
 .hero-logo-container {
