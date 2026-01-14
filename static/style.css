@@ -786,6 +786,15 @@ input[type="submit"]:hover {
    ADMIN FORM STYLING (präzise & sauber)
    =================================== */
 
+.admin-section form {
+    max-width: 100%;        /* überschreibt 720px */
+    margin: 0;              /* überschreibt margin: auto */
+    padding: 0;             /* überschreibt padding: 3rem */
+    background: transparent;/* überschreibt weißen Hintergrund */
+    box-shadow: none;       /* entfernt elevated shadow */
+    border: none;           /* entfernt border */
+}
+
 .admin-section {
     background: var(--sand-light);
     border: 2px solid var(--sand-medium);
