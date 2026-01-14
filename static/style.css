@@ -543,7 +543,7 @@ main.container section h3::after {
 .header-logo {
     height: 48px;
     width: auto;
-    filter: none; /* Glow entfernt */
+    filter: none;
 }
 
 .header-title {
@@ -597,9 +597,9 @@ main.container section h3::after {
 .hero { display: flex; 
     flex-direction: column; 
     align-items: center; 
-    justify-content: flex-start; /* WICHTIG – das löst dein Problem */ 
+    justify-content: flex-start; 
     position: relative; min-height: auto; 
-    padding: 1rem 1.5rem; 
+    padding: 2rem 3rem; 
     background: linear-gradient( 160deg, var(--sand-light) 0%, var(--sand-base) 100% ); 
 }
 
@@ -608,7 +608,7 @@ main.container section h3::after {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 2rem;   
+    margin-bottom: 4rem;   
 }
 
 .hero-logo {
@@ -636,8 +636,8 @@ main.container section h3::after {
     font-size: 2.5rem;
     font-weight: 700;
     color: var(--text-primary);
-    margin-top: 2rem;     
-    margin-bottom: 2rem;  
+    margin-top: 4rem;     
+    margin-bottom: 4rem;  
     line-height: 1.2;
     letter-spacing: -0.02em;
     text-align: center;
@@ -647,7 +647,7 @@ main.container section h3::after {
     font-size: 1.2rem;
     color: var(--text-secondary);
     max-width: 660px;
-    margin: 2 auto;
+    margin: 4 auto;
     line-height: 1.6;
     text-align: center;
 }
