@@ -36,7 +36,7 @@
 
     <main class="container">
         <!-- Tennisplatz hinzufügen -->
-        <section>
+        <section class="admin-section">
             <h3>Tennisplatz hinzufügen</h3>
             <form method="POST" onsubmit="return validateWartungsdatum('wartung_add')">
                 <input type="hidden" name="aktion" value="hinzufuegen">
@@ -72,7 +72,7 @@
         </section>
 
         <!-- Tennisplatz-Daten ändern -->
-        <section>
+        <section class="admin-section">
             <h3>Tennisplatz-Daten ändern</h3>
             <form method="POST" onsubmit="return validateWartungsdatum('wartung_edit')">
                 <input type="hidden" name="aktion" value="aendern">
@@ -105,7 +105,7 @@
         </section>
 
         <!-- Tennisplatz löschen -->
-        <section>
+        <section class="admin-section">
             <h3>Tennisplatz löschen</h3>
             <form method="POST">
                 <input type="hidden" name="aktion" value="loeschen">
