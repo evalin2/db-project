@@ -11,10 +11,10 @@
 /* --- BRAND COLOR SYSTEM --- */
 :root {
     /* Primary Brand Colors */
-    --brand-green: #9fd447;
-    --brand-green-soft: #b4df6f;
-    --brand-terracotta: #d97757;
-    --brand-terracotta-dark: #c4633f;
+    --brand-green: #C2F216;
+    --brand-green-soft: #B2D925;
+    --brand-terracotta: #8C6185; /* --- not terracotta, purple  --- */
+    --brand-pruple-light: #D9ADD2;
     
     /* Neutral Palette */
     --sand-light: #faf8f5;
