@@ -315,41 +315,6 @@ footer p {
     font-size: 0.95rem;
 }
 
-/* --- CONTAINER (Management Pages) --- */
-.container {
-    max-width: 1280px;
-    margin: 2.5rem auto;
-    padding: 0 2.5rem;
-}
-
-main.container section {
-    background: var(--white);
-    padding: 2.5rem;
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-elevated);
-    margin-bottom: 2rem;
-    border: 1px solid var(--sand-medium);
-}
-
-main.container section h3 {
-    color: var(--text-primary);
-    margin-bottom: 1.75rem;
-    font-size: 1.5rem;
-    font-weight: 600;
-    position: relative;
-    padding-bottom: 0.75rem;
-}
-
-main.container section h3::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 50px;
-    height: 3px;
-    background: var(--brand-terracotta);
-    border-radius: 3px;
-}
 
 /* ===================================
    VERWALTUNG – NAVIGATION LINKS
