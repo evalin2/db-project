@@ -595,19 +595,15 @@ main.container section h3::after {
     opacity: 0.9;
 }
 
-.hero {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
+.hero { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    position: relative; 
     min-height: auto; 
-    padding: 1rem 1.5rem;
-    background: linear-gradient(
-        160deg,
-        var(--sand-light) 0%,
-        var(--sand-base) 100%
-    );
+    padding: 1rem 1.5rem; /* Punkt statt Komma */ 
+    background: linear-gradient( 160deg, var(--sand-light) 0%, var(--sand-base) 100% ); 
 }
 
 .hero-logo-container {
