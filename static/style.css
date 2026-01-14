@@ -616,7 +616,7 @@ main.container section h3::after {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 0.5rem;   /* Abstand Logo → Slogan */
+    margin-bottom: 0rem;   /* Abstand Logo → Slogan */
 }
 
 .hero-logo {
