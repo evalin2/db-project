@@ -679,18 +679,6 @@ main.container section h3::after {
     position: relative;
 }
 
-/* Subtle purple top line */
-.service-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: var(--brand-terracotta);
-    opacity: 0.35; /* very subtle */
-}
-
 /* Hover: elegant lift */
 .service-card:hover {
     transform: translateY(-6px);
