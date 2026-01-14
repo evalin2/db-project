@@ -526,24 +526,28 @@ main.container section h3::after {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.5rem 2rem;
-    background: rgba(255, 255, 255, 0.97);
-    backdrop-filter: blur(12px);
+    padding: 0.75rem 2rem;
+    background: var(--white);
     border-bottom: 1px solid var(--sand-medium);
     box-shadow: var(--shadow-soft);
-    position: sticky;
-    top: 0;
+    position: relative;
     z-index: 1000;
 }
 
 .header-left {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1rem;
+}
+
+.header-logo {
+    height: 48px;
+    width: auto;
+    filter: none; /* Glow entfernt */
 }
 
 .header-title {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     font-weight: 600;
     color: var(--text-primary);
     font-family: 'Outfit', sans-serif;
@@ -557,100 +561,66 @@ main.container section h3::after {
 
 .header-nav .nav-links {
     display: flex;
-    gap: 2.5rem;
+    gap: 2rem;
     align-items: center;
+}
+
+.nav-link {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 500;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    transition: var(--transition-quick);
+    border: 2px solid transparent;
+}
+
+.nav-link:hover {
+    background: var(--brand-terracotta);
+    color: var(--white);
+    border-color: var(--brand-terracotta);
 }
 
 
 /* --- HERO SECTION --- */
 .hero {
-    min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    position: relative;
-    padding: 0.5rem 2rem;
-    background: linear-gradient(
-        160deg,
-        var(--sand-light) 0%,
-        var(--sand-base) 100%
-    );
-}
-
-.hero-container {
-    max-width: 1000px;
-    text-align: center;
-    position: relative;
+    padding: 2rem 2rem 3rem;
+    background: linear-gradient(160deg, var(--sand-light) 0%, var(--sand-base) 100%);
 }
 
 .hero-logo-container {
-    position: relative;
-    display: inline-block;
-    margin-top: 0;
+    margin-bottom: 1.5rem;
 }
 
 .hero-logo {
-    width: 400px;
+    width: 220px;
     height: auto;
-    filter: drop-shadow(0 12px 48px rgba(159, 212, 71, 0.4));
-    position: relative;
-    z-index: 2;
-    margin-bottom: 0rem;
-}
-
-.logo-glow {
-    position: absolute;
-    top: 48%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 800px;
-    height: 800px;
-    background: radial-gradient(circle,rgba(57, 88, 9, 0.25) 0%,transparent 30%);
-    filter: blur(40px);
-    z-index: 1;
-    border-radius: 50%;
+    filter: none; /* Glow entfernt */
 }
 
 .hero-heading {
-    font-size: 4rem;
+    font-size: 2.5rem;
     font-weight: 700;
     color: var(--text-primary);
-    margin-top: 0rem; 
-    margin-bottom: 0rem;
-    line-height: 0.7;
-    letter-spacing: -0.03em;
-}
-
-.hero-heading a {
-    text-decoration: none;
-    color: inherit;
-    transition: var(--transition-quick);
-}
-
-.hero-heading a:hover {
-    opacity: 0.9;
-}
-
-.highlight-slogan {
-    color: var(--brand-green);
-    position: relative;
-    display: inline-block;
-    background: linear-gradient(
-        135deg,
-        var(--brand-green) 0%,
-        var(--brand-green-soft) 100%
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    text-align: center;
 }
 
 .hero-description {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     color: var(--text-secondary);
     max-width: 660px;
     margin: 0 auto;
-    line-height: 1.7;
+    line-height: 1.6;
+    text-align: center;
 }
 
 /* --- SERVICES SECTION --- */
