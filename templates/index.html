@@ -45,55 +45,56 @@
 
 
     <section class="services">
-        <div class="services-container">
-            
-            <div class="service-card card-primary" onclick="window.location='{{ url_for('buchen') }}'">
-                <div class="card-header">
-                    <div class="card-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M12 6v6l4 2"/>
-                        </svg>
-                    </div>
-                    <h3 class="card-title">Buchung</h3>
+    <div class="services-container">
+        
+        <div class="service-card" onclick="window.location='{{ url_for('buchen') }}'">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
                 </div>
-                <p class="card-description">
-                    Tennisplätze unkompliziert und übersichtlich reservieren.
-                </p>
+                <h3 class="card-title">Buchung</h3>
             </div>
-
-            <div class="service-card card-secondary" onclick="window.location='{{ url_for('stornieren') }}'">
-                <div class="card-header">
-                    <div class="card-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 11l3 3L22 4"/>
-                            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-                        </svg>
-                    </div>
-                    <h3 class="card-title">Stornierung</h3>
-                </div>
-                <p class="card-description">
-                    Reservierungen flexibel anpassen oder stornieren.
-                </p>
-            </div>
-
-            <div class="service-card card-tertiary" onclick="window.location='{{ url_for('verwaltung') }}'">
-                <div class="card-header">
-                    <div class="card-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="3" width="18" height="18" rx="2"/>
-                            <path d="M9 3v18M15 3v18M3 9h18M3 15h18"/>
-                        </svg>
-                    </div>
-                    <h3 class="card-title">Verwaltung</h3>
-                </div>
-                <p class="card-description">
-                    Administrativer Bereich zur Verwaltung aller Buchungen (nur für Administratoren).
-                </p>
-            </div>
-
+            <p class="card-description">
+                Tennisplätze unkompliziert und übersichtlich reservieren.
+            </p>
         </div>
+
+        <div class="service-card" onclick="window.location='{{ url_for('stornieren') }}'">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 11l3 3L22 4"/>
+                        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+                    </svg>
+                </div>
+                <h3 class="card-title">Stornierung</h3>
+            </div>
+            <p class="card-description">
+                Reservierungen flexibel anpassen oder stornieren.
+            </p>
+        </div>
+
+        <div class="service-card" onclick="window.location='{{ url_for('verwaltung') }}'">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <path d="M9 3v18M15 3v18M3 9h18M3 15h18"/>
+                    </svg>
+                </div>
+                <h3 class="card-title">Verwaltung</h3>
+            </div>
+            <p class="card-description">
+                Administrativer Bereich zur Verwaltung aller Buchungen (nur für Administratoren).
+            </p>
+        </div>
+
+    </div>
     </section>
+
 
     <footer>
         <p>Impressum<br>Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt</p>
