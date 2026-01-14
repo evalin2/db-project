@@ -620,7 +620,7 @@ main.container section h3::after {
 }
 
 .hero-logo {
-    width: 400px;
+    width: 600px;
     height: auto;
     filter: drop-shadow(0 12px 48px rgba(159, 212, 71, 0.4));
     position: relative;
