@@ -386,6 +386,10 @@ main.container section h3::after {
 }
 
 
+
+
+
+
 /* --- LISTS (Tennis Courts & Maintenance) --- */
 .platz-liste,
 .arbeiter-liste {
@@ -811,6 +815,83 @@ input[type="submit"]:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-soft);
 }
+
+
+/* ===================================
+   ADMIN FORM STYLING (Tennisplätze + Arbeiter)
+   =================================== */
+
+/* Admin-Formular-Container */
+main.container section {
+    background: var(--sand-light); /* wärmer, admin-typisch */
+    border: 2px solid var(--sand-medium);
+    box-shadow: var(--shadow-soft);
+}
+
+/* Admin-Formular-Titel */
+main.container section h3 {
+    border-bottom: 2px solid var(--brand-terracotta); /* stärkerer Purple-Akzent */
+    padding-bottom: 0.6rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Admin-Inputs */
+main.container section input,
+main.container section select {
+    background: var(--white);
+    border: 2px solid var(--sand-medium);
+    border-radius: var(--radius-md);
+    padding: 0.9rem 1.1rem;
+    font-family: 'Outfit', sans-serif;
+    transition: var(--transition-quick);
+}
+
+/* Hover */
+main.container section input:hover,
+main.container section select:hover {
+    border-color: var(--warm-grey);
+}
+
+/* Focus – stärkerer Admin-Purple */
+main.container section input:focus,
+main.container section select:focus {
+    border-color: var(--brand-terracotta);
+    box-shadow: 0 0 0 3px rgba(140, 97, 133, 0.18);
+    background: var(--white);
+}
+
+/* Admin-Buttons */
+main.container section button {
+    background: var(--brand-terracotta); /* Purple statt Grün */
+    color: var(--white);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.5rem;
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+    transition: var(--transition-quick);
+    border: none;
+}
+
+main.container section button:hover {
+    background: #7a4f75; /* dunkleres Purple */
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-soft);
+}
+
+/* Admin-Fehlerbox */
+main.container .fehler {
+    background: rgba(217, 95, 78, 0.12);
+    border-left: 4px solid var(--error);
+}
+
+/* Admin-Erfolgsbox */
+main.container .erfolg {
+    background: rgba(111, 186, 92, 0.12);
+    border-left: 4px solid var(--success);
+}
+
+
+
 
 /* ===================================
    RESPONSIVE DESIGN
