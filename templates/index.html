@@ -10,7 +10,7 @@
     <header class="global-header">
         <div class="header-left">
             <a href="{{ url_for('index') }}" class="logo-link">
-                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="header-logo">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="header-logo" onclick="window.location='{{ url_for('index') }}'>
             </a>
             <h1 class="header-title">Tennisplatz‑Buchungssystem</h1>
         </div>
