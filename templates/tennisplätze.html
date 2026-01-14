@@ -26,9 +26,9 @@
     </nav>
 </header>
 
-<h2 class="subheading">Tennisplätze verwalten</h2>
+<h2 class="subheading" style="color: var(--brand-terracotta);">Tennisplätze verwalten</h2>
 
-<div style="max-width: 720px; margin: 0 auto; padding: 0 1rem;">
+<div style="max-width: 900px; margin: 0 auto; padding: 0 1rem;">
     {% if fehler %}
     <div class="fehler">{{ fehler }}</div>
     {% endif %}
@@ -39,10 +39,10 @@
 </div>
 
 <!-- Tennisplatz hinzufügen -->
-<form method="POST" onsubmit="return validateWartungsdatum('wartung_add')">
+<form method="POST" onsubmit="return validateWartungsdatum('wartung_add')" style="max-width: 900px; border: 2px solid var(--brand-terracotta); box-shadow: 0 8px 32px rgba(140, 97, 133, 0.15);">
     <input type="hidden" name="aktion" value="hinzufuegen">
 
-    <h3>Tennisplatz hinzufügen</h3>
+    <h3 style="color: var(--brand-terracotta); border-bottom-color: var(--brand-terracotta);">Tennisplatz hinzufügen</h3>
 
     <div class="form-group">
         <label for="anlage_add">Tennisanlage *</label>
@@ -85,10 +85,10 @@
 
 
 <!-- Tennisplatz-Daten ändern -->
-<form method="POST" onsubmit="return validateWartungsdatum('wartung_edit')">
+<form method="POST" onsubmit="return validateWartungsdatum('wartung_edit')" style="max-width: 900px; border: 2px solid var(--brand-terracotta); box-shadow: 0 8px 32px rgba(140, 97, 133, 0.15);">
     <input type="hidden" name="aktion" value="aendern">
 
-    <h3>Tennisplatz-Daten ändern</h3>
+    <h3 style="color: var(--brand-terracotta); border-bottom-color: var(--brand-terracotta);">Tennisplatz-Daten ändern</h3>
 
     <div class="form-group">
         <label for="platz_id_edit">Tennisplatz-ID *</label>
@@ -130,10 +130,10 @@
 
 
 <!-- Tennisplatz löschen -->
-<form method="POST">
+<form method="POST" style="max-width: 900px; border: 2px solid var(--brand-terracotta); box-shadow: 0 8px 32px rgba(140, 97, 133, 0.15);">
     <input type="hidden" name="aktion" value="loeschen">
 
-    <h3>Tennisplatz löschen</h3>
+    <h3 style="color: var(--brand-terracotta); border-bottom-color: var(--brand-terracotta);">Tennisplatz löschen</h3>
 
     <div class="form-group">
         <label for="platz_id_delete">Tennisplatz-ID *</label>
