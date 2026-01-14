@@ -526,7 +526,7 @@ main.container section h3::after {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.5rem 3rem;
+    padding: 0.5rem 2rem;
     background: rgba(255, 255, 255, 0.97);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--sand-medium);
@@ -540,12 +540,6 @@ main.container section h3::after {
     display: flex;
     align-items: center;
     gap: 1.5rem;
-}
-
-.header-logo {
-    height: 64px;
-    width: auto;
-    filter: drop-shadow(0 4px 12px rgba(159, 212, 71, 0.25));
 }
 
 .header-title {
@@ -575,7 +569,7 @@ main.container section h3::after {
     align-items: center;
     justify-content: center;
     position: relative;
-    padding: 4rem 2.5rem 1.5rem;
+    padding: 0.5rem 2rem;
     background: linear-gradient(
         160deg,
         var(--sand-light) 0%,
