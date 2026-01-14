@@ -769,7 +769,7 @@ main.container section h3::after {
 }
 
 /* ===================================
-   ULTRA CLEAN TENNIS BOOKING FORM
+   PREMIUM TENNIS BOOKING FORM
    =================================== */
 
 form {
@@ -777,9 +777,9 @@ form {
     margin: 3rem auto;
     padding: 3rem;
     background: var(--white);
-    border-radius: 20px;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.05);
-    border: 1px solid rgba(0,0,0,0.04);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-elevated);
+    border: 1px solid var(--sand-medium);
 }
 
 /* Titel – clean, ohne Gradient */
@@ -789,7 +789,7 @@ form h2, form h3 {
     font-weight: 600;
     letter-spacing: -0.02em;
     padding-bottom: 0.4rem;
-    border-bottom: 1px solid rgba(140, 97, 133, 0.25); /* subtle purple line */
+    border-bottom: 1px solid rgba(140, 97, 133, 0.25); /* subtle purple */
 }
 
 /* Form Groups */
@@ -806,56 +806,75 @@ form h2, form h3 {
     font-size: 0.95rem;
 }
 
-/* Inputs + Selects – Notion/Linear Style */
+/* Inputs – warm, weich, modern */
 .form-group input,
-.form-group select,
-.form-control {
+.form-group select {
     width: 100%;
     padding: 0.9rem 1.1rem;
-    border-radius: 12px;
-    border: 1px solid rgba(0,0,0,0.12);
-    background: #f9f9f9;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--sand-medium);
+    background: var(--sand-light);
     font-size: 1rem;
-    transition: all 0.2s ease;
+    transition: var(--transition-quick);
     font-family: 'Outfit', sans-serif;
     color: var(--text-primary);
 }
 
-/* Hover – minimal */
+/* Hover */
 .form-group input:hover,
 .form-group select:hover {
-    background: #ffffff;
-    border-color: rgba(0,0,0,0.18);
+    background: var(--white);
+    border-color: var(--warm-grey);
 }
 
-/* Focus – Signature Purple, kein Gradient */
+/* Focus – Signature Purple */
 .form-group input:focus,
-.form-group select:focus,
-.form-control:focus {
+.form-group select:focus {
     outline: none;
-    background: #ffffff;
+    background: var(--white);
     border-color: var(--brand-terracotta);
     box-shadow: 0 0 0 3px rgba(140, 97, 133, 0.15);
 }
 
 /* Read-only fields */
 .form-group input:read-only {
-    background: #efefef;
+    background: var(--sand-medium);
     color: var(--text-tertiary);
     cursor: not-allowed;
-    border-color: rgba(0,0,0,0.08);
 }
 
-/* Fehlerbox – unsichtbar, bis JS sie zeigt */
+/* Fehlerbox – unsichtbar bis Fehler */
 #js-fehler {
     display: none;
     background: rgba(217, 95, 78, 0.12);
     color: var(--error);
     padding: 1rem 1.25rem;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     margin-bottom: 1.5rem;
     border: 1px solid rgba(217, 95, 78, 0.25);
     font-weight: 500;
+}
+
+/* Submit Button – sportlich, modern, kein Gradient */
+button,
+input[type="submit"] {
+    background: var(--brand-green);
+    color: var(--text-primary);
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius-md);
+    border: none;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-quick);
+    font-family: 'Outfit', sans-serif;
+}
+
+button:hover,
+input[type="submit"]:hover {
+    background: var(--brand-green-soft);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-soft);
 }
 
 /* ===================================
