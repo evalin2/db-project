@@ -442,9 +442,10 @@ form h3 {
     flex: 1;
 }
 
+/* Verwaltung: Formulare passen sich automatisch an (1, 2 oder 3 Spalten) */
 .form-row {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 2rem;
     width: calc(100% - 6rem);
     margin: 2.5rem 3rem;
