@@ -843,58 +843,55 @@ h2.subheading {
    13. VERWALTUNG NAVIGATION
    =================================== */
 
-/* Cards / Container */
-.admin-form,
-.platz-liste,
-.arbeiter-liste {
+/* --- FORM CONTAINERS --- */
+.admin-form {
     background: var(--white);
     border: 1px solid rgba(140, 97, 133, 0.25);
-    box-shadow: 0 8px 32px rgba(140, 97, 133, 0.12);
+    box-shadow: 0 8px 28px rgba(140, 97, 133, 0.18);
     border-radius: var(--radius-xl);
+    padding: 3rem;
 }
 
-/* Headings */
+/* --- HEADINGS --- */
 .admin-form h2,
-.admin-form h3,
-.platz-liste h4,
-.arbeiter-liste h4 {
+.admin-form h3 {
+    color: var(--brand-terracotta);
     font-weight: 700;
     letter-spacing: -0.03em;
-    color: var(--brand-terracotta);
-    text-shadow: 0 1px 3px rgba(140, 97, 133, 0.15);
+    border-bottom: 1px solid rgba(140, 97, 133, 0.35);
+    padding-bottom: 0.6rem;
 }
 
-/* Labels */
-.admin-form label {
+/* --- LABELS --- */
+.admin-form .form-group label {
     font-weight: 600;
     color: var(--text-primary);
     font-size: 1rem;
 }
 
-/* Inputs */
-.admin-form input,
-.admin-form select {
+/* --- INPUTS --- */
+.admin-form .form-group input,
+.admin-form .form-group select {
     background: var(--sand-light);
     border: 1px solid rgba(140, 97, 133, 0.35);
     font-weight: 500;
 }
 
-.admin-form input:focus,
-.admin-form select:focus {
+.admin-form .form-group input:focus,
+.admin-form .form-group select:focus {
     border-color: var(--brand-terracotta);
     box-shadow: 0 0 0 4px rgba(140, 97, 133, 0.18);
 }
 
-/* Buttons – Premium Purple Gradient */
+/* --- SUBMIT BUTTONS --- */
 .admin-form button[type="submit"] {
-    background: linear-gradient(135deg, #8C6185 0%, #D9ADD2 100%);
-    color: white;
+    background: linear-gradient(135deg, var(--brand-terracotta), var(--brand-purple-light));
+    color: var(--white);
     font-size: 1.15rem;
     font-weight: 700;
     padding: 1.1rem 2rem;
     border-radius: var(--radius-lg);
     box-shadow: 0 6px 20px rgba(140, 97, 133, 0.35);
-    letter-spacing: 0.02em;
     transition: all 0.25s ease;
 }
 
@@ -908,11 +905,18 @@ h2.subheading {
     box-shadow: 0 4px 14px rgba(140, 97, 133, 0.25);
 }
 
-/* List Items */
+/* --- LISTEN (PLÄTZE & ARBEITER) --- */
+.platz-liste,
+.arbeiter-liste {
+    border: 1px solid rgba(140, 97, 133, 0.25);
+    box-shadow: 0 8px 28px rgba(140, 97, 133, 0.18);
+}
+
 .platz-item,
 .arbeiter-item {
     border: 2px solid rgba(140, 97, 133, 0.25);
     background: var(--sand-light);
+    transition: all 0.25s ease;
 }
 
 .platz-item:hover,
@@ -922,11 +926,27 @@ h2.subheading {
     box-shadow: 0 8px 24px rgba(140, 97, 133, 0.25);
 }
 
-/* ID Badges */
+/* --- ID BADGES --- */
 .platz-id,
 .arbeiter-id {
     background: linear-gradient(135deg, var(--brand-terracotta), var(--brand-purple-light));
     font-weight: 700;
+    color: var(--white);
+}
+
+/* --- ADMIN HERO BUTTONS --- */
+.admin-hero-buttons a {
+    border: 2px solid rgba(140, 97, 133, 0.35);
+    background: var(--white);
+    font-weight: 600;
+    transition: all 0.25s ease;
+}
+
+.admin-hero-buttons a:hover {
+    border-color: var(--brand-purple-light);
+    background: var(--sand-light);
+    box-shadow: 0 8px 24px rgba(140, 97, 133, 0.25);
+    transform: translateY(-3px);
 }
 
 
