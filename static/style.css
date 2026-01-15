@@ -958,5 +958,9 @@ footer p {
     box-shadow: var(--shadow-strong);
 }
 
+form:hover {
+    box-shadow: var(--shadow-strong);
+    transition: box-shadow 0.25s ease;
+}
 
 
