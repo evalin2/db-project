@@ -956,7 +956,7 @@ form {
 .platz-item:hover,
 .arbeiter-item:hover,
 form:hover {
-    transform: translateY(-1,5px);
+    transform: translateY(-1.5px);
     box-shadow: var(--shadow-strong);
 }
 
