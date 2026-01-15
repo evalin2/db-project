@@ -433,23 +433,37 @@ form h3 {
    =================================== */
 
 .form-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.form-row .admin-form {
+    flex: 1;
+}
+
+.form-row {
+    display: flex;
     gap: 2.5rem;
+    justify-content: center;
+    align-items: stretch;
     padding: 0 3rem;
     margin-bottom: 3rem;
 }
 
 .form-row > * {
-    flex: none;
-    max-width: 100%;
+    flex: 1;
+    max-width: 420px;
 }
 
-.error,
-.fehler,
-.erfolg {
-    grid-column: 1 / -1;
-    margin-bottom: 1.75rem;
+.admin-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-form button[type="submit"] {
+    margin-top: auto;
 }
 
 
