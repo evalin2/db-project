@@ -770,6 +770,23 @@ button[type="submit"]:active,
     font-size: 0.9rem;
 }
 
+/* --- GRID LAYOUT FOR TENNIS COURT LIST --- */
+.platz-liste {
+    max-width: none; 
+    width: 100%;
+    margin: 2.5rem auto;
+    padding: 2.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* Platzkarten im Grid */
+.platz-item {
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
 
 /* ===================================
    12. PAGE HEADINGS
