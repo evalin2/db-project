@@ -946,18 +946,17 @@ footer p {
    16. Zusätzliche Animationen 
    =================================== */
 
-/* Smooth hover lift for cards and forms */
+/* Smooth hover lift for cards */
 .platz-item,
-.arbeiter-item,
-form {
-    transition: transform 0.2 ease, box-shadow 0.2 ease;
+.arbeiter-item {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .platz-item:hover,
-.arbeiter-item:hover,
-form:hover {
+.arbeiter-item:hover {
     transform: translateY(-1px);
     box-shadow: var(--shadow-strong);
 }
+
 
 
