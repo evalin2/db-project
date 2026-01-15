@@ -608,14 +608,6 @@ button[type="submit"]:active,
     grid-column: 1 / -1;
 }
 
-/* Meldungen über die gesamte Breite der drei Boxen */
-.error,
-.fehler,
-.erfolg {
-    width: calc(100% - 6rem); /* 3rem links + 3rem rechts wie .form-row */
-    margin: 0 auto 1.75rem;
-    display: block;
-}
 
 /* ===================================
    9. SUCCESS BOX (Confirmation Pages)
@@ -776,6 +768,19 @@ button[type="submit"]:active,
     display: block;
     margin-top: 0.5rem;
     font-size: 0.9rem;
+}
+
+/* Fix: Oberkanten angleichen */
+.admin-form h3 {
+    margin-top: 0;
+}
+
+.arbeiter-liste h4 {
+    margin-top: 0;
+}
+
+.arbeiter-liste {
+    padding-top: 0;
 }
 
 

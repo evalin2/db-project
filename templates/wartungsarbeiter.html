@@ -101,7 +101,13 @@
             <h4>Alle Wartungsarbeiter ({{ alle_arbeiter|length }})</h4>
 
             {% for arbeiter in alle_arbeiter %}
-            <div class="arbeiter-item">
+            <div class="arbeiter-item"
+                 data-wid="{{ arbeiter.wid }}"
+                 data-vorname="{{ arbeiter.vorname }}"
+                 data-nachname="{{ arbeiter.nachname }}"
+                 data-geburtsdatum="{{ arbeiter.geburtsdatum }}"
+                 onclick="fillDeleteForm(this)">
+                 
                 <div class="arbeiter-info">
                     <span class="arbeiter-id">ID: {{ arbeiter.wid }}</span>
                     <strong>{{ arbeiter.vorname }} {{ arbeiter.nachname }}</strong>
@@ -159,6 +165,15 @@
                 });
             }
         });
+    </script>
+
+    <script>
+        function fillDeleteForm(el) {
+            document.getElementById('arbeiter_id_delete').value = el.dataset.wid;
+            document.getElementById('vorname_delete').value = el.dataset.vorname;
+            document.getElementById('nachname_delete').value = el.dataset.nachname;
+            document.getElementById('geburtsdatum_delete').value = el.dataset.geburtsdatum;
+        }
     </script>
 
 </body>
