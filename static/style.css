@@ -452,6 +452,15 @@ form h3 {
     max-width: 420px;
 }
 
+.admin-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-form button[type="submit"] {
+    margin-top: auto;
+}
+
 
 /* ===================================
    7. BUTTONS
