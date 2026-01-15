@@ -424,6 +424,22 @@ form h3 {
 
 
 /* ===================================
+   6.1 FORM LAYOUT (Side-by-Side)
+   =================================== */
+
+.form-row {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.form-row .admin-form {
+    flex: 1;
+}
+
+
+/* ===================================
    7. BUTTONS
    =================================== */
 

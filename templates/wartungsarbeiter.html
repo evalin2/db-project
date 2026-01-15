@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <link rel="stylesheet" href="static/style.css">
     <meta charset="UTF-8">
@@ -9,152 +10,157 @@
 
 <body>
 
-<header class="global-header">
-    <div class="header-left">
-        <a href="{{ url_for('index') }}" class="logo-link">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="header-logo">
-        </a>
-        <h1 class="header-title">Tennisplatz‑Buchungssystem</h1>
-    </div>
-
-    <nav class="header-nav">
-        <div class="nav-links">
-            <a href="{{ url_for('buchen') }}" class="nav-link">Buchen</a>
-            <a href="{{ url_for('stornieren') }}" class="nav-link">Stornieren</a>
-            <a href="{{ url_for('verwaltung') }}" class="nav-link">Verwaltung</a>
+    <header class="global-header">
+        <div class="header-left">
+            <a href="{{ url_for('index') }}" class="logo-link">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="header-logo">
+            </a>
+            <h1 class="header-title">Tennisplatz‑Buchungssystem</h1>
         </div>
-    </nav>
-</header>
 
-<h2 class="subheading">Wartungsarbeiter verwalten</h2>
+        <nav class="header-nav">
+            <div class="nav-links">
+                <a href="{{ url_for('buchen') }}" class="nav-link">Buchen</a>
+                <a href="{{ url_for('stornieren') }}" class="nav-link">Stornieren</a>
+                <a href="{{ url_for('verwaltung') }}" class="nav-link">Verwaltung</a>
+            </div>
+        </nav>
+    </header>
 
-{% if fehler %}
-<div class="fehler">{{ fehler }}</div>
-{% endif %}
+    <h2 class="subheading">Wartungsarbeiter verwalten</h2>
 
-{% if erfolg %}
-<div class="erfolg">{{ erfolg }}</div>
-{% endif %}
+    {% if fehler %}
+    <div class="fehler">{{ fehler }}</div>
+    {% endif %}
 
-<!-- Wartungsarbeiter hinzufügen -->
-<form method="POST" action="{{ url_for('wartungsarbeiter') }}" class="admin-form">
-    <input type="hidden" name="aktion" value="hinzufuegen">
-    
-    <h3>Wartungsarbeiter hinzufügen</h3>
+    {% if erfolg %}
+    <div class="erfolg">{{ erfolg }}</div>
+    {% endif %}
 
-    <div class="form-group">
-        <label for="vorname_add">Vorname *</label>
-        <input type="text" id="vorname_add" name="vorname" required>
+    <div class="form-row">
+
+        <!-- Wartungsarbeiter hinzufügen -->
+        <form method="POST" action="{{ url_for('wartungsarbeiter') }}" class="admin-form">
+            <input type="hidden" name="aktion" value="hinzufuegen">
+
+            <h3>Wartungsarbeiter hinzufügen</h3>
+
+            <div class="form-group">
+                <label for="vorname_add">Vorname *</label>
+                <input type="text" id="vorname_add" name="vorname" required>
+            </div>
+
+            <div class="form-group">
+                <label for="nachname_add">Nachname *</label>
+                <input type="text" id="nachname_add" name="nachname" required>
+            </div>
+
+            <div class="form-group">
+                <label for="geburtsdatum_add">Geburtsdatum *</label>
+                <input type="date" id="geburtsdatum_add" name="geburtsdatum" required>
+            </div>
+
+            <button type="submit">Wartungsarbeiter hinzufügen</button>
+        </form>
+
+
+        <!-- Wartungsarbeiter löschen -->
+        <form method="POST" action="{{ url_for('wartungsarbeiter') }}" class="admin-form">
+            <input type="hidden" name="aktion" value="loeschen">
+
+            <h3>Wartungsarbeiter löschen</h3>
+
+            <div class="form-group">
+                <label for="arbeiter_id_delete">Wartungsarbeiter-ID *</label>
+                <input type="text" id="arbeiter_id_delete" name="arbeiter_id" required
+                    placeholder="ID aus der Liste unten">
+            </div>
+
+            <div class="form-group">
+                <label for="vorname_delete">Vorname</label>
+                <input type="text" id="vorname_delete" name="vorname" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="nachname_delete">Nachname</label>
+                <input type="text" id="nachname_delete" name="nachname" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="geburtsdatum_delete">Geburtsdatum</label>
+                <input type="date" id="geburtsdatum_delete" name="geburtsdatum" readonly>
+            </div>
+
+            <button type="submit">Wartungsarbeiter löschen</button>
+        </form>
+
     </div>
 
-    <div class="form-group">
-        <label for="nachname_add">Nachname *</label>
-        <input type="text" id="nachname_add" name="nachname" required>
-    </div>
+    <!-- Liste aller Wartungsarbeiter -->
+    {% if alle_arbeiter %}
+    <div class="arbeiter-liste">
+        <h4>Alle Wartungsarbeiter ({{ alle_arbeiter|length }})</h4>
 
-    <div class="form-group">
-        <label for="geburtsdatum_add">Geburtsdatum *</label>
-        <input type="date" id="geburtsdatum_add" name="geburtsdatum" required>
-    </div>
+        {% for arbeiter in alle_arbeiter %}
+        <div class="arbeiter-item">
+            <div class="arbeiter-info">
+                <span class="arbeiter-id">ID: {{ arbeiter.wid }}</span>
+                <strong>{{ arbeiter.vorname }} {{ arbeiter.nachname }}</strong>
 
-    <button type="submit">Wartungsarbeiter hinzufügen</button>
-</form>
-
-
-<!-- Wartungsarbeiter löschen -->
-<form method="POST" action="{{ url_for('wartungsarbeiter') }}" class="admin-form">
-    <input type="hidden" name="aktion" value="loeschen">
-    
-    <h3>Wartungsarbeiter löschen</h3>
-
-    <div class="form-group">
-        <label for="arbeiter_id_delete">Wartungsarbeiter-ID *</label>
-        <input type="text" id="arbeiter_id_delete" name="arbeiter_id" required placeholder="ID aus der Liste unten">
-    </div>
-
-    <div class="form-group">
-        <label for="vorname_delete">Vorname</label>
-        <input type="text" id="vorname_delete" name="vorname" readonly>
-    </div>
-
-    <div class="form-group">
-        <label for="nachname_delete">Nachname</label>
-        <input type="text" id="nachname_delete" name="nachname" readonly>
-    </div>
-
-    <div class="form-group">
-        <label for="geburtsdatum_delete">Geburtsdatum</label>
-        <input type="date" id="geburtsdatum_delete" name="geburtsdatum" readonly>
-    </div>
-
-    <button type="submit">Wartungsarbeiter löschen</button>
-</form>
-
-
-<!-- Liste aller Wartungsarbeiter -->
-{% if alle_arbeiter %}
-<div class="arbeiter-liste">
-    <h4>Alle Wartungsarbeiter ({{ alle_arbeiter|length }})</h4>
-    
-    {% for arbeiter in alle_arbeiter %}
-    <div class="arbeiter-item">
-        <div class="arbeiter-info">
-            <span class="arbeiter-id">ID: {{ arbeiter.wid }}</span>
-            <strong>{{ arbeiter.vorname }} {{ arbeiter.nachname }}</strong>
-            
-            {% if arbeiter.geburtsdatum %}
-            <br><small>Geburtsdatum: {{ arbeiter.geburtsdatum }}</small>
-            {% endif %}
+                {% if arbeiter.geburtsdatum %}
+                <br><small>Geburtsdatum: {{ arbeiter.geburtsdatum }}</small>
+                {% endif %}
+            </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
-{% endif %}
+    {% endif %}
 
-<footer>
-    <p>
-        <strong>Impressum</strong><br>
-        Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt
-    </p>
-</footer>
+    <footer>
+        <p>
+            <strong>Impressum</strong><br>
+            Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt
+        </p>
+    </footer>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var widInput = document.getElementById('arbeiter_id_delete');
-        
-        if (widInput) {
-            widInput.addEventListener('input', function() {
-                var wid = this.value.trim();
-                
-                if (!wid) {
-                    document.getElementById('vorname_delete').value = '';
-                    document.getElementById('nachname_delete').value = '';
-                    document.getElementById('geburtsdatum_delete').value = '';
-                    return;
-                }
-                
-                fetch('/get_wartungsarbeiter/' + wid)
-                    .then(function(response) {
-                        return response.json();
-                    })
-                    .then(function(data) {
-                        if (data.exists) {
-                            document.getElementById('vorname_delete').value = data.vorname;
-                            document.getElementById('nachname_delete').value = data.nachname;
-                            document.getElementById('geburtsdatum_delete').value = data.geburtsdatum;
-                        } else {
-                            document.getElementById('vorname_delete').value = '';
-                            document.getElementById('nachname_delete').value = '';
-                            document.getElementById('geburtsdatum_delete').value = '';
-                        }
-                    })
-                    .catch(function(error) {
-                        console.error('Fehler beim Laden:', error);
-                    });
-            });
-        }
-    });
-</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var widInput = document.getElementById('arbeiter_id_delete');
+
+            if (widInput) {
+                widInput.addEventListener('input', function () {
+                    var wid = this.value.trim();
+
+                    if (!wid) {
+                        document.getElementById('vorname_delete').value = '';
+                        document.getElementById('nachname_delete').value = '';
+                        document.getElementById('geburtsdatum_delete').value = '';
+                        return;
+                    }
+
+                    fetch('/get_wartungsarbeiter/' + wid)
+                        .then(function (response) {
+                            return response.json();
+                        })
+                        .then(function (data) {
+                            if (data.exists) {
+                                document.getElementById('vorname_delete').value = data.vorname;
+                                document.getElementById('nachname_delete').value = data.nachname;
+                                document.getElementById('geburtsdatum_delete').value = data.geburtsdatum;
+                            } else {
+                                document.getElementById('vorname_delete').value = '';
+                                document.getElementById('nachname_delete').value = '';
+                                document.getElementById('geburtsdatum_delete').value = '';
+                            }
+                        })
+                        .catch(function (error) {
+                            console.error('Fehler beim Laden:', error);
+                        });
+                });
+            }
+        });
+    </script>
 
 </body>
+
 </html>
