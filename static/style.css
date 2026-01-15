@@ -608,6 +608,14 @@ button[type="submit"]:active,
     grid-column: 1 / -1;
 }
 
+/* Meldungen über die gesamte Breite der drei Boxen */
+.error,
+.fehler,
+.erfolg {
+    width: calc(100% - 6rem); /* 3rem links + 3rem rechts wie .form-row */
+    margin: 0 auto 1.75rem;
+    display: block;
+}
 
 /* ===================================
    9. SUCCESS BOX (Confirmation Pages)
