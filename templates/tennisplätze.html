@@ -33,7 +33,7 @@
     {% endif %}
     <div class="form-row">
         <!-- Tennisplatz hinzufügen -->
-        <form method="POST" class="admin-form" onsubmit="return validateWartungsdatum('wartung_add')">
+        <form method="POST" class="admin-form admin-form-wide" onsubmit="return validateWartungsdatum('wartung_add')">
             <input type="hidden" name="aktion" value="hinzufuegen">
             <h3>Tennisplatz hinzufügen</h3>
             <div class="form-group">
@@ -70,7 +70,7 @@
             <button type="submit">Tennisplatz hinzufügen</button>
         </form>
         <!-- Tennisplatz-Daten ändern -->
-        <form method="POST" class="admin-form" onsubmit="return validateWartungsdatum('wartung_edit')">
+        <form method="POST" class="admin-form admin-form-wide" onsubmit="return validateWartungsdatum('wartung_edit')">
             <input type="hidden" name="aktion" value="aendern">
             <h3>Tennisplatz-Daten ändern</h3>
             <div class="form-group">
@@ -106,7 +106,7 @@
             <button type="submit">Tennisplatz ändern</button>
         </form>
         <!-- Tennisplatz löschen -->
-        <form method="POST" class="admin-form">
+        <form method="POST" class="admin-form admin-form-wide">
             <input type="hidden" name="aktion" value="loeschen">
             <h3>Tennisplatz löschen</h3>
             <div class="form-group">

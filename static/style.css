@@ -462,6 +462,11 @@ form h3 {
     margin-top: auto;
 }
 
+.admin-form-wide {
+    max-width: none !important;
+    width: 100%;
+    margin: 0;
+}
 
 /* ===================================
    7. BUTTONS
