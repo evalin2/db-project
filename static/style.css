@@ -770,19 +770,6 @@ button[type="submit"]:active,
     font-size: 0.9rem;
 }
 
-/* Fix: Oberkanten angleichen */
-.admin-form h3 {
-    margin-top: 0;
-}
-
-.arbeiter-liste h4 {
-    margin-top: 0;
-}
-
-.arbeiter-liste {
-    padding-top: 0;
-}
-
 
 /* ===================================
    12. PAGE HEADINGS
