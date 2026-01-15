@@ -859,7 +859,7 @@ h2.subheading {
     content: "";
     position: absolute;
     inset: 0;
-    background: rgba(140, 97, 133, 0.35); /* sehr leichtes Weiß */
+    background: rgba(140, 97, 133, 0.2); /* sehr leichtes Weiß */
     backdrop-filter: blur(9px);            /* natürlicher Blur */
     z-index: 1;
 }
