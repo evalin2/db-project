@@ -444,25 +444,21 @@ form h3 {
 }
 
 .form-row {
-    display: flex;
-    gap: 2.5rem;
-    justify-content: center;
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
     padding: 0 3rem;
-    margin-bottom: 3rem;
+    margin: 2.5rem 0;
+    align-items: start;
 }
 
-.form-row > * {
-    flex: 1;
-    max-width: 420px;
-}
-
-.admin-form {
+.form-row .admin-form {
+    height: 100%;
     display: flex;
     flex-direction: column;
 }
 
-.admin-form button[type="submit"] {
+.form-row .admin-form button[type="submit"] {
     margin-top: auto;
 }
 
@@ -770,23 +766,57 @@ button[type="submit"]:active,
     font-size: 0.9rem;
 }
 
-/* --- GRID LAYOUT FOR TENNIS COURT LIST --- */
+/* ===================================
+    11.1 VERWALTUNGSSEITEN - LISTEN LAYOUT
+   =================================== */
+
+/* Tennisplatz-Liste */
 .platz-liste {
-    max-width: none; 
-    width: 100%;
-    margin: 2.5rem auto;
+    max-width: none;
+    width: calc(100% - 6rem);
+    margin: 2.5rem 3rem;
     padding: 2.5rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-elevated);
+    border: 1px solid var(--sand-medium);
+    display: block;
 }
 
-/* Platzkarten im Grid */
-.platz-item {
+.platz-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.platz-grid .platz-item {
     margin-bottom: 0;
     cursor: pointer;
 }
 
+/* Arbeiter-Liste */
+.arbeiter-liste {
+    max-width: none;
+    width: calc(100% - 6rem);
+    margin: 2.5rem 3rem;
+    padding: 2.5rem;
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-elevated);
+    border: 1px solid var(--sand-medium);
+    display: block;
+}
+
+.arbeiter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.arbeiter-grid .arbeiter-item {
+    margin-bottom: 0;
+    cursor: pointer;
+}
 
 /* ===================================
    12. PAGE HEADINGS
@@ -904,66 +934,3 @@ footer p {
     font-size: 0.95rem;
 }
 
-/* ===================================
-   VERWALTUNGSSEITEN - ERGÄNZUNGEN
-   Diese Regeln zum bestehenden CSS hinzufügen
-   =================================== */
-
-/* Formulare in form-row gleich lang machen */
-.form-row {
-    align-items: stretch;
-}
-
-.form-row .admin-form {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.form-row .admin-form button[type="submit"] {
-    margin-top: auto;
-}
-
-/* Tennisplatz-Liste: professionelles Grid mit gleicher Breite wie Formulare */
-.platz-liste {
-    max-width: none;
-    width: calc(100% - 6rem);
-    margin: 2.5rem 3rem;
-    padding: 2.5rem;
-    display: block;
-}
-
-.platz-liste h4 {
-    margin-bottom: 2rem;
-}
-
-.platz-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 1.5rem;
-}
-
-/* Arbeiter-Liste: professionelles Grid mit gleicher Breite */
-.arbeiter-liste {
-    max-width: none;
-    width: calc(100% - 6rem);
-    margin: 2.5rem 3rem;
-    padding: 2.5rem;
-    display: block;
-}
-
-.arbeiter-liste h4 {
-    margin-bottom: 2rem;
-}
-
-.arbeiter-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 1.5rem;
-}
-
-/* Platz- und Arbeiter-Items: margin-bottom entfernen für Grid */
-.platz-grid .platz-item,
-.arbeiter-grid .arbeiter-item {
-    margin-bottom: 0;
-}
