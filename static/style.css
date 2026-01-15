@@ -565,8 +565,8 @@ button[type="submit"]:active,
 #js-fehler,
 .fehler,
 .erfolg {
-    margin-left: var(--spacing-lg);
-    margin-right: var(--spacing-lg);
+    max-width: 960px;
+    margin: 0 auto 1.75rem;
 }
 
 .error,
@@ -580,7 +580,6 @@ button[type="submit"]:active,
     color: var(--error);
     padding: 1.1rem 1.3rem;
     border-radius: var(--radius-md);
-    margin-bottom: 1.75rem;
     border-left: 4px solid var(--error);
     font-weight: 500;
     font-size: 0.95rem;
@@ -599,7 +598,6 @@ button[type="submit"]:active,
     color: var(--success);
     padding: 1.1rem 1.3rem;
     border-radius: var(--radius-md);
-    margin-bottom: 1.75rem;
     border-left: 4px solid var(--success);
     font-weight: 500;
     font-size: 0.95rem;
