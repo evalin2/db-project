@@ -94,27 +94,27 @@
             <button type="submit">Wartungsarbeiter löschen</button>
         </form>
 
-    </div>
 
-    <!-- Liste aller Wartungsarbeiter -->
-    {% if alle_arbeiter %}
-    <div class="arbeiter-liste">
-        <h4>Alle Wartungsarbeiter ({{ alle_arbeiter|length }})</h4>
+        <!-- Liste aller Wartungsarbeiter -->
+        {% if alle_arbeiter %}
+        <div class="arbeiter-liste">
+            <h4>Alle Wartungsarbeiter ({{ alle_arbeiter|length }})</h4>
 
-        {% for arbeiter in alle_arbeiter %}
-        <div class="arbeiter-item">
-            <div class="arbeiter-info">
-                <span class="arbeiter-id">ID: {{ arbeiter.wid }}</span>
-                <strong>{{ arbeiter.vorname }} {{ arbeiter.nachname }}</strong>
+            {% for arbeiter in alle_arbeiter %}
+            <div class="arbeiter-item">
+                <div class="arbeiter-info">
+                    <span class="arbeiter-id">ID: {{ arbeiter.wid }}</span>
+                    <strong>{{ arbeiter.vorname }} {{ arbeiter.nachname }}</strong>
 
-                {% if arbeiter.geburtsdatum %}
-                <br><small>Geburtsdatum: {{ arbeiter.geburtsdatum }}</small>
-                {% endif %}
+                    {% if arbeiter.geburtsdatum %}
+                    <br><small>Geburtsdatum: {{ arbeiter.geburtsdatum }}</small>
+                    {% endif %}
+                </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
+        {% endif %}
     </div>
-    {% endif %}
 
     <footer>
         <p>
