@@ -903,3 +903,67 @@ footer p {
     opacity: 0.9;
     font-size: 0.95rem;
 }
+
+/* ===================================
+   VERWALTUNGSSEITEN - ERGÄNZUNGEN
+   Diese Regeln zum bestehenden CSS hinzufügen
+   =================================== */
+
+/* Formulare in form-row gleich lang machen */
+.form-row {
+    align-items: stretch;
+}
+
+.form-row .admin-form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.form-row .admin-form button[type="submit"] {
+    margin-top: auto;
+}
+
+/* Tennisplatz-Liste: professionelles Grid mit gleicher Breite wie Formulare */
+.platz-liste {
+    max-width: none;
+    width: calc(100% - 6rem);
+    margin: 2.5rem 3rem;
+    padding: 2.5rem;
+    display: block;
+}
+
+.platz-liste h4 {
+    margin-bottom: 2rem;
+}
+
+.platz-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Arbeiter-Liste: professionelles Grid mit gleicher Breite */
+.arbeiter-liste {
+    max-width: none;
+    width: calc(100% - 6rem);
+    margin: 2.5rem 3rem;
+    padding: 2.5rem;
+    display: block;
+}
+
+.arbeiter-liste h4 {
+    margin-bottom: 2rem;
+}
+
+.arbeiter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Platz- und Arbeiter-Items: margin-bottom entfernen für Grid */
+.platz-grid .platz-item,
+.arbeiter-grid .arbeiter-item {
+    margin-bottom: 0;
+}
