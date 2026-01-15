@@ -945,11 +945,14 @@ footer p {
 /* ===================================
    16. Zusätzliche Animationen 
    =================================== */
+:root {
+    --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
 
 /* Smooth hover lift for cards */
 .platz-item,
 .arbeiter-item {
-    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+    transition: transform 0.15s var(--ease-smooth), box-shadow 0.15s var(--ease-smooth);
 }
 
 .platz-item:hover,
@@ -961,7 +964,7 @@ footer p {
 /* Slow fade back for cards */
 .platz-item:not(:hover),
 .arbeiter-item:not(:hover) {
-    transition: transform 0.35s ease-in, box-shadow 0.35s ease-in;
+    transition: transform 0.35s var(--ease-smooth), box-shadow 0.35s var(--ease-smooth);
 }
 
 /* Form hover (only shadow, no transform) */
@@ -973,6 +976,14 @@ form:hover {
     box-shadow: var(--shadow-strong);
     transition: box-shadow 0.15s ease-out;
 }
+
+/* Scale effect */
+.platz-item:hover,
+.arbeiter-item:hover {
+    transform: translateY(-1px) scale(1.01);
+}
+
+
 
 
 
