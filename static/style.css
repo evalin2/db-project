@@ -843,20 +843,29 @@ h2.subheading {
    13. VERWALTUNG NAVIGATION
    =================================== */
 
+/* ===================================
+   13. VERWALTUNG NAVIGATION
+   =================================== */
+
 .admin-hero {
-    background: linear-gradient(
-        to bottom,
-        rgba(42, 42, 42, 0.50) 0%,
-        rgba(42, 42, 42, 0.65) 100%
-    ),
-    url('/static/purple_gradient.jpg') center/cover no-repeat;
-    padding: 7rem 3rem 8rem;
+    background: url('/static/purple_gradient.jpg') center/cover no-repeat;
+    padding: 5.5rem 3rem 6.5rem;
     border-radius: var(--radius-xl);
     margin: 3rem;
     position: relative;
     overflow: hidden;
     box-shadow: var(--shadow-elevated);
     border: 1px solid var(--sand-medium);
+}
+
+.admin-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(42, 42, 42, 0.45);
+    backdrop-filter: blur(8px);
+    border-radius: var(--radius-xl);
+    z-index: 1;
 }
 
 .admin-hero-content {
@@ -879,36 +888,40 @@ h2.subheading {
 .admin-hero-buttons {
     display: flex;
     justify-content: center;
-    gap: 1.5rem;
+    gap: 2rem;
     flex-wrap: wrap;
 }
 
 .admin-hero-buttons a {
-    padding: 1rem 2rem;
-    background: linear-gradient(135deg, var(--brand-terracotta) 0%, var(--brand-purple-light) 100%);
-    color: var(--white);
-    border: none;
-    border-radius: var(--radius-md);
-    font-size: 1.05rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition-smooth);
-    text-decoration: none;
-    display: inline-block;
-    text-align: center;
+    padding: 1.5rem 2rem;
+    background: var(--white);
+    color: var(--text-primary);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius-lg);
     font-family: 'Outfit', sans-serif;
-    letter-spacing: 0.02em;
-    box-shadow: 0 4px 16px rgba(140, 97, 133, 0.25);
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-width: 220px;
 }
 
 .admin-hero-buttons a:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(140, 97, 133, 0.35);
+    transform: translateY(-6px);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
 }
 
-.admin-hero-buttons a:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(140, 97, 133, 0.2);
+.admin-hero-buttons a svg {
+    width: 24px;
+    height: 24px;
+    color: var(--brand-terracotta);
+    opacity: 0.8;
 }
 
 
