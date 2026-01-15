@@ -922,57 +922,7 @@ h2.subheading {
 
 
 /* ===================================
-   14. AUTH PAGES (Login/Register)
-   =================================== */
-
-.auth-wrapper {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(160deg, var(--sand-light) 0%, var(--sand-base) 100%);
-    padding: 2.5rem;
-}
-
-.auth-card {
-    background: var(--white);
-    padding: 3.5rem;
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-elevated);
-    max-width: 480px;
-    width: 100%;
-    border: 1px solid var(--sand-medium);
-}
-
-.auth-title {
-    text-align: center;
-    color: var(--text-primary);
-    margin-bottom: 2.5rem;
-    font-size: 2.25rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-}
-
-.auth-footer-text {
-    text-align: center;
-    margin-top: 2rem;
-    color: var(--text-secondary);
-}
-
-.auth-footer-text a {
-    color: var(--brand-green);
-    text-decoration: none;
-    font-weight: 600;
-    transition: var(--transition-quick);
-}
-
-.auth-footer-text a:hover {
-    color: var(--brand-terracotta);
-}
-
-
-/* ===================================
-   15. FOOTER
+   14. FOOTER
    =================================== */
 
 footer {
@@ -991,7 +941,7 @@ footer p {
 
 
 /* ===================================
-   16. Zusätzliche Animationen 
+   15. Zusätzliche Animationen 
    =================================== */
 :root {
     --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
