@@ -342,7 +342,7 @@ header p {
    6. FORMS (Buchen, Stornieren, Verwaltung)
    =================================== */
 form {
-    max-width: 1300px;
+    max-width: 3000px;
     margin: 3rem auto;
     padding: 3rem;
     background: var(--white);
