@@ -941,3 +941,20 @@ footer p {
     font-size: 0.95rem;
 }
 
+
+
+
+
+
+/* Global smoother hover lift */
+.card, .platz-item, .arbeiter-item, form {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover,
+.platz-item:hover,
+.arbeiter-item:hover,
+form:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-strong);
+}
