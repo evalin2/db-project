@@ -466,6 +466,10 @@ form h3 {
     margin-top: auto;
 }
 
+.admin-form {
+    height: 100%;
+}
+
 
 /* ===================================
    7. BUTTONS
