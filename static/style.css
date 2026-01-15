@@ -843,10 +843,7 @@ h2.subheading {
    13. VERWALTUNG NAVIGATION
    =================================== */
 
-/* ===================================
-   13. VERWALTUNG NAVIGATION
-   =================================== */
-
+/* --- Verwaltung: Hero Background --- */
 .admin-hero {
     background: url('/static/purple_gradient.jpg') center/cover no-repeat;
     padding: 5.5rem 3rem 6.5rem;
@@ -858,16 +855,18 @@ h2.subheading {
     border: 1px solid var(--sand-medium);
 }
 
+/* --- Soft Overlay über dem Bild --- */
 .admin-hero::before {
     content: "";
     position: absolute;
     inset: 0;
-    background: rgba(42, 42, 42, 0.45);
-    backdrop-filter: blur(8px);
+    background: rgba(42, 42, 42, 0.35); /* dunkler, aber nicht schwarz */
+    backdrop-filter: blur(10px);        /* weicher, hochwertiger Blur */
     border-radius: var(--radius-xl);
     z-index: 1;
 }
 
+/* --- Inhalt über dem Overlay --- */
 .admin-hero-content {
     position: relative;
     z-index: 2;
@@ -876,15 +875,18 @@ h2.subheading {
     margin: 0 auto;
 }
 
+/* --- Überschrift --- */
 .admin-hero-content h2 {
-    font-size: 2.5rem;
+    font-size: 2.6rem;
     font-weight: 600;
     color: var(--white);
     letter-spacing: -0.02em;
     margin-bottom: 3.5rem;
     line-height: 1.3;
+    text-shadow: 0 3px 12px rgba(0,0,0,0.25); /* weicher Glow */
 }
 
+/* --- Buttons --- */
 .admin-hero-buttons {
     display: flex;
     justify-content: center;
@@ -893,35 +895,29 @@ h2.subheading {
 }
 
 .admin-hero-buttons a {
-    padding: 1.5rem 2rem;
+    padding: 1.4rem 2.2rem;
     background: var(--white);
     color: var(--text-primary);
     border: 1px solid rgba(0, 0, 0, 0.06);
     border-radius: var(--radius-lg);
     font-family: 'Outfit', sans-serif;
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     font-weight: 600;
     text-decoration: none;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.75rem;
     min-width: 220px;
 }
 
+/* --- Hover-Effekt --- */
 .admin-hero-buttons a:hover {
     transform: translateY(-6px);
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
-}
-
-.admin-hero-buttons a svg {
-    width: 24px;
-    height: 24px;
-    color: var(--brand-terracotta);
-    opacity: 0.8;
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.16);
+    border-color: var(--brand-green-soft); /* subtiler Farbakzent */
 }
 
 
