@@ -851,34 +851,17 @@ h2.subheading {
     position: relative;
     overflow: hidden;
     box-shadow: var(--shadow-elevated);
-    border: 1px solid rgba(140, 97, 133, 0.2);
+    border: 1px solid var(--sand-medium);
 }
 
-/* Soft Overlay */
 .admin-hero::before {
     content: "";
     position: absolute;
     inset: 0;
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(12px);
+    border-radius: var(--radius-xl);
     z-index: 1;
-}
-
-/* Subtile Akzente */
-.admin-hero::after {
-    content: "";
-    position: absolute;
-    top: -100px;
-    right: -100px;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(
-        circle,
-        rgba(217, 173, 210, 0.15) 0%,
-        transparent 70%
-    );
-    z-index: 1;
-    pointer-events: none;
 }
 
 .admin-hero-content {
@@ -893,7 +876,7 @@ h2.subheading {
     color: var(--text-primary);
     letter-spacing: -0.02em;
     margin-bottom: 2.5rem;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    text-shadow: 0 2px 8px rgba(255, 255, 255, 0.5);
 }
 
 .admin-hero-buttons {
@@ -904,49 +887,24 @@ h2.subheading {
 }
 
 .admin-hero-buttons a {
-    padding: 1.3rem 2.6rem;
+    padding: 1.2rem 2.4rem;
     background: var(--white);
-    color: var(--brand-terracotta);
+    color: var(--text-primary);
     border-radius: var(--radius-lg);
     font-family: 'Outfit', sans-serif;
-    font-size: 1.15rem;
+    font-size: 1.2rem;
     font-weight: 600;
     text-decoration: none;
     border: 2px solid var(--sand-medium);
     box-shadow: var(--shadow-soft);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-}
-
-.admin-hero-buttons a::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: var(--radius-lg);
-    background: linear-gradient(
-        135deg,
-        var(--brand-terracotta) 0%,
-        var(--brand-purple-light) 100%
-    );
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: -1;
+    transition: var(--transition-smooth);
 }
 
 .admin-hero-buttons a:hover {
-    transform: translateY(-4px);
+    transform: translateY(-3px);
     box-shadow: var(--shadow-elevated);
     border-color: var(--brand-purple-light);
-    color: var(--white);
-}
-
-.admin-hero-buttons a:hover::before {
-    opacity: 1;
-}
-
-.admin-hero-buttons a:active {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-soft);
+    background: var(--sand-light);
 }
 
 
