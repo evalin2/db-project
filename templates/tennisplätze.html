@@ -36,6 +36,8 @@
 <div class="erfolg">{{ erfolg }}</div>
 {% endif %}
 
+<div class="form-row">
+
 <!-- Tennisplatz hinzufügen -->
 <form method="POST" class="admin-form" onsubmit="return validateWartungsdatum('wartung_add')">
     <input type="hidden" name="aktion" value="hinzufuegen">
@@ -141,6 +143,8 @@
     <button type="submit">Tennisplatz löschen</button>
 </form>
 
+</div> <!-- form-row END -->
+
 
 <!-- Liste aller Tennisplätze -->
 {% if alle_plaetze %}
@@ -148,7 +152,15 @@
     <h4>Alle Tennisplätze ({{ alle_plaetze|length }})</h4>
 
     {% for platz in alle_plaetze %}
-    <div class="platz-item">
+    <div class="platz-item"
+         data-tid="{{ platz.tid }}"
+         data-anlage="{{ platz.tennisanlage }}"
+         data-platznummer="{{ platz.platznummer }}"
+         data-belag="{{ platz.belag }}"
+         data-wid="{{ platz.wid }}"
+         data-wartung="{{ platz.wartung }}"
+         onclick="fillPlatzForm(this)">
+
         <div class="platz-info">
             <span class="platz-id">ID: {{ platz.tid }}</span>
             <strong>{{ platz.tennisanlage }}</strong> – Platz {{ platz.platznummer }} ({{ platz.belag }})
@@ -225,6 +237,15 @@
             });
         }
     });
+
+    function fillPlatzForm(el) {
+        document.getElementById('platz_id_edit').value = el.dataset.tid;
+        document.getElementById('anlage_edit').value = el.dataset.anlage;
+        document.getElementById('platznummer_edit').value = el.dataset.platznummer;
+        document.getElementById('belag_edit').value = el.dataset.belag;
+        document.getElementById('wid_edit').value = el.dataset.wid;
+        document.getElementById('wartung_edit').value = el.dataset.wartung;
+    }
 </script>
 
 </body>
