@@ -561,28 +561,24 @@ button[type="submit"]:active,
    8. MESSAGES (Error & Success)
    =================================== */
 
-.error,
-.fehler,
-#js-fehler,
-.erfolg {
+.message {
     padding: 1.3rem 1.6rem;
     border-radius: var(--radius-lg);
     margin-bottom: 2rem;
     font-weight: 600;
     font-size: 1.05rem;
-    border: 1px solid var(--sand-medium);
+    background: var(--white);
     box-shadow: var(--shadow-soft);
-    background: var(--sand-light);
-    color: var(--text-primary);
+    border-left: 6px solid transparent;
 }
 
 /* Fehler */
 .error,
 .fehler,
 #js-fehler {
-    border-color: rgba(217, 95, 78, 0.35);
-    background: rgba(217, 95, 78, 0.08);
+    border-left-color: var(--error);
     color: var(--error);
+    background: rgba(217, 95, 78, 0.06);
 }
 
 #js-fehler {
@@ -591,9 +587,9 @@ button[type="submit"]:active,
 
 /* Erfolg */
 .erfolg {
-    border-color: rgba(159, 212, 71, 0.35);
-    background: rgba(194, 242, 22, 0.10);
+    border-left-color: var(--success);
     color: var(--text-primary);
+    background: rgba(111, 186, 92, 0.08);
 }
 
 
