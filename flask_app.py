@@ -1310,3 +1310,67 @@ def wartungsarbeiter():
         alle_arbeiter = []
     
     return render_template("wartungsarbeiter.html", fehler=fehler, erfolg=erfolg, alle_arbeiter=alle_arbeiter)
+
+
+
+
+
+
+
+
+
+
+
+
+
+from flask import Flask, render_template, request, jsonify
+from flask_babel import Babel, gettext as _
+
+app = Flask(__name__)
+app.config['BABEL_DEFAULT_LOCALE'] = 'de'
+app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
+
+babel = Babel(app)
+
+@babel.localeselector
+def get_locale():
+    # Automatische Spracherkennung
+    return request.args.get("lang") or request.accept_languages.best_match(['de', 'en'])
+
+
+# Beispiel-Daten
+alle_plaetze = [
+    {"tennisanlage": "Anlage A", "platznummer": 1, "belag": "Sand"},
+    {"tennisanlage": "Anlage A", "platznummer": 2, "belag": "Sand"},
+    {"tennisanlage": "Anlage B", "platznummer": 1, "belag": "Hartplatz"},
+]
+
+nutzer_db = {
+    1: {"vorname": "Max", "nachname": "Muster", "email": "max@example.com", "geburtsdatum": "1990-01-01"}
+}
+
+
+@app.route("/")
+def index():
+    return render_template("buchen.html", alle_plaetze=alle_plaetze, form_data=None, nutzer=None, fehler=None)
+
+
+@app.route("/buchen", methods=["GET", "POST"])
+def buchen():
+    if request.method == "POST":
+        # Hier würdest du die Buchung speichern
+        return _("Buchung erfolgreich gespeichert!")
+
+    return render_template("buchen.html", alle_plaetze=alle_plaetze, form_data=None, nutzer=None, fehler=None)
+
+
+@app.route("/get_nutzer/<int:nid>")
+def get_nutzer(nid):
+    nutzer = nutzer_db.get(nid)
+    if not nutzer:
+        return jsonify({"exists": False})
+    return jsonify({"exists": True, **nutzer})
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

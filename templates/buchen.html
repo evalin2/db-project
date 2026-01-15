@@ -1,236 +1,165 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="{{ get_locale() }}">
 <head>
-    <link rel="stylesheet" href="static/style.css">
     <meta charset="UTF-8">
-    <title>Tennisplatz buchen</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ _("Tennisplatz buchen") }}</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
-<body>
-<header class="global-header">
-    <div class="header-left">
-        <a href="{{ url_for('index') }}" class="logo-link">
-                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="header-logo">
-        </a>
-    <h1 class="header-title">Tennisplatz‑Buchungssystem</h1>
-    </div>
 
-    <nav class="header-nav">
-        <div class="nav-links">
-            <a href="{{ url_for('buchen') }}" class="nav-link">Buchen</a>
-            <a href="{{ url_for('stornieren') }}" class="nav-link">Stornieren</a>
-            <a href="{{ url_for('verwaltung') }}" class="nav-link">Verwaltung</a>
-        </div>
-    </nav>
-</header>
+<body>
+
+<h1>{{ _("Tennisplatz‑Buchungssystem") }}</h1>
+
 <form method="POST" action="{{ url_for('buchen') }}" id="buchungsform">
+
     {% if fehler %}
         <p class="error">{{ fehler }}</p>
     {% endif %}
-    
+
     <div id="js-fehler" class="error"></div>
-    <h2>Buchen</h2>
-    <h3>Personalien</h3>
-    <div class="form-group">
-        <label>Nutzer-ID (optional, nur bestehende IDs)</label>
-        <input type="number" name="nid" id="nid" placeholder="Bestehende Nutzer-ID eingeben" value="{{ form_data.nid if form_data else (nutzer.nid if nutzer else '') }}">
-        <small>Falls vorhanden, geben Sie zusätzlich Ihre E-Mail zur Verifizierung ein.</small>
-    </div>
-    <div class="form-group">
-        <label>Vorname *</label>
-        <input type="text" name="vorname" id="vorname" value="{{ form_data.vorname if form_data else (nutzer.vorname if nutzer else '') }}" required>
-    </div>
-    <div class="form-group">
-        <label>Nachname *</label>
-        <input type="text" name="nachname" id="nachname" value="{{ form_data.nachname if form_data else (nutzer.nachname if nutzer else '') }}" required>
-    </div>
-    <div class="form-group">
-        <label>Geburtsdatum</label>
-        <input type="date" name="geburtsdatum" id="geburtsdatum" value="{{ form_data.geburtsdatum if form_data else (nutzer.geburtsdatum if nutzer else '') }}">
-    </div>
-    <div class="form-group">
-        <label>E-Mail *</label>
-        <input type="email" name="email" id="email" value="{{ form_data.email if form_data else (nutzer.email if nutzer else '') }}" required>
-    </div>
-    <h3>Buchungsdetails</h3>
-    <div class="form-group">
-        <label>Tennisanlage *</label>
-        <select name="tennisanlage" id="tennisanlage" required>
-            <option value="">-- bitte wählen --</option>
-            {% for anlage in anlagen %}
-                <option value="{{ anlage }}" {% if form_data and form_data.tennisanlage == anlage %}selected{% endif %}>{{ anlage }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="form-group">
-        <label>Platznummer *</label>
-        <select name="platznummer" id="platznummer" required>
-            <option value="">-- zuerst Tennisanlage wählen --</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label>Spieldatum *</label>
-        <input type="date" name="spieldatum" id="spieldatum" value="{{ form_data.spieldatum if form_data else '' }}" required>
-    </div>
-    <div class="form-group">
-        <label>Spielbeginn *</label>
-        <input type="time" name="beginn" id="beginn" value="{{ form_data.beginn if form_data else '' }}" min="07:00" max="20:00" required>
-        <small>Nur :00 oder :30 erlaubt (z.B. 14:00 oder 14:30)</small>
-    </div>
-    <div class="form-group">
-        <label>Spielende *</label>
-        <input type="time" name="ende" id="ende" value="{{ form_data.ende if form_data else '' }}" min="07:00" max="20:00" required>
-        <small>Nur :00 oder :30 erlaubt (z.B. 15:00 oder 15:30)</small>
-    </div>
-    <button type="submit">Buchung bestätigen</button>
+
+    <h2>{{ _("Buchen") }}</h2>
+
+    <h3>{{ _("Personalien") }}</h3>
+
+    <label>{{ _("Nutzer-ID (optional, nur bestehende IDs)") }}</label>
+    <input type="number" name="nid" id="nid">
+
+    <label>{{ _("Vorname") }} *</label>
+    <input type="text" name="vorname" id="vorname" required>
+
+    <label>{{ _("Nachname") }} *</label>
+    <input type="text" name="nachname" id="nachname" required>
+
+    <label>{{ _("Geburtsdatum") }}</label>
+    <input type="date" name="geburtsdatum" id="geburtsdatum">
+
+    <label>{{ _("E-Mail") }} *</label>
+    <input type="email" name="email" id="email" required>
+
+    <h3>{{ _("Buchungsdetails") }}</h3>
+
+    <label>{{ _("Tennisanlage") }} *</label>
+    <select name="tennisanlage" id="tennisanlage" required>
+        <option value="">{{ _("-- bitte wählen --") }}</option>
+        {% for anlage in alle_plaetze | map(attribute='tennisanlage') | unique %}
+            <option value="{{ anlage }}">{{ anlage }}</option>
+        {% endfor %}
+    </select>
+
+    <label>{{ _("Platznummer") }} *</label>
+    <select name="platznummer" id="platznummer" required>
+        <option value="">{{ _("-- zuerst Tennisanlage wählen --") }}</option>
+    </select>
+
+    <label>{{ _("Spieldatum") }} *</label>
+    <input type="date" name="spieldatum" id="spieldatum" required>
+
+    <label>{{ _("Spielbeginn") }} *</label>
+    <input type="time" name="beginn" id="beginn" min="07:00" max="20:00" required>
+
+    <label>{{ _("Spielende") }} *</label>
+    <input type="time" name="ende" id="ende" min="07:00" max="20:00" required>
+
+    <button type="submit">{{ _("Buchung bestätigen") }}</button>
 </form>
+
+
+<!-- Übersetzbare JS-Texte -->
 <script>
-const allePlaetze = {{ alle_plaetze | tojson | safe }};
+    const msgBeginnFehler = "{{ _('Spielbeginn muss auf :00 oder :30 enden.') }}";
+    const msgEndeFehler = "{{ _('Spielende muss auf :00 oder :30 enden.') }}";
+    const msgEmailFehlt = "{{ _('Bitte geben Sie auch Ihre E-Mail-Adresse zur Verifizierung ein.') }}";
+    const msgNutzerExistiertNicht = "{{ _('Diese Nutzer-ID existiert nicht in der Datenbank.') }}";
+    const msgEmailMismatch = "{{ _('Die E-Mail-Adresse stimmt nicht mit der Nutzer-ID überein.') }}";
+
+    const allePlaetze = {{ alle_plaetze | tojson | safe }};
+</script>
+
+
+<script>
+// Datum min = heute
 document.addEventListener("DOMContentLoaded", function() {
     const heute = new Date().toISOString().split('T')[0];
     document.getElementById("spieldatum").setAttribute("min", heute);
-    
-    const form = document.getElementById('buchungsform');
-    const jsFehlerDiv = document.getElementById('js-fehler');
-    
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            jsFehlerDiv.textContent = '';
-            
-            const beginn = document.getElementById('beginn').value;
-            const ende = document.getElementById('ende').value;
-            
-            if (beginn) {
-                const beginnTeile = beginn.split(':');
-                const beginnMinuten = parseInt(beginnTeile[1]);
-                
-                if (beginnMinuten !== 0 && beginnMinuten !== 30) {
-                    e.preventDefault();
-                    jsFehlerDiv.textContent = 'Spielbeginn muss auf :00 oder :30 enden (z.B. 14:00 oder 14:30). Zeiten wie ' + beginn + ' sind nicht erlaubt.';
-                    document.getElementById('beginn').value = '';
-                    document.getElementById('beginn').focus();
-                    window.scrollTo(0, 0);
-                    return false;
-                }
-            }
-            
-            if (ende) {
-                const endeTeile = ende.split(':');
-                const endeMinuten = parseInt(endeTeile[1]);
-                
-                if (endeMinuten !== 0 && endeMinuten !== 30) {
-                    e.preventDefault();
-                    jsFehlerDiv.textContent = 'Spielende muss auf :00 oder :30 enden (z.B. 15:00 oder 15:30). Zeiten wie ' + ende + ' sind nicht erlaubt.';
-                    document.getElementById('ende').value = '';
-                    document.getElementById('ende').focus();
-                    window.scrollTo(0, 0);
-                    return false;
-                }
-            }
-        });
-    }
 });
+
+
+// Nutzer-ID + Email prüfen
 function checkNidAndEmail() {
     let nid = document.getElementById("nid").value;
     let email = document.getElementById("email").value;
     const jsFehlerDiv = document.getElementById('js-fehler');
-    if (!nid && !email) {
-        document.getElementById("vorname").value = "";
-        document.getElementById("nachname").value = "";
-        document.getElementById("geburtsdatum").value = "";
-        return;
-    }
+
+    if (!nid && !email) return;
+
     if (nid && !email) {
-        jsFehlerDiv.textContent = 'Bitte geben Sie auch Ihre E-Mail-Adresse zur Verifizierung ein.';
-        document.getElementById("email").focus();
-        window.scrollTo(0, 0);
+        jsFehlerDiv.textContent = msgEmailFehlt;
         return;
     }
-    if (!nid && email) {
-        return;
-    }
+
     if (nid && email) {
         fetch(`/get_nutzer/${nid}`)
-        .then(response => response.json())
+        .then(r => r.json())
         .then(data => {
-            if (data.exists === false || !data.vorname) {
-                jsFehlerDiv.textContent = 'Diese Nutzer-ID existiert nicht in der Datenbank.';
-                document.getElementById("nid").value = "";
-                document.getElementById("nid").focus();
-                document.getElementById("vorname").value = "";
-                document.getElementById("nachname").value = "";
-                document.getElementById("geburtsdatum").value = "";
-                window.scrollTo(0, 0);
-            } else if (data.email !== email) {
-                jsFehlerDiv.textContent = 'Die E-Mail-Adresse stimmt nicht mit der Nutzer-ID überein.';
-                document.getElementById("email").value = "";
-                document.getElementById("email").focus();
-                document.getElementById("nid").value = "";
-                document.getElementById("vorname").value = "";
-                document.getElementById("nachname").value = "";
-                document.getElementById("geburtsdatum").value = "";
-                window.scrollTo(0, 0);
-            } else {
-                document.getElementById("vorname").value = data.vorname || "";
-                document.getElementById("nachname").value = data.nachname || "";
-                document.getElementById("geburtsdatum").value = data.geburtsdatum || "";
+            if (!data.exists) {
+                jsFehlerDiv.textContent = msgNutzerExistiertNicht;
+                return;
             }
-        })
-        .catch(error => {
-            console.error("Fehler beim Abrufen der Nutzerdaten:", error);
-            jsFehlerDiv.textContent = "Fehler beim Abrufen der Nutzerdaten";
-            window.scrollTo(0, 0);
+            if (data.email !== email) {
+                jsFehlerDiv.textContent = msgEmailMismatch;
+                return;
+            }
+
+            document.getElementById("vorname").value = data.vorname;
+            document.getElementById("nachname").value = data.nachname;
+            document.getElementById("geburtsdatum").value = data.geburtsdatum;
         });
     }
 }
+
 document.getElementById("nid").addEventListener("blur", checkNidAndEmail);
 document.getElementById("email").addEventListener("blur", checkNidAndEmail);
+
+
+// Plätze nach Anlage filtern
 document.getElementById("tennisanlage").addEventListener("change", function() {
-    const gewaehlteAnlage = this.value;
-    const platznummerSelect = document.getElementById("platznummer");
-    
-    platznummerSelect.innerHTML = '<option value="">-- bitte wählen --</option>';
-    
-    if (!gewaehlteAnlage) {
+    const anlage = this.value;
+    const select = document.getElementById("platznummer");
+
+    select.innerHTML = `<option value="">${"-- bitte wählen --"}</option>`;
+
+    allePlaetze
+        .filter(p => p.tennisanlage === anlage)
+        .forEach(p => {
+            const opt = document.createElement("option");
+            opt.value = p.platznummer;
+            opt.textContent = `Platz ${p.platznummer} (${p.belag})`;
+            select.appendChild(opt);
+        });
+});
+
+
+// Zeitvalidierung
+document.getElementById("buchungsform").addEventListener("submit", function(e) {
+    const jsFehlerDiv = document.getElementById('js-fehler');
+
+    const beginn = document.getElementById('beginn').value;
+    const ende = document.getElementById('ende').value;
+
+    if (beginn && !["00","30"].includes(beginn.split(":")[1])) {
+        e.preventDefault();
+        jsFehlerDiv.textContent = msgBeginnFehler;
         return;
     }
-    
-    const verfuegbarePlaetze = allePlaetze.filter(p => p.tennisanlage === gewaehlteAnlage);
-    
-    verfuegbarePlaetze.forEach(platz => {
-        const option = document.createElement("option");
-        option.value = platz.platznummer;
-        option.textContent = `Platz ${platz.platznummer} (${platz.belag})`;
-        platznummerSelect.appendChild(option);
-    });
-});
-document.addEventListener("DOMContentLoaded", function() {
-    const tennisanlageSelect = document.getElementById("tennisanlage");
-    const platznummerSelect = document.getElementById("platznummer");
-    const gespeichertePlatznummer = "{{ form_data.platznummer if form_data else '' }}";
-    
-    if (tennisanlageSelect.value) {
-        const gewaehlteAnlage = tennisanlageSelect.value;
-        const verfuegbarePlaetze = allePlaetze.filter(p => p.tennisanlage === gewaehlteAnlage);
-        
-        platznummerSelect.innerHTML = '<option value="">-- bitte wählen --</option>';
-        verfuegbarePlaetze.forEach(platz => {
-            const option = document.createElement("option");
-            option.value = platz.platznummer;
-            option.textContent = `Platz ${platz.platznummer} (${platz.belag})`;
-            if (gespeichertePlatznummer && platz.platznummer == gespeichertePlatznummer) {
-                option.selected = true;
-            }
-            platznummerSelect.appendChild(option);
-        });
+
+    if (ende && !["00","30"].includes(ende.split(":")[1])) {
+        e.preventDefault();
+        jsFehlerDiv.textContent = msgEndeFehler;
+        return;
     }
 });
 </script>
-<footer>
-    <p>
-        Impressum<br>
-        Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt
-    </p>
-</footer>
+
 </body>
 </html>
