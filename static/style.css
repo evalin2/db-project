@@ -860,8 +860,8 @@ h2.subheading {
     content: "";
     position: absolute;
     inset: 0;
-    background: rgba(42, 42, 42, 0.35); /* dunkler, aber nicht schwarz */
-    backdrop-filter: blur(10px);        /* weicher, hochwertiger Blur */
+    background: rgba(42, 42, 42, 0.35); 
+    backdrop-filter: blur(10px);      
     border-radius: var(--radius-xl);
     z-index: 1;
 }
@@ -883,7 +883,7 @@ h2.subheading {
     letter-spacing: -0.02em;
     margin-bottom: 3.5rem;
     line-height: 1.3;
-    text-shadow: 0 3px 12px rgba(0,0,0,0.25); /* weicher Glow */
+    text-shadow: 0 3px 12px rgba(0,0,0,0.25);
 }
 
 /* --- Buttons --- */
@@ -917,7 +917,7 @@ h2.subheading {
 .admin-hero-buttons a:hover {
     transform: translateY(-6px);
     box-shadow: 0 10px 32px rgba(0, 0, 0, 0.16);
-    border-color: var(--brand-green-soft); /* subtiler Farbakzent */
+    border-color: var(--brand-purple-light); /* subtiler Farbakzent */
 }
 
 
