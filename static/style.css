@@ -359,7 +359,7 @@ form h3 {
     font-weight: 600;
     letter-spacing: -0.02em;
     padding-bottom: 0.4rem;
-    border-bottom: 1px solid rgba(194, 242, 22, 0.25);
+    border-bottom: 1px solid rgba(194, 242, 22, 0.5);
 }
 
 /* Admin Forms - Purple Accent */
