@@ -843,70 +843,63 @@ h2.subheading {
    13. VERWALTUNG NAVIGATION
    =================================== */
 
-/* --- Verwaltung: Hintergrund & Overlay --- */
+/* --- Verwaltung: Hero Background --- */
 
-.admin-background {
+.admin-hero {
     background: url('/static/purple_gradient.jpg') center/cover no-repeat;
-    padding: 4rem 3rem;
+    padding: 6rem 3rem;
     border-radius: var(--radius-xl);
     margin: 3rem;
-    box-shadow: var(--shadow-elevated);
     position: relative;
     overflow: hidden;
 }
 
-.admin-overlay {
-    background: rgba(255, 255, 255, 0.78);
-    backdrop-filter: blur(10px);
-    padding: 3rem;
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-soft);
-    max-width: 900px;
-    margin: 0 auto;
+/* Soft Overlay über dem ganzen Bereich */
+.admin-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.35); /* sehr leichtes Weiß */
+    backdrop-filter: blur(8px);            /* natürlicher Blur */
+    z-index: 1;
 }
 
+/* Inhalt */
+.admin-hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
 
-/* --- Verwaltung: Überschrift --- */
-
-.admin-overlay .subheading {
-    color: var(--brand-terracotta);
-    margin-top: 0;
+/* Überschrift */
+.admin-hero-content h2 {
+    font-size: 2.8rem;
+    font-weight: 600;
+    color: var(--text-primary); /* kein Lila */
+    letter-spacing: -0.02em;
     margin-bottom: 2rem;
-    font-size: 2.4rem;
     text-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
-
-/* --- Verwaltung: Navigation Buttons --- */
-
-.admin-overlay nav {
+/* Buttons */
+.admin-hero-buttons {
     display: flex;
-    gap: 2rem;
     justify-content: center;
-    margin-top: 1rem;
+    gap: 2rem;
 }
 
-.admin-overlay nav a {
-    padding: 1.3rem 2.4rem;
-    background: linear-gradient(135deg, var(--brand-terracotta) 0%, var(--brand-purple-light) 100%);
-    color: var(--white);
+.admin-hero-buttons a {
+    padding: 1.2rem 2.4rem;
+    background: var(--white);
+    color: var(--text-primary);
     border-radius: var(--radius-lg);
     font-family: 'Outfit', sans-serif;
     font-size: 1.2rem;
     font-weight: 600;
     text-decoration: none;
-    box-shadow: 0 6px 20px rgba(140, 97, 133, 0.25);
+    border: 1px solid var(--sand-medium);
+    box-shadow: var(--shadow-soft);
     transition: var(--transition-smooth);
-}
-
-.admin-overlay nav a:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 28px rgba(140, 97, 133, 0.35);
-}
-
-.admin-overlay nav a:active {
-    transform: translateY(0);
-    box-shadow: 0 3px 12px rgba(140, 97, 133, 0.2);
 }
 
 
