@@ -859,8 +859,8 @@ h2.subheading {
     content: "";
     position: absolute;
     inset: 0;
-    background: rgba(255, 255, 255, 0.35); /* sehr leichtes Weiß */
-    backdrop-filter: blur(6px);            /* natürlicher Blur */
+    background: rgba(140, 97, 133, 0.35); /* sehr leichtes Weiß */
+    backdrop-filter: blur(9px);            /* natürlicher Blur */
     z-index: 1;
 }
 
@@ -905,7 +905,7 @@ h2.subheading {
 .admin-hero-buttons a:hover {
     transform: translateY(-3px);
     box-shadow: var(--shadow-elevated);
-    border-color: var(--brand-green-soft);
+    border-color: var(--brand-purple-light);
 }
 
 
