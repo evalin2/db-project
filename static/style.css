@@ -438,6 +438,20 @@ form h3 {
     flex: 1;
 }
 
+.form-row {
+    display: flex;
+    gap: 2.5rem;
+    justify-content: center;
+    align-items: stretch;
+    padding: 0 3rem;
+    margin-bottom: 3rem;
+}
+
+.form-row > * {
+    flex: 1;
+    max-width: 420px;
+}
+
 
 /* ===================================
    7. BUTTONS
