@@ -950,13 +950,13 @@ footer p {
 .platz-item,
 .arbeiter-item,
 form {
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    transition: transform 0.5 ease, box-shadow 0.5 ease;
 }
 
 .platz-item:hover,
 .arbeiter-item:hover,
 form:hover {
-    transform: translateY(-1.5px);
+    transform: translateY(-1px);
     box-shadow: var(--shadow-strong);
 }
 
