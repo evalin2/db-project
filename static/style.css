@@ -567,18 +567,22 @@ button[type="submit"]:active,
     margin-bottom: 2rem;
     font-weight: 600;
     font-size: 1.05rem;
-    background: var(--white);
+    color: var(--text-primary);
     box-shadow: var(--shadow-soft);
-    border-left: 6px solid transparent;
+    border: 1px solid var(--sand-medium);
 }
 
 /* Fehler */
 .error,
 .fehler,
 #js-fehler {
-    border-left-color: var(--error);
+    background: linear-gradient(
+        135deg,
+        rgba(217, 95, 78, 0.18) 0%,
+        rgba(140, 97, 133, 0.22) 100%
+    );
+    border-color: rgba(217, 95, 78, 0.35);
     color: var(--error);
-    background: rgba(217, 95, 78, 0.06);
 }
 
 #js-fehler {
@@ -587,10 +591,15 @@ button[type="submit"]:active,
 
 /* Erfolg */
 .erfolg {
-    border-left-color: var(--success);
+    background: linear-gradient(
+        135deg,
+        rgba(111, 186, 92, 0.18) 0%,
+        rgba(194, 242, 22, 0.22) 100%
+    );
+    border-color: rgba(159, 212, 71, 0.35);
     color: var(--text-primary);
-    background: rgba(111, 186, 92, 0.08);
 }
+
 
 
 /* ===================================
