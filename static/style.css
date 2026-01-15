@@ -944,5 +944,18 @@ footer p {
 
 
 
+/* Smooth hover lift for cards and forms */
+.platz-item,
+.arbeiter-item,
+form {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.platz-item:hover,
+.arbeiter-item:hover,
+form:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-strong);
+}
 
 
