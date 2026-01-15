@@ -26,13 +26,16 @@
     </nav>
 </header>
 
-<h2 class="subheading">Verwaltung</h2>
+<!-- Neuer Hintergrundbereich für Verwaltung -->
+<div class="admin-background">
+    <div class="admin-overlay">
+        <h2 class="subheading">Verwaltung</h2>
 
-<div class="container">
-    <nav>
-        <a href="{{ url_for('tennisplätze') }}">Tennisplätze</a>
-        <a href="{{ url_for('wartungsarbeiter') }}">Wartungsarbeiter</a>
-    </nav>
+        <nav>
+            <a href="{{ url_for('tennisplätze') }}">Tennisplätze</a>
+            <a href="{{ url_for('wartungsarbeiter') }}">Wartungsarbeiter</a>
+        </nav>
+    </div>
 </div>
 
 <footer>
