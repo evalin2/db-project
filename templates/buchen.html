@@ -29,7 +29,8 @@
     {% endif %}
     
     <div id="js-fehler" class="error"></div>
-    <h2>Personalien</h2>
+    <h2>Stornieren</h2>
+    <h3>Personalien</h3>
     <div class="form-group">
         <label>Nutzer-ID (optional, nur bestehende IDs)</label>
         <input type="number" name="nid" id="nid" placeholder="Bestehende Nutzer-ID eingeben" value="{{ form_data.nid if form_data else (nutzer.nid if nutzer else '') }}">
@@ -51,7 +52,7 @@
         <label>E-Mail *</label>
         <input type="email" name="email" id="email" value="{{ form_data.email if form_data else (nutzer.email if nutzer else '') }}" required>
     </div>
-    <h2>Buchungsdetails</h2>
+    <h3>Buchungsdetails</h3>
     <div class="form-group">
         <label>Tennisanlage *</label>
         <select name="tennisanlage" id="tennisanlage" required>
