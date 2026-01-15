@@ -433,37 +433,23 @@ form h3 {
    =================================== */
 
 .form-row {
-    display: flex;
-    gap: 2rem;
-    justify-content: center;
-    align-items: flex-start;
-}
-
-.form-row .admin-form {
-    flex: 1;
-}
-
-.form-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 2.5rem;
-    justify-content: center;
-    align-items: stretch;
     padding: 0 3rem;
     margin-bottom: 3rem;
 }
 
-.form-row>* {
-    flex: 1;
-    max-width: 420px;
+.form-row > * {
+    flex: none;
+    max-width: 100%;
 }
 
-.admin-form {
-    display: flex;
-    flex-direction: column;
-}
-
-.admin-form button[type="submit"] {
-    margin-top: auto;
+.error,
+.fehler,
+.erfolg {
+    grid-column: 1 / -1;
+    margin-bottom: 1.75rem;
 }
 
 
@@ -600,6 +586,12 @@ button[type="submit"]:active,
     border-left: 4px solid var(--success);
     font-weight: 500;
     font-size: 0.95rem;
+}
+
+.error,
+.fehler,
+.erfolg {
+    grid-column: 1 / -1;
 }
 
 
