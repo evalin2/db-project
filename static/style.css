@@ -563,32 +563,37 @@ button[type="submit"]:active,
 
 .error,
 .fehler,
-#js-fehler {
-    background: rgba(217, 95, 78, 0.08);
-    color: var(--error);
-    padding: 1.3rem 1.5rem;
+#js-fehler,
+.erfolg {
+    padding: 1.3rem 1.6rem;
     border-radius: var(--radius-lg);
     margin-bottom: 2rem;
     font-weight: 600;
     font-size: 1.05rem;
-    border: 1px solid rgba(217, 95, 78, 0.25);
-    box-shadow: 0 6px 20px rgba(217, 95, 78, 0.12);
+    border: 1px solid var(--sand-medium);
+    box-shadow: var(--shadow-soft);
+    background: var(--sand-light);
+    color: var(--text-primary);
+}
+
+/* Fehler */
+.error,
+.fehler,
+#js-fehler {
+    border-color: rgba(217, 95, 78, 0.35);
+    background: rgba(217, 95, 78, 0.08);
+    color: var(--error);
 }
 
 #js-fehler {
     display: none;
 }
 
+/* Erfolg */
 .erfolg {
-    background: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-green-soft) 100%);
+    border-color: rgba(159, 212, 71, 0.35);
+    background: rgba(194, 242, 22, 0.10);
     color: var(--text-primary);
-    padding: 1.4rem 1.6rem;
-    border-radius: var(--radius-lg);
-    margin-bottom: 2rem;
-    font-weight: 600;
-    font-size: 1.1rem;
-    border: 1px solid rgba(194, 242, 22, 0.35);
-    box-shadow: 0 8px 28px rgba(159, 212, 71, 0.28);
 }
 
 
