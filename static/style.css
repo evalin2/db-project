@@ -952,19 +952,21 @@ footer p {
 /* Smooth hover lift for cards */
 .platz-item,
 .arbeiter-item {
-    transition: transform 0.15s var(--ease-smooth), box-shadow 0.15s var(--ease-smooth);
+    transition: transform 0.15s var(--ease-smooth), 
+                box-shadow 0.15s var(--ease-smooth);
 }
 
 .platz-item:hover,
 .arbeiter-item:hover {
-    transform: translateY(-1px);
+    transform: translateY(-1px) scale(1.01);
     box-shadow: var(--shadow-strong);
 }
 
-/* Slow fade back for cards */
+/* Slow fade back */
 .platz-item:not(:hover),
 .arbeiter-item:not(:hover) {
-    transition: transform 0.35s var(--ease-smooth), box-shadow 0.35s var(--ease-smooth);
+    transition: transform 0.35s var(--ease-smooth), 
+                box-shadow 0.35s var(--ease-smooth);
 }
 
 /* Form hover (only shadow, no transform) */
@@ -976,14 +978,3 @@ form:hover {
     box-shadow: var(--shadow-strong);
     transition: box-shadow 0.15s ease-out;
 }
-
-/* Scale effect */
-.platz-item:hover,
-.arbeiter-item:hover {
-    transform: translateY(-1px) scale(1.01);
-}
-
-
-
-
-
