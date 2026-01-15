@@ -565,8 +565,7 @@ button[type="submit"]:active,
 #js-fehler,
 .fehler,
 .erfolg {
-    max-width: 960px;
-    margin: 0 auto 1.75rem;
+    margin: 0 3rem 1.75rem;
 }
 
 .error,
