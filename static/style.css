@@ -563,6 +563,14 @@ button[type="submit"]:active,
 
 .error,
 #js-fehler,
+.fehler,
+.erfolg {
+    margin-left: var(--spacing-lg);
+    margin-right: var(--spacing-lg);
+}
+
+.error,
+#js-fehler,
 .fehler {
     background: linear-gradient(
         135deg,
@@ -580,12 +588,6 @@ button[type="submit"]:active,
 
 #js-fehler {
     display: none;
-    background: linear-gradient(
-        135deg,
-        rgba(217, 95, 78, 0.12) 0%,
-        rgba(140, 97, 133, 0.18) 100%
-    );
-    border: 1px solid rgba(217, 95, 78, 0.25);
 }
 
 .erfolg {
@@ -602,7 +604,6 @@ button[type="submit"]:active,
     font-weight: 500;
     font-size: 0.95rem;
 }
-
 
 
 /* ===================================
