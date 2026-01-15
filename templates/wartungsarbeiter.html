@@ -94,12 +94,14 @@
             <button type="submit">Wartungsarbeiter löschen</button>
         </form>
 
+    </div>
 
-        <!-- Liste aller Wartungsarbeiter -->
-        {% if alle_arbeiter %}
-        <div class="arbeiter-liste">
-            <h4>Alle Wartungsarbeiter ({{ alle_arbeiter|length }})</h4>
+    <!-- Liste aller Wartungsarbeiter -->
+    {% if alle_arbeiter %}
+    <div class="arbeiter-liste">
+        <h4>Alle Wartungsarbeiter ({{ alle_arbeiter|length }})</h4>
 
+        <div class="arbeiter-grid">
             {% for arbeiter in alle_arbeiter %}
             <div class="arbeiter-item"
                  data-wid="{{ arbeiter.wid }}"
@@ -119,8 +121,8 @@
             </div>
             {% endfor %}
         </div>
-        {% endif %}
     </div>
+    {% endif %}
 
     <footer>
         <p>

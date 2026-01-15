@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <link rel="stylesheet" href="static/style.css">
     <meta charset="UTF-8">
@@ -8,245 +9,206 @@
 </head>
 
 <body>
-
-<header class="global-header">
-    <div class="header-left">
-        <a href="{{ url_for('index') }}" class="logo-link">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="header-logo">
-        </a>
-        <h1 class="header-title">Tennisplatz‑Buchungssystem</h1>
-    </div>
-
-    <nav class="header-nav">
-        <div class="nav-links">
-            <a href="{{ url_for('buchen') }}" class="nav-link">Buchen</a>
-            <a href="{{ url_for('stornieren') }}" class="nav-link">Stornieren</a>
-            <a href="{{ url_for('verwaltung') }}" class="nav-link">Verwaltung</a>
+    <header class="global-header">
+        <div class="header-left">
+            <a href="{{ url_for('index') }}" class="logo-link">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="header-logo">
+            </a>
+            <h1 class="header-title">Tennisplatz‑Buchungssystem</h1>
         </div>
-    </nav>
-</header>
-
-<h2 class="subheading">Tennisplätze verwalten</h2>
-
-{% if fehler %}
-<div class="fehler">{{ fehler }}</div>
-{% endif %}
-
-{% if erfolg %}
-<div class="erfolg">{{ erfolg }}</div>
-{% endif %}
-
-<div class="form-row">
-
-<!-- Tennisplatz hinzufügen -->
-<form method="POST" class="admin-form" onsubmit="return validateWartungsdatum('wartung_add')">
-    <input type="hidden" name="aktion" value="hinzufuegen">
-    
-    <h3>Tennisplatz hinzufügen</h3>
-
-    <div class="form-group">
-        <label for="anlage_add">Tennisanlage *</label>
-        <input type="text" id="anlage_add" name="anlage" required>
-    </div>
-
-    <div class="form-group">
-        <label for="platznummer_add">Platznummer *</label>
-        <input type="text" id="platznummer_add" name="platznummer" required placeholder="z.B. 1, 2, 3">
-    </div>
-
-    <div class="form-group">
-        <label for="belag_add">Belag *</label>
-        <select id="belag_add" name="belag" required>
-            <option value="">Bitte wählen...</option>
-            <option value="hart">Hart</option>
-            <option value="sand">Sand</option>
-            <option value="rasen">Rasen</option>
-            <option value="teppich">Teppich (Halle)</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="wid_add">Wartungsarbeiter *</label>
-        <select id="wid_add" name="wid" required>
-            <option value="">Bitte wählen...</option>
-            {% for arbeiter in alle_arbeiter %}
-            <option value="{{ arbeiter.wid }}">{{ arbeiter.vorname }} {{ arbeiter.nachname }}</option>
+        <nav class="header-nav">
+            <div class="nav-links">
+                <a href="{{ url_for('buchen') }}" class="nav-link">Buchen</a>
+                <a href="{{ url_for('stornieren') }}" class="nav-link">Stornieren</a>
+                <a href="{{ url_for('verwaltung') }}" class="nav-link">Verwaltung</a>
+            </div>
+        </nav>
+    </header>
+    <h2 class="subheading">Tennisplätze verwalten</h2>
+    {% if fehler %}
+    <div class="fehler">{{ fehler }}</div>
+    {% endif %}
+    {% if erfolg %}
+    <div class="erfolg">{{ erfolg }}</div>
+    {% endif %}
+    <div class="form-row">
+        <!-- Tennisplatz hinzufügen -->
+        <form method="POST" class="admin-form" onsubmit="return validateWartungsdatum('wartung_add')">
+            <input type="hidden" name="aktion" value="hinzufuegen">
+            <h3>Tennisplatz hinzufügen</h3>
+            <div class="form-group">
+                <label for="anlage_add">Tennisanlage *</label>
+                <input type="text" id="anlage_add" name="anlage" required>
+            </div>
+            <div class="form-group">
+                <label for="platznummer_add">Platznummer *</label>
+                <input type="text" id="platznummer_add" name="platznummer" required placeholder="z.B. 1, 2, 3">
+            </div>
+            <div class="form-group">
+                <label for="belag_add">Belag *</label>
+                <select id="belag_add" name="belag" required>
+                    <option value="">Bitte wählen...</option>
+                    <option value="hart">Hart</option>
+                    <option value="sand">Sand</option>
+                    <option value="rasen">Rasen</option>
+                    <option value="teppich">Teppich (Halle)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="wid_add">Wartungsarbeiter *</label>
+                <select id="wid_add" name="wid" required>
+                    <option value="">Bitte wählen...</option>
+                    {% for arbeiter in alle_arbeiter %}
+                    <option value="{{ arbeiter.wid }}">{{ arbeiter.vorname }} {{ arbeiter.nachname }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="wartung_add">Datum der letzten Wartung *</label>
+                <input type="date" id="wartung_add" name="wartung" required>
+            </div>
+            <button type="submit">Tennisplatz hinzufügen</button>
+        </form>
+        <!-- Tennisplatz-Daten ändern -->
+        <form method="POST" class="admin-form" onsubmit="return validateWartungsdatum('wartung_edit')">
+            <input type="hidden" name="aktion" value="aendern">
+            <h3>Tennisplatz-Daten ändern</h3>
+            <div class="form-group">
+                <label for="platz_id_edit">Tennisplatz-ID *</label>
+                <input type="text" id="platz_id_edit" name="platz_id" required placeholder="ID aus der Liste unten">
+            </div>
+            <div class="form-group">
+                <label for="anlage_edit">Tennisanlage *</label>
+                <input type="text" id="anlage_edit" name="anlage" required readonly>
+            </div>
+            <div class="form-group">
+                <label for="platznummer_edit">Platznummer *</label>
+                <input type="text" id="platznummer_edit" name="platznummer" required readonly>
+            </div>
+            <div class="form-group">
+                <label for="belag_edit">Belag *</label>
+                <input type="text" id="belag_edit" name="belag" required readonly>
+            </div>
+            <div class="form-group">
+                <label for="wid_edit">Wartungsarbeiter *</label>
+                <select id="wid_edit" name="wid" required>
+                    <option value="">Bitte wählen...</option>
+                    {% for arbeiter in alle_arbeiter %}
+                    <option value="{{ arbeiter.wid }}">{{ arbeiter.vorname }} {{ arbeiter.nachname }} (ID: {{
+                        arbeiter.wid }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="wartung_edit">Wartungsdatum *</label>
+                <input type="date" id="wartung_edit" name="wartung" required>
+            </div>
+            <button type="submit">Tennisplatz ändern</button>
+        </form>
+        <!-- Tennisplatz löschen -->
+        <form method="POST" class="admin-form">
+            <input type="hidden" name="aktion" value="loeschen">
+            <h3>Tennisplatz löschen</h3>
+            <div class="form-group">
+                <label for="platz_id_delete">Tennisplatz-ID *</label>
+                <input type="text" id="platz_id_delete" name="platz_id" required placeholder="ID aus der Liste unten">
+            </div>
+            <button type="submit">Tennisplatz löschen</button>
+        </form>
+    </div> <!-- form-row END -->
+    <!-- Liste aller Tennisplätze -->
+    {% if alle_plaetze %}
+    <div class="platz-liste">
+        <h4>Alle Tennisplätze ({{ alle_plaetze|length }})</h4>
+        <div class="platz-grid">
+            {% for platz in alle_plaetze %}
+            <div class="platz-item" data-tid="{{ platz.tid }}" data-anlage="{{ platz.tennisanlage }}"
+                data-platznummer="{{ platz.platznummer }}" data-belag="{{ platz.belag }}" data-wid="{{ platz.wid }}"
+                data-wartung="{{ platz.wartung }}" onclick="fillPlatzForm(this)">
+                <div class="platz-info">
+                    <span class="platz-id">ID: {{ platz.tid }}</span>
+                    <strong>{{ platz.tennisanlage }}</strong> – Platz {{ platz.platznummer }} ({{ platz.belag }})
+                    {% if platz.wartung %}
+                    <br><small>Letzte Wartung: {{ platz.wartung }}</small>
+                    {% endif %}
+                    {% if platz.wartungsarbeiter_name %}
+                    <br><small>Wartungsarbeiter: {{ platz.wartungsarbeiter_name }} (WID: {{ platz.wid }})</small>
+                    {% endif %}
+                </div>
+            </div>
             {% endfor %}
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="wartung_add">Datum der letzten Wartung *</label>
-        <input type="date" id="wartung_add" name="wartung" required>
-    </div>
-
-    <button type="submit">Tennisplatz hinzufügen</button>
-</form>
-
-
-<!-- Tennisplatz-Daten ändern -->
-<form method="POST" class="admin-form" onsubmit="return validateWartungsdatum('wartung_edit')">
-    <input type="hidden" name="aktion" value="aendern">
-    
-    <h3>Tennisplatz-Daten ändern</h3>
-
-    <div class="form-group">
-        <label for="platz_id_edit">Tennisplatz-ID *</label>
-        <input type="text" id="platz_id_edit" name="platz_id" required placeholder="ID aus der Liste unten">
-    </div>
-
-    <div class="form-group">
-        <label for="anlage_edit">Tennisanlage *</label>
-        <input type="text" id="anlage_edit" name="anlage" required readonly>
-    </div>
-
-    <div class="form-group">
-        <label for="platznummer_edit">Platznummer *</label>
-        <input type="text" id="platznummer_edit" name="platznummer" required readonly>
-    </div>
-
-    <div class="form-group">
-        <label for="belag_edit">Belag *</label>
-        <input type="text" id="belag_edit" name="belag" required readonly>
-    </div>
-
-    <div class="form-group">
-        <label for="wid_edit">Wartungsarbeiter *</label>
-        <select id="wid_edit" name="wid" required>
-            <option value="">Bitte wählen...</option>
-            {% for arbeiter in alle_arbeiter %}
-            <option value="{{ arbeiter.wid }}">{{ arbeiter.vorname }} {{ arbeiter.nachname }} (ID: {{ arbeiter.wid }})</option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="wartung_edit">Wartungsdatum *</label>
-        <input type="date" id="wartung_edit" name="wartung" required>
-    </div>
-
-    <button type="submit">Tennisplatz ändern</button>
-</form>
-
-
-<!-- Tennisplatz löschen -->
-<form method="POST" class="admin-form">
-    <input type="hidden" name="aktion" value="loeschen">
-    
-    <h3>Tennisplatz löschen</h3>
-
-    <div class="form-group">
-        <label for="platz_id_delete">Tennisplatz-ID *</label>
-        <input type="text" id="platz_id_delete" name="platz_id" required placeholder="ID aus der Liste unten">
-    </div>
-
-    <button type="submit">Tennisplatz löschen</button>
-</form>
-
-</div> <!-- form-row END -->
-
-
-<!-- Liste aller Tennisplätze -->
-{% if alle_plaetze %}
-<div class="platz-liste">
-    <h4>Alle Tennisplätze ({{ alle_plaetze|length }})</h4>
-
-    {% for platz in alle_plaetze %}
-    <div class="platz-item"
-         data-tid="{{ platz.tid }}"
-         data-anlage="{{ platz.tennisanlage }}"
-         data-platznummer="{{ platz.platznummer }}"
-         data-belag="{{ platz.belag }}"
-         data-wid="{{ platz.wid }}"
-         data-wartung="{{ platz.wartung }}"
-         onclick="fillPlatzForm(this)">
-
-        <div class="platz-info">
-            <span class="platz-id">ID: {{ platz.tid }}</span>
-            <strong>{{ platz.tennisanlage }}</strong> – Platz {{ platz.platznummer }} ({{ platz.belag }})
-
-            {% if platz.wartung %}
-            <br><small>Letzte Wartung: {{ platz.wartung }}</small>
-            {% endif %}
-
-            {% if platz.wartungsarbeiter_name %}
-            <br><small>Wartungsarbeiter: {{ platz.wartungsarbeiter_name }} (WID: {{ platz.wid }})</small>
-            {% endif %}
         </div>
     </div>
-    {% endfor %}
-</div>
-{% endif %}
-
-<footer>
-    <p>
-        <strong>Impressum</strong><br>
-        Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt
-    </p>
-</footer>
-
-<script>
-    function validateWartungsdatum(fieldId) {
-        var wartungInput = document.getElementById(fieldId);
-        var wartungsdatum = new Date(wartungInput.value);
-        var heute = new Date();
-        heute.setHours(0, 0, 0, 0);
-
-        if (wartungsdatum > heute) {
-            alert('Das Datum der letzten Wartung muss in der Vergangenheit oder heute liegen.');
-            wartungInput.focus();
-            return false;
+    {% endif %}
+    <footer>
+        <p>
+            <strong>Impressum</strong><br>
+            Tennisverein Musterstadt · Musterstraße 1 · 12345 Musterstadt
+        </p>
+    </footer>
+    <script>
+        function validateWartungsdatum(fieldId) {
+            var wartungInput = document.getElementById(fieldId);
+            var wartungsdatum = new Date(wartungInput.value);
+            var heute = new Date();
+            heute.setHours(0, 0, 0, 0);
+            if (wartungsdatum > heute) {
+                alert('Das Datum der letzten Wartung muss in der Vergangenheit oder heute liegen.');
+                wartungInput.focus();
+                return false;
+            }
+            return true;
         }
-        return true;
-    }
+        document.addEventListener('DOMContentLoaded', function () {
+            var tidInput = document.getElementById('platz_id_edit');
+            if (tidInput) {
+                tidInput.addEventListener('input', function () {
+                    var tid = this.value.trim();
+                    if (!tid) {
+                        document.getElementById('anlage_edit').value = '';
+                        document.getElementById('platznummer_edit').value = '';
+                        document.getElementById('belag_edit').value = '';
+                        document.getElementById('wid_edit').value = '';
+                        document.getElementById('wartung_edit').value = '';
+                        return;
+                    }
+                    fetch('/get_tennisplatz/' + tid)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.exists) {
+                                document.getElementById('anlage_edit').value = data.tennisanlage;
+                                document.getElementById('platznummer_edit').value = data.platznummer;
+                                document.getElementById('belag_edit').value = data.belag;
+                                document.getElementById('wid_edit').value = data.wid;
+                                document.getElementById('wartung_edit').value = data.wartung;
+                            } else {
+                                document.getElementById('anlage_edit').value = '';
+                                document.getElementById('platznummer_edit').value = '';
+                                document.getElementById('belag_edit').value = '';
+                                document.getElementById('wid_edit').value = '';
+                                document.getElementById('wartung_edit').value = '';
+                            }
+                        })
+                        .catch(error => console.error('Fehler beim Laden:', error));
+                });
+            }
+        });
+        function fillPlatzForm(el) {
+            // Füllt BEIDE Formulare: Ändern UND Löschen
+            var tid = el.dataset.tid;
 
-    document.addEventListener('DOMContentLoaded', function() {
-        var tidInput = document.getElementById('platz_id_edit');
+            // Ändern-Formular
+            document.getElementById('platz_id_edit').value = tid;
+            document.getElementById('anlage_edit').value = el.dataset.anlage;
+            document.getElementById('platznummer_edit').value = el.dataset.platznummer;
+            document.getElementById('belag_edit').value = el.dataset.belag;
+            document.getElementById('wid_edit').value = el.dataset.wid;
+            document.getElementById('wartung_edit').value = el.dataset.wartung;
 
-        if (tidInput) {
-            tidInput.addEventListener('input', function() {
-                var tid = this.value.trim();
-
-                if (!tid) {
-                    document.getElementById('anlage_edit').value = '';
-                    document.getElementById('platznummer_edit').value = '';
-                    document.getElementById('belag_edit').value = '';
-                    document.getElementById('wid_edit').value = '';
-                    document.getElementById('wartung_edit').value = '';
-                    return;
-                }
-
-                fetch('/get_tennisplatz/' + tid)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.exists) {
-                            document.getElementById('anlage_edit').value = data.tennisanlage;
-                            document.getElementById('platznummer_edit').value = data.platznummer;
-                            document.getElementById('belag_edit').value = data.belag;
-                            document.getElementById('wid_edit').value = data.wid;
-                            document.getElementById('wartung_edit').value = data.wartung;
-                        } else {
-                            document.getElementById('anlage_edit').value = '';
-                            document.getElementById('platznummer_edit').value = '';
-                            document.getElementById('belag_edit').value = '';
-                            document.getElementById('wid_edit').value = '';
-                            document.getElementById('wartung_edit').value = '';
-                        }
-                    })
-                    .catch(error => console.error('Fehler beim Laden:', error));
-            });
+            // Löschen-Formular
+            document.getElementById('platz_id_delete').value = tid;
         }
-    });
-
-    function fillPlatzForm(el) {
-        document.getElementById('platz_id_edit').value = el.dataset.tid;
-        document.getElementById('anlage_edit').value = el.dataset.anlage;
-        document.getElementById('platznummer_edit').value = el.dataset.platznummer;
-        document.getElementById('belag_edit').value = el.dataset.belag;
-        document.getElementById('wid_edit').value = el.dataset.wid;
-        document.getElementById('wartung_edit').value = el.dataset.wartung;
-    }
-</script>
-
+    </script>
 </body>
+
 </html>
