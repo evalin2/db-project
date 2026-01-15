@@ -949,7 +949,7 @@ footer p {
 /* Smooth hover lift for cards */
 .platz-item,
 .arbeiter-item {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
 }
 
 .platz-item:hover,
@@ -958,9 +958,21 @@ footer p {
     box-shadow: var(--shadow-strong);
 }
 
+/* Slow fade back for cards */
+.platz-item:not(:hover),
+.arbeiter-item:not(:hover) {
+    transition: transform 0.35s ease-in, box-shadow 0.35s ease-in;
+}
+
+/* Form hover (only shadow, no transform) */
+form {
+    transition: box-shadow 0.35s ease-in;
+}
+
 form:hover {
     box-shadow: var(--shadow-strong);
-    transition: box-shadow 0.25s ease;
+    transition: box-shadow 0.15s ease-out;
 }
+
 
 
