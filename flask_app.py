@@ -482,7 +482,7 @@ def buchen():
         form_data=form_data
     )
 
-# bbestätigt Route (nach der buchen Route einfügen)
+# bbestätigt
 @app.route("/bbestätigt")
 @login_required
 def bbestätigt():
@@ -951,7 +951,7 @@ def stornieren():
         form_data=form_data
     )
 
-#sbestätigt Route
+#sbestätigt 
 @app.route("/sbestätigt")
 @login_required
 def sbestätigt():
@@ -997,7 +997,7 @@ def sbestätigt():
 def verwaltung():
     return render_template("verwaltung.html")
 
-# Aktualisierte get_tennisplatz Route (ersetzen in app.py)
+# get_tennisplatz
 @app.route("/get_tennisplatz/<int:tid>")
 @login_required
 def get_tennisplatz(tid):
@@ -1019,7 +1019,7 @@ def get_tennisplatz(tid):
         return jsonify({"exists": False, "error": str(e)})
 
 
-# Aktualisierte tennisplätze route (ersetzen in app.py)
+# tennisplätze
 @app.route("/tennisplätze", methods=["GET", "POST"])
 @login_required
 def tennisplätze():
@@ -1203,7 +1203,7 @@ def tennisplätze():
                          alle_plaetze=alle_plaetze,
                          alle_arbeiter=alle_arbeiter)   
 
-# API Route für AJAX - Wartungsarbeiter-Daten abrufen
+# get_wartungsarbeiter
 @app.route("/get_wartungsarbeiter/<int:wid>")
 @login_required
 def get_wartungsarbeiter(wid):
@@ -1223,7 +1223,7 @@ def get_wartungsarbeiter(wid):
         return jsonify({"exists": False, "error": str(e)})
 
 
-# wartungsarbeiter route 
+# wartungsarbeiter  
 @app.route("/wartungsarbeiter", methods=["GET", "POST"])
 @login_required
 def wartungsarbeiter():
