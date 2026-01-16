@@ -571,12 +571,13 @@ def stornieren():
         fehler = "Fehler beim Laden der Tennisplätze."
 
     if request.method == "POST":
-        # Formulardaten speichern
+        # Formulardaten speichern - GEBURTSDATUM HINZUGEFÜGT
         form_data = {
             'buchungsnummer': request.form.get("buchungsnummer", ""),
             'nid': request.form.get("nid", ""),
             'vorname': request.form.get("vorname", ""),
             'nachname': request.form.get("nachname", ""),
+            'geburtsdatum': request.form.get("geburtsdatum", ""),  # NEU!
             'email': request.form.get("email", ""),
             'tennisanlage': request.form.get("tennisanlage", ""),
             'platznummer': request.form.get("platznummer", ""),
