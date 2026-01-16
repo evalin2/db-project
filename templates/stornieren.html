@@ -55,6 +55,10 @@
         <input type="text" name="nachname" id="nachname" value="{{ form_data.nachname if form_data else '' }}">
     </div>
     <div class="form-group">
+        <label>Geburtsdatum</label>
+        <input type="date" name="geburtsdatum" id="geburtsdatum" value="{{ form_data.geburtsdatum if form_data else '' }}">
+    </div>
+    <div class="form-group">
         <label>E-Mail *</label>
         <input type="email" name="email" id="email" placeholder="Ihre E-Mail-Adresse" value="{{ form_data.email if form_data else '' }}" required>
     </div>
@@ -99,9 +103,13 @@ function checkNidAndEmail() {
     let email = document.getElementById("email").value;
     const jsFehlerDiv = document.getElementById('js-fehler');
     
+    // Fehlermeldung zurücksetzen
+    jsFehlerDiv.textContent = '';
+    
     if (!nid && !email) {
         document.getElementById("vorname").value = "";
         document.getElementById("nachname").value = "";
+        document.getElementById("geburtsdatum").value = "";
         return;
     }
     
@@ -113,6 +121,7 @@ function checkNidAndEmail() {
     }
     
     if (!nid && email) {
+        // Nur E-Mail eingegeben, keine NID - das ist ok
         return;
     }
     
@@ -126,6 +135,7 @@ function checkNidAndEmail() {
                 document.getElementById("nid").focus();
                 document.getElementById("vorname").value = "";
                 document.getElementById("nachname").value = "";
+                document.getElementById("geburtsdatum").value = "";
                 window.scrollTo(0, 0);
             } else if (data.email !== email) {
                 jsFehlerDiv.textContent = 'Die E-Mail-Adresse stimmt nicht mit der Nutzer-ID überein.';
@@ -134,10 +144,13 @@ function checkNidAndEmail() {
                 document.getElementById("nid").value = "";
                 document.getElementById("vorname").value = "";
                 document.getElementById("nachname").value = "";
+                document.getElementById("geburtsdatum").value = "";
                 window.scrollTo(0, 0);
             } else {
+                // Erfolgreich - Felder automatisch ausfüllen
                 document.getElementById("vorname").value = data.vorname || "";
                 document.getElementById("nachname").value = data.nachname || "";
+                document.getElementById("geburtsdatum").value = data.geburtsdatum || "";
             }
         })
         .catch(error => {
