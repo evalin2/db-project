@@ -165,9 +165,11 @@ function checkNidAndEmail() {
     }
 }
 
-// Event Listener
+// Event Listener - both blur and change
 document.getElementById("nid").addEventListener("blur", checkNidAndEmail);
+document.getElementById("nid").addEventListener("change", checkNidAndEmail);
 document.getElementById("email").addEventListener("blur", checkNidAndEmail);
+document.getElementById("email").addEventListener("change", checkNidAndEmail);
 
 // Tennisanlage Dropdown
 document.getElementById("tennisanlage").addEventListener("change", function() {
