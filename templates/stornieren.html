@@ -125,10 +125,13 @@ function checkNidAndEmail() {
         return;
     }
     
+    // Beide Felder ausgefüllt - Nutzer abrufen
     if (nid && email) {
         fetch(`/get_nutzer/${nid}`)
         .then(response => response.json())
         .then(data => {
+            console.log("API Antwort:", data);  // Zum Debuggen
+            
             if (data.exists === false || !data.vorname) {
                 jsFehlerDiv.textContent = 'Diese Nutzer-ID existiert nicht in der Datenbank.';
                 document.getElementById("nid").value = "";
@@ -147,7 +150,8 @@ function checkNidAndEmail() {
                 document.getElementById("geburtsdatum").value = "";
                 window.scrollTo(0, 0);
             } else {
-                // Erfolgreich - Felder automatisch ausfüllen
+                // Erfolgreich - Alle Felder ausfüllen
+                console.log("Fülle Felder aus mit:", data);  // Zum Debuggen
                 document.getElementById("vorname").value = data.vorname || "";
                 document.getElementById("nachname").value = data.nachname || "";
                 document.getElementById("geburtsdatum").value = data.geburtsdatum || "";
@@ -161,9 +165,11 @@ function checkNidAndEmail() {
     }
 }
 
+// Event Listener
 document.getElementById("nid").addEventListener("blur", checkNidAndEmail);
 document.getElementById("email").addEventListener("blur", checkNidAndEmail);
 
+// Tennisanlage Dropdown
 document.getElementById("tennisanlage").addEventListener("change", function() {
     const gewaehlteAnlage = this.value;
     const platznummerSelect = document.getElementById("platznummer");
@@ -184,6 +190,7 @@ document.getElementById("tennisanlage").addEventListener("change", function() {
     });
 });
 
+// Beim Laden der Seite: Platznummer wiederherstellen falls Fehler
 document.addEventListener("DOMContentLoaded", function() {
     const tennisanlageSelect = document.getElementById("tennisanlage");
     const platznummerSelect = document.getElementById("platznummer");
