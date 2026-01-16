@@ -165,11 +165,19 @@ function checkNidAndEmail() {
     }
 }
 
-// Event Listener - both blur and change
+// Event Listener
 document.getElementById("nid").addEventListener("blur", checkNidAndEmail);
-document.getElementById("nid").addEventListener("change", checkNidAndEmail);
+document.getElementById("nid").addEventListener("input", function() {
+    if (this.value && document.getElementById("email").value) {
+        checkNidAndEmail();
+    }
+});
 document.getElementById("email").addEventListener("blur", checkNidAndEmail);
-document.getElementById("email").addEventListener("change", checkNidAndEmail);
+document.getElementById("email").addEventListener("input", function() {
+    if (this.value && document.getElementById("nid").value) {
+        checkNidAndEmail();
+    }
+});
 
 // Tennisanlage Dropdown
 document.getElementById("tennisanlage").addEventListener("change", function() {
