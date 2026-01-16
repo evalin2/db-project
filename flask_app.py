@@ -577,7 +577,6 @@ def stornieren():
             'nid': request.form.get("nid", ""),
             'vorname': request.form.get("vorname", ""),
             'nachname': request.form.get("nachname", ""),
-            'geburtsdatum': request.form.get("geburtsdatum", ""),
             'email': request.form.get("email", ""),
             'tennisanlage': request.form.get("tennisanlage", ""),
             'platznummer': request.form.get("platznummer", ""),
